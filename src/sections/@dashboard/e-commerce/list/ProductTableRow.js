@@ -105,7 +105,6 @@ export default function ProductTableRow({
             {inventoryType ? sentenceCase(inventoryType) : ''}
           </Label>
         </TableCell> */}
-        <TableCell align="center">{price ? fCurrency(price) : '$0'}</TableCell>
         <TableCell align="center">{provider}</TableCell>
         <TableCell align="center">{region}</TableCell>
         <TableCell align="center">{sku}</TableCell>
