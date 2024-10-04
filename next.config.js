@@ -3,7 +3,7 @@ module.exports = {
   trailingSlash: true,
   env: {
     // HOST
-    HOST_API_KEY: 'http://localhost:5000/',
+    HOST_API_KEY: 'https://230d-91-239-130-102.ngrok-free.app',
     // MAPBOX
     MAPBOX_API: '',
     // FIREBASE
