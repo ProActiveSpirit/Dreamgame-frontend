@@ -151,7 +151,7 @@ export default function EcommerceProductListPage() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.id !== id);
+    const deleteRow = tableData.filter((row) => row.name !== id);
     setSelected([]);
     setTableData(deleteRow);
 
@@ -163,7 +163,7 @@ export default function EcommerceProductListPage() {
   };
 
   const handleDeleteRows = (selectedRows) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row.id));
+    const deleteRows = tableData.filter((row) => !selectedRows.includes(row.name));
     setSelected([]);
     setTableData(deleteRows);
 
@@ -240,7 +240,7 @@ export default function EcommerceProductListPage() {
               onSelectAllRows={(checked) =>
                 onSelectAllRows(
                   checked,
-                  tableData.map((row) => row.id)
+                  tableData.map((row) => row.name)
                 )
               }
               action={
@@ -264,7 +264,7 @@ export default function EcommerceProductListPage() {
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.id)
+                      tableData.map((row) => row.name)
                     )
                   }
                 />
@@ -275,11 +275,11 @@ export default function EcommerceProductListPage() {
                     .map((row, index) =>
                       row ? (
                         <ProductTableRow
-                          key={row.id}
+                          key={row.name}
                           row={row}
-                          selected={selected.includes(row.id)}
-                          onSelectRow={() => onSelectRow(row.id)}
-                          onDeleteRow={() => handleDeleteRow(row.id)}
+                          selected={selected.includes(row.name)}
+                          onSelectRow={() => onSelectRow(row.name)}
+                          onDeleteRow={() => handleDeleteRow(row.name)}
                           onEditRow={() => handleEditRow(row.name)}
                           onViewRow={() => handleViewRow(row.name)}
                         />
