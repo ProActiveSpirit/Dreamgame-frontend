@@ -33,6 +33,7 @@ export default function AppAreaInstalled({ title, subheader, chart, ...other }) 
         title={title}
         subheader={subheader}
         action={
+          <div>
           <CustomSmallSelect
             value={seriesData}
             onChange={(event) => setSeriesData(event.target.value)}
@@ -42,14 +43,28 @@ export default function AppAreaInstalled({ title, subheader, chart, ...other }) 
                 {option.year}
               </option>
             ))}
+            
           </CustomSmallSelect>
+          
+          <CustomSmallSelect
+          value={seriesData}
+          onChange={(event) => setSeriesData(event.target.value)}
+        >
+          {series.map((option) => (
+            <option key={option.year} value={option.year}>
+              {option.year}
+            </option>
+          ))}
+          
+        </CustomSmallSelect>
+        </div>
         }
       />
 
       {series.map((item) => (
         <Box key={item.year} sx={{ mt: 3, mx: 3 }} dir="ltr">
           {item.year === seriesData && (
-            <Chart type="line" series={item.data} options={chartOptions} height={364} />
+            <Chart type="area" series={item.data} options={chartOptions} height={364} />
           )}
         </Box>
       ))}
