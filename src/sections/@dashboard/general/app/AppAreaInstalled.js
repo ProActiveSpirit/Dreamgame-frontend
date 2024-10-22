@@ -17,7 +17,7 @@ AppAreaInstalled.propTypes = {
 export default function AppAreaInstalled({ title, subheader, chart, ...other }) {
   const { colors, categories, series, options } = chart;
 
-  const [seriesData, setSeriesData] = useState('2019');
+  const [seriesData, setSeriesData] = useState('2023');
 
   const chartOptions = useChart({
     colors,
@@ -43,20 +43,7 @@ export default function AppAreaInstalled({ title, subheader, chart, ...other }) 
                 {option.year}
               </option>
             ))}
-            
           </CustomSmallSelect>
-          
-          <CustomSmallSelect
-          value={seriesData}
-          onChange={(event) => setSeriesData(event.target.value)}
-        >
-          {series.map((option) => (
-            <option key={option.year} value={option.year}>
-              {option.year}
-            </option>
-          ))}
-          
-        </CustomSmallSelect>
         </div>
         }
       />
