@@ -70,7 +70,7 @@ export const PATH_DASHBOARD = {
   },
   eCommerce: {
     root: path(ROOTS_DASHBOARD, '/e-commerce'),
-    shop: path(ROOTS_DASHBOARD, '/e-commerce/shop'),
+    stock: path(ROOTS_DASHBOARD, '/e-commerce/stock'),
     list: path(ROOTS_DASHBOARD, '/e-commerce/list'),
     checkout: path(ROOTS_DASHBOARD, '/e-commerce/checkout'),
     new: path(ROOTS_DASHBOARD, '/e-commerce/product/new'),
