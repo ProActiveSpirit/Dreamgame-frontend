@@ -24,7 +24,10 @@ import {
   ProfileFollowers,
 } from '../../../../../sections/@dashboard/user/profile';
 import {
-  ProductInformation
+  ProductInformation,
+  ProductSalesOrder,
+  ProductPurchaseOrder,
+  ProductStockHistory
 } from '../detailed';
 //_mock
 import {
@@ -71,25 +74,21 @@ export default function EcommerceProductEditPage() {
       value: 'Sales Orders',
       label: 'Sales Orders',
       // icon: <Iconify icon="eva:heart-fill" />,
-      component: <ProfileFollowers followers={_userFollowers} />,
+      component: <ProductSalesOrder />,
     },
     {
       value: 'Purchase Orders',
       label: 'Purchase Orders',
       // icon: <Iconify icon="eva:people-fill" />,
       component: (
-        <ProfileFriends
-          friends={_userFriends}
-          // searchFriends={searchFriends}
-          onSearchFriends={(event) => setSearchFriends(event.target.value)}
-        />
+        <ProductPurchaseOrder />
       ),
     },
     {
       value: 'Stock History',
       label: 'Stock History',
       // icon: <Iconify icon="ic:round-perm-media" />,
-      component: <ProfileGallery gallery={_userGallery} />,
+      component: <ProductStockHistory />,
     },
   ];
 
