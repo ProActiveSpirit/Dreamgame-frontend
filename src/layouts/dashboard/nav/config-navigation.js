@@ -75,7 +75,7 @@ const navConfig = [
         icon: ICONS.cart,
         children: [
           { title: 'Product', path: PATH_DASHBOARD.eCommerce.list },
-          { title: 'Stock', path: PATH_DASHBOARD.eCommerce.shop },
+          { title: 'Stock', path: PATH_DASHBOARD.eCommerce.stock },
           // { title: 'Provider Products', path: PATH_DASHBOARD.eCommerce.demoView },
           // { title: 'Genba Promotions', path: PATH_DASHBOARD.eCommerce.new },
           // { title: 'Genba Catalog', path: PATH_DASHBOARD.eCommerce.demoEdit },
