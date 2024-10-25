@@ -43,15 +43,14 @@ import { ProductTableRow, ProductTableToolbar } from '../../../../../sections/@d
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'NAME', align: 'left', width: 300 },
-  { id: 'stock', label: 'STOCK', align: 'center' },
-  // { id: 'price', label: 'PRICE', align: 'center' },
-  { id: 'provider', label: 'PROVIDER', align: 'center' },
-  { id: 'region', label: 'REGION', align: 'center' },
-  { id: 'sku', label: 'SKU', align: 'center' },
-  { id: 'publisher', label: 'PUBLISHER', align: 'center' },
-  { id: 'status', label: 'STATUS', align: 'center' },
-  { id: 'createdAt', label: 'Create at', align: 'center' },
+  { id: 'number', label: 'Purchase Order Number', align: 'left', width: 300 },
+  { id: 'Product', label: 'Product', align: 'center' },
+  { id: 'Provider', label: 'Provider', align: 'center' },
+  { id: 'Region', label: 'Region', align: 'center' },
+  { id: 'CostIncVat', label: 'Cost Inc Vat', align: 'center' },
+  { id: 'Quantity', label: 'Quantity', align: 'center' },
+  { id: 'TotalCostIncVat', label: 'Total Cost Inc Vat', align: 'center' },
+  { id: 'CreatdOn', label: 'Creatd On', align: 'center' },
 ];
 
 
