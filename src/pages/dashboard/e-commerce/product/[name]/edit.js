@@ -19,7 +19,6 @@ import {
   ProductInformation,
   ProductSalesOrder,
   ProductPurchaseOrder,
-  ProductStockHistory
 } from '../detailed';
 //_mock
 import {
@@ -72,12 +71,7 @@ export default function EcommerceProductEditPage() {
       component: (
         <ProductPurchaseOrder />
       ),
-    },
-    {
-      value: 'Stock History',
-      label: 'Stock History',
-      component: <ProductStockHistory />,
-    },
+    }
   ];
 
   return (
