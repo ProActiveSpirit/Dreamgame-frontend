@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { paramCase } from 'change-case';
 // next
-import Head from 'next/head';
 import { useRouter } from 'next/router';
 // @mui
 import { Tab, Card, Tabs, Container, Box } from '@mui/material';
@@ -16,13 +15,6 @@ import DashboardLayout from '../../../../../layouts/dashboard';
 import { useSettingsContext } from '../../../../../components/settings';
 import CustomBreadcrumbs from '../../../../../components/custom-breadcrumbs';
 // sections
-import ProductNewEditForm from '../../../../../sections/@dashboard/e-commerce/ProductNewEditForm';
-import {
-  Profile,
-  ProfileFriends,
-  ProfileGallery,
-  ProfileFollowers,
-} from '../../../../../sections/@dashboard/user/profile';
 import {
   ProductInformation,
   ProductSalesOrder,
@@ -67,19 +59,16 @@ export default function EcommerceProductEditPage() {
     {
       value: 'Product Information',
       label: 'Product Information',
-      // icon: <Iconify icon="ic:round-account-box" />,
       component: <ProductInformation />,
     },
     {
       value: 'Sales Orders',
       label: 'Sales Orders',
-      // icon: <Iconify icon="eva:heart-fill" />,
       component: <ProductSalesOrder />,
     },
     {
       value: 'Purchase Orders',
       label: 'Purchase Orders',
-      // icon: <Iconify icon="eva:people-fill" />,
       component: (
         <ProductPurchaseOrder />
       ),
@@ -87,15 +76,13 @@ export default function EcommerceProductEditPage() {
     {
       value: 'Stock History',
       label: 'Stock History',
-      // icon: <Iconify icon="ic:round-perm-media" />,
       component: <ProductStockHistory />,
     },
   ];
 
   return (
     <>
-
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={themeStretch ? 'lg' : false}>
         <CustomBreadcrumbs
           heading="Edit product"
           links={[
@@ -107,9 +94,6 @@ export default function EcommerceProductEditPage() {
             { name: currentProduct?.name },
           ]}
         />
-
-        {/* <ProductNewEditForm isEdit currentProduct={currentProduct} /> */}
-
         <Card
           sx={{
             mb: 3,
@@ -122,7 +106,6 @@ export default function EcommerceProductEditPage() {
             onChange={(event, newValue) => setCurrentTab(newValue)}
             sx={{
               width: 1,
-              // bottom: 0,
               zIndex: 9,
               position: 'absolute',
               bgcolor: 'background.paper',

@@ -43,13 +43,13 @@ import { ProductTableRow, ProductTableToolbar } from '../../../../../sections/@d
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Sales Order Number', align: 'left', width: 300 },
-  { id: 'stock', label: 'Customer', align: 'center' },
+  { id: 'Number', label: 'Sales Order Number', align: 'left', width: 300 },
+  { id: 'Customer', label: 'Customer', align: 'center' },
   // { id: 'price', label: 'PRICE', align: 'center' },
-  { id: 'provider', label: 'Product', align: 'center' },
-  { id: 'region', label: 'Provider', align: 'center' },
-  { id: 'sku', label: 'Region', align: 'center' },
-  { id: 'publisher', label: 'Sales Inc Vat', align: 'center' },
+  { id: 'Product', label: 'Product', align: 'center' },
+  { id: 'Provider', label: 'Provider', align: 'center' },
+  { id: 'Region', label: 'Region', align: 'center' },
+  { id: '', label: 'Sales Inc Vat', align: 'center' },
   { id: 'status', label: 'Quantity', align: 'center' },
   { id: 'createdAt', label: 'Total Sales Inc Vat', align: 'center' },
   { id: 'createdOn', label: 'Created On', align: 'center' },
@@ -162,7 +162,7 @@ export default function ProductSalesOrder() {
     if (page > 0) {
       if (selectedRows.length === dataInPage.length) {
         setPage(page - 1);
-      } else if (selectedRows.length === dataFiltered.length) {
+      } else if (selectedRows.length === dataFiltered.length) { 
         setPage(0);
       } else if (selectedRows.length > dataInPage.length) {
         const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
