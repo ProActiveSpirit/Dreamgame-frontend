@@ -50,8 +50,7 @@ const TABLE_HEAD = [
   { id: 'region', label: 'REGION', align: 'center' },
   { id: 'sku', label: 'SKU', align: 'center' },
   { id: 'publisher', label: 'PUBLISHER', align: 'center' },
-  { id: 'status', label: 'STATUS', align: 'center' },
-  { id: 'createdAt', label: 'Create at', align: 'center' },
+  { id: 'status', label: 'STATUS', align: 'center' }
 ];
 
 // const STATUS_OPTIONS = [

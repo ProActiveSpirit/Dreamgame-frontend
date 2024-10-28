@@ -50,7 +50,6 @@ const TABLE_HEAD = [
   { id: 'CostIncVat', label: 'Cost Inc Vat', align: 'center' },
   { id: 'Quantity', label: 'Quantity', align: 'center' },
   { id: 'TotalCostIncVat', label: 'Total Cost Inc Vat', align: 'center' },
-  { id: 'CreatdOn', label: 'Creatd On', align: 'center' },
 ];
 
 
