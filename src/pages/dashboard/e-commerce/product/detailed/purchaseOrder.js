@@ -19,8 +19,6 @@ import { useDispatch, useSelector } from '../../../../../redux/store';
 import { getProducts } from '../../../../../redux/slices/product';
 // routes
 import { PATH_DASHBOARD } from '../../../../../routes/paths';
-// layouts
-import DashboardLayout from '../../../../../layouts/dashboard';
 // components
 import { useSettingsContext } from '../../../../../components/settings';
 import {
@@ -38,7 +36,7 @@ import Iconify from '../../../../../components/iconify';
 import Scrollbar from '../../../../../components/scrollbar';
 import ConfirmDialog from '../../../../../components/confirm-dialog';
 // sections
-import { ProductTableRow, ProductTableToolbar } from '../../../../../sections/@dashboard/e-commerce/list';
+import { PurchaseOrderTableRow, PurchaseOrderTableToolbar } from '../../../../../sections/@dashboard/e-commerce/details/purchase';
 
 // ----------------------------------------------------------------------
 
@@ -211,7 +209,7 @@ export default function ProductPurchaseOrder() {
         /> */}
 
         <Card>
-          <ProductTableToolbar
+          <PurchaseOrderTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
@@ -263,7 +261,7 @@ export default function ProductPurchaseOrder() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <ProductTableRow
+                        <PurchaseOrderTableRow
                           key={row.name}
                           row={row}
                           selected={selected.includes(row.name)}
