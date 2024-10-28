@@ -5,11 +5,8 @@ import {
   TableRow,
   Checkbox,
   TableCell,
-  IconButton,
   Link,
 } from '@mui/material';
-// components
-import Iconify from '../../../../../components/iconify';
 
 // ----------------------------------------------------------------------
 

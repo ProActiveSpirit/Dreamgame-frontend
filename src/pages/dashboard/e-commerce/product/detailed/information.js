@@ -2,8 +2,10 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 // @mui
 import { alpha } from '@mui/material/styles';
-import { Box, TextField, Label, Tooltip , Paper, Container} from '@mui/material';
+import { Box, TextField, Tooltip , Paper, Container} from '@mui/material';
 import { Masonry } from '@mui/lab';
+
+import Label from 'src/components/label';
 
 export default function ProductInformation({ variant }) {
   const [currency, setCurrency] = useState('EUR');
@@ -20,8 +22,8 @@ export default function ProductInformation({ variant }) {
     '& > *': { my: '8px !important' },
   };
 
-  const COLORS = ['primary', 'secondary', 'info', 'success', 'warning', 'error'];
-
+  const COLORS = ['primary', 'warning','info', 'secondary'];
+  const Stock = ['1','0','0','1' ];
 
   return (
     <Masonry columns={{ xs: 1}} spacing={4}>
@@ -31,35 +33,33 @@ export default function ProductInformation({ variant }) {
           fullWidth
           label="Name"
           size="small"
-          defaultValue="Game Name"
+          defaultValue="13000 CALL OF DUTY POINTS (MV IIII, MIW II, Warzone) - [XBOX Series X|S /XBOX One]"
         />
-
         <Box
-            sx={{
-                minHeight: 20,
-                display: 'flex',
-                flexWrap: 'wrap',
-                alignItems: 'left',
-                justifyContent: 'left',
-                '& > *': { mx: 1 },
-            }}
+          sx={{
+            p: 1,
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'left',
+            justifyContent: 'left',
+            '& > *': { mx: 0.5 },
+          }}
         >
-            {COLORS.map((color) => (
-                // <Tooltip key={color} title={color}>
-                //     <Label color={color} variant="filled">
-                     <div>   {color} </div>
-                //     </Label>
-                // </Tooltip>
+            {COLORS.map((color, index) => (
+              <Tooltip key={color} title={color}>
+                <Label color={color} variant="filled">
+                  {Stock[index]}
+                </Label>
+              </Tooltip>
             ))}
-        </Box>       
-
+        </Box>
         <TextField
           variant={variant}
           required
           fullWidth
           label="Provider"
           size="small"
-          defaultValue="Hello Minimal"
+          defaultValue=""
         />
 
         <TextField
@@ -68,7 +68,7 @@ export default function ProductInformation({ variant }) {
           fullWidth
           label="Sku"
           size="small"
-          defaultValue="Hello Minimal"
+          defaultValue="8806188752425"
         />
 
         <TextField
@@ -77,7 +77,16 @@ export default function ProductInformation({ variant }) {
           fullWidth
           label="Publisher"
           size="small"
-          defaultValue="Hello Minimal"
+          defaultValue="Activision"
+        />
+
+        <TextField
+          variant={variant}
+          required
+          fullWidth
+          label="Provider Status"
+          size="small"
+          defaultValue=""
         />
     </Masonry>
   );
