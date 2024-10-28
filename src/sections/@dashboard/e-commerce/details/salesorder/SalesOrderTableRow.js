@@ -9,11 +9,11 @@ import {
   Link,
 } from '@mui/material';
 // components
-import Iconify from '../../../../components/iconify';
+import Iconify from '../../../../../components/iconify';
 
 // ----------------------------------------------------------------------
 
-ProductTableRow.propTypes = {
+SalesOrderTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
@@ -22,7 +22,7 @@ ProductTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
 };
 
-export default function ProductTableRow({
+export default function SalesOrderTableRow({
   row,
   selected,
   onSelectRow,
@@ -59,11 +59,6 @@ export default function ProductTableRow({
         <TableCell align="center">{publisher}</TableCell>
         <TableCell align="center">{status}</TableCell>
 
-        <TableCell align="center"  width={50}>
-          <IconButton onClick={() => onEditRow()}>
-            <Iconify icon="eva:edit-fill" />
-          </IconButton>
-        </TableCell>
       </TableRow>
     </>
   );
