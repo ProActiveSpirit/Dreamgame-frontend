@@ -37,7 +37,7 @@ EcommerceProductEditPage.getLayout = (page) => <DashboardLayout>{page}</Dashboar
 export default function EcommerceProductEditPage() {
   const { themeStretch } = useSettingsContext();
 
-  const [currentTab, setCurrentTab] = useState('profile');
+  const [currentTab, setCurrentTab] = useState('Product Information');
 
   const dispatch = useDispatch();
 

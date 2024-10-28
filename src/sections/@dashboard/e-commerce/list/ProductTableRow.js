@@ -110,16 +110,16 @@ export default function ProductTableRow({
         <TableCell align="center">{sku}</TableCell>
         <TableCell align="center">{publisher}</TableCell>
         <TableCell align="center">{status}</TableCell>
-        <TableCell align="center">{createAt}</TableCell>
+        {/* <TableCell align="center">{createAt}</TableCell> */}
 
-        <TableCell align="right">
-          <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
-            <Iconify icon="eva:more-vertical-fill" />
+        <TableCell align="center"  width={50}>
+          <IconButton color={openPopover ? 'primary' : 'default'} onClick={() => onEditRow()}>
+            <Iconify icon="eva:edit-fill" />
           </IconButton>
         </TableCell>
       </TableRow>
 
-      <MenuPopover
+      {/* <MenuPopover
         open={openPopover}
         onClose={handleClosePopover}
         arrow="right-top"
@@ -145,7 +145,7 @@ export default function ProductTableRow({
           <Iconify icon="eva:edit-fill" />
           Edit
         </MenuItem>
-      </MenuPopover>
+      </MenuPopover> */}
 
       <ConfirmDialog
         open={openConfirm}
