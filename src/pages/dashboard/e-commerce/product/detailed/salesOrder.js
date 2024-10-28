@@ -19,8 +19,6 @@ import { useDispatch, useSelector } from '../../../../../redux/store';
 import { getProducts } from '../../../../../redux/slices/product';
 // routes
 import { PATH_DASHBOARD } from '../../../../../routes/paths';
-// layouts
-import DashboardLayout from '../../../../../layouts/dashboard';
 // components
 import { useSettingsContext } from '../../../../../components/settings';
 import {
@@ -38,7 +36,7 @@ import Iconify from '../../../../../components/iconify';
 import Scrollbar from '../../../../../components/scrollbar';
 import ConfirmDialog from '../../../../../components/confirm-dialog';
 // sections
-import { ProductTableRow, ProductTableToolbar } from '../../../../../sections/@dashboard/e-commerce/list';
+import { SalesOrderTableRow, SalesOrderTableToolbar } from '../../../../../sections/@dashboard/e-commerce/details/salesorder';
 
 // ----------------------------------------------------------------------
 
@@ -49,7 +47,7 @@ const TABLE_HEAD = [
   { id: 'Product', label: 'Product', align: 'center' },
   { id: 'Provider', label: 'Provider', align: 'center' },
   { id: 'Region', label: 'Region', align: 'center' },
-  { id: '', label: 'Sales Inc Vat', align: 'center' },
+  { id: 'vat', label: 'Sales Inc Vat', align: 'center' },
   { id: 'status', label: 'Quantity', align: 'center' },
 ];
 
@@ -212,7 +210,7 @@ export default function ProductSalesOrder() {
         /> */}
 
         <Card>
-          <ProductTableToolbar
+          <SalesOrderTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
@@ -264,7 +262,7 @@ export default function ProductSalesOrder() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <ProductTableRow
+                        <SalesOrderTableRow
                           key={row.name}
                           row={row}
                           selected={selected.includes(row.name)}
