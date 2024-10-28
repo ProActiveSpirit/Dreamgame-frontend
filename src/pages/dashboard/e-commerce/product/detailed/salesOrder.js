@@ -49,6 +49,7 @@ const TABLE_HEAD = [
   { id: 'Region', label: 'Region', align: 'center' },
   { id: 'vat', label: 'Sales Inc Vat', align: 'center' },
   { id: 'status', label: 'Quantity', align: 'center' },
+  { id: 'created', label: 'Created On', align: 'center' },
 ];
 
 
