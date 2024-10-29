@@ -78,8 +78,8 @@ export default function StockTableRow({
         <TableCell align="center"></TableCell>
         <TableCell align="center">
           {(() => {
-            const color = STATUS === "true" ? "primary" : "error";
-            return <Label color={color} variant="filled"></Label>;
+            const icon = STATUS === "true" ? "eva:checkmark-circle-2-fill" : "eva:checkmark-circle-2-fill";
+            return   <Iconify icon={icon} sx={{ color: 'primary.main' }} />
           })()}
         </TableCell>
 
