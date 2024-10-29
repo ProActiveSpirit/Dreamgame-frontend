@@ -37,8 +37,9 @@ import {
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog';
+import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 // sections
-import { ProductTableRow, ProductTableToolbar } from '../../../sections/@dashboard/e-commerce/list';
+import { StockTableRow, StockTableToolbar } from '../../../sections/@dashboard/e-commerce/stock';
 
 // ----------------------------------------------------------------------
 
@@ -199,30 +200,30 @@ export default function EcommerceProductStockPage() {
       </Head>
 
       <Container maxWidth={themeStretch ? false : 'mg'}>
-        {/* <CustomBreadcrumbs
-          heading="Product List"
+        <CustomBreadcrumbs
+          heading="Product Stock"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'E-Commerce',
               href: PATH_DASHBOARD.eCommerce.root,
             },
-            { name: 'List' },
+            { name: 'Stock' },
           ]}
-          action={
-            <Button
-              component={NextLink}
-              href={PATH_DASHBOARD.eCommerce.new}
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-            >
-              New Product
-            </Button>
-          }
-        /> */}
+          // action={
+          //   <Button
+          //     component={NextLink}
+          //     href={PATH_DASHBOARD.eCommerce.new}
+          //     variant="contained"
+          //     startIcon={<Iconify icon="eva:plus-fill" />}
+          //   >
+          //     New Product
+          //   </Button>
+          // }
+        />
 
         <Card>
-          <ProductTableToolbar
+          <StockTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
@@ -274,7 +275,7 @@ export default function EcommerceProductStockPage() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <ProductTableRow
+                        <StockTableRow
                           key={row.name}
                           row={row}
                           selected={selected.includes(row.name)}
