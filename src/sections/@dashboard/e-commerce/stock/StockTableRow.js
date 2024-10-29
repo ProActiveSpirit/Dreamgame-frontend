@@ -83,7 +83,7 @@ export default function StockTableRow({
           })()}
         </TableCell>
 
-        <TableCell align="center"  width={50}>
+        <TableCell align="center" width={50}>
           <IconButton  onClick={() => {
             handleOpenConfirm();
             handleClosePopover();
