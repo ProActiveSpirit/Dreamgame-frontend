@@ -58,7 +58,6 @@ export default function ProductTableRow({
         <TableCell align="center">{sku}</TableCell>
         <TableCell align="center">{publisher}</TableCell>
         <TableCell align="center">{status}</TableCell>
-        <TableCell align="center">{status}</TableCell>
 
         <TableCell align="center"  width={50}>
           <IconButton onClick={() => onEditRow()}>
