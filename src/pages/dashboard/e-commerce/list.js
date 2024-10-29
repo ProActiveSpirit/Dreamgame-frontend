@@ -37,6 +37,7 @@ import {
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog';
+import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 // sections
 import { ProductTableRow, ProductTableToolbar } from '../../../sections/@dashboard/e-commerce/list';
 
@@ -50,7 +51,7 @@ const TABLE_HEAD = [
   { id: 'region', label: 'REGION', align: 'center' },
   { id: 'sku', label: 'SKU', align: 'center' },
   { id: 'publisher', label: 'PUBLISHER', align: 'center' },
-  { id: 'status', label: 'STATUS', align: 'center' }
+  { id: 'status', label: 'STATUS', align: 'center' },
 ];
 
 // const STATUS_OPTIONS = [
@@ -198,7 +199,7 @@ export default function EcommerceProductListPage() {
       </Head>
 
       <Container maxWidth={themeStretch ? false : 'mg'}>
-        {/* <CustomBreadcrumbs
+        <CustomBreadcrumbs
           heading="Product List"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
@@ -208,17 +209,16 @@ export default function EcommerceProductListPage() {
             },
             { name: 'List' },
           ]}
-          action={
-            <Button
-              component={NextLink}
-              href={PATH_DASHBOARD.eCommerce.new}
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-            >
-              New Product
-            </Button>
-          }
-        /> */}
+          // action={
+          //   <Button
+          //     href={PATH_DASHBOARD.eCommerce.new}
+          //     variant="contained"
+          //     startIcon={<Iconify icon="eva:plus-fill" />}
+          //   >
+          //     New Product
+          //   </Button>
+          // }
+        />
 
         <Card>
           <ProductTableToolbar

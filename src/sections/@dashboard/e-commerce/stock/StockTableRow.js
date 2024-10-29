@@ -13,7 +13,7 @@ import Iconify from '../../../../components/iconify';
 
 // ----------------------------------------------------------------------
 
-ProductTableRow.propTypes = {
+StockTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
@@ -22,7 +22,7 @@ ProductTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
 };
 
-export default function ProductTableRow({
+export default function StockTableRow({
   row,
   selected,
   onSelectRow,
