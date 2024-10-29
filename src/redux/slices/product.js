@@ -198,7 +198,7 @@ export function getProducts() {
       const Nintendo = await axios.get('/api/nintendo/products');
       const Epay = await axios.get('/api/epay/products');
       // console.log('Nintendo : ', Nintendo.data.products);
-      console.log('Epay : ', Epay.data.products);
+      // console.log('Epay : ', Epay.data.products);
 
       let response = [...Nintendo.data.products, ...Epay.data.products];
       dispatch(slice.actions.getProductsSuccess(response));
