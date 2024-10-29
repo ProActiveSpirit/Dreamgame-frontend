@@ -14,7 +14,8 @@ import {
 // components
 import Iconify from '../../../../components/iconify';
 import ConfirmDialog from 'src/components/confirm-dialog';
-
+import { CustomAvatar } from 'src/components/custom-avatar';
+import Label from 'src/components/label';
 // ----------------------------------------------------------------------
 
 StockTableRow.propTypes = {
@@ -34,7 +35,7 @@ export default function StockTableRow({
   onDeleteRow,
   onViewRow,
 }) {
-  const { name, stock, provider, region, sku, publisher, status } = row;
+  const { NAME, STOCK, COST, PROVIDER, REGION, SKU, STATUS } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -62,18 +63,25 @@ export default function StockTableRow({
               onClick={onViewRow}
               sx={{ cursor: 'pointer' }}
             >
-              {name}
+              {NAME}
             </Link>
           </Stack>
         </TableCell>
 
-        <TableCell align="center">{stock}</TableCell>
-        <TableCell align="center">{provider}</TableCell>
-        <TableCell align="center">{region}</TableCell>
-        <TableCell align="center">{sku}</TableCell>
-        <TableCell align="center">{publisher}</TableCell>
-        <TableCell align="center">{status}</TableCell>
-        <TableCell align="center">{status}</TableCell>
+        <TableCell align="center">
+          {<Label color={"primary"} variant="filled">{STOCK}</Label>}
+        </TableCell>
+        <TableCell align="center">{COST}</TableCell>
+        <TableCell align="center">{PROVIDER}</TableCell>
+        <TableCell align="center">{REGION}</TableCell>
+        <TableCell align="center">{SKU}</TableCell>
+        <TableCell align="center"></TableCell>
+        <TableCell align="center">
+          {(() => {
+            const color = STATUS === "true" ? "primary" : "error";
+            return <Label color={color} variant="filled"></Label>;
+          })()}
+        </TableCell>
 
         <TableCell align="center"  width={50}>
           <IconButton  onClick={() => {

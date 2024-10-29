@@ -23,6 +23,7 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 import DashboardLayout from '../../../layouts/dashboard';
 // components
 import { useSettingsContext } from '../../../components/settings';
+import stockData from './stock.json';
 import {
   useTable,
   getComparator,
@@ -51,8 +52,8 @@ const TABLE_HEAD = [
   { id: 'PROVIDER', label: 'PROVIDER', align: 'center' },
   { id: 'REGION', label: 'REGION', align: 'center' },
   { id: 'SKU', label: 'SKU', align: 'center' },
-  { id: 'STATUS', label: 'STATUS', align: 'center' },
   { id: 'Prices', label: 'Prices', align: 'center' },
+  { id: 'STATUS', label: 'STATUS', align: 'center' },
 ];
 
 // const STATUS_OPTIONS = [
@@ -95,7 +96,9 @@ export default function EcommerceProductStockPage() {
 
   const dispatch = useDispatch();
 
-  const { products, isLoading } = useSelector((state) => state.product);
+  // const { products, isLoading } = useSelector((state) => state.product);
+
+  const [isLoading, setIsLoding] = useState(false);
 
   const [tableData, setTableData] = useState([]);
 
@@ -105,15 +108,19 @@ export default function EcommerceProductStockPage() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  useEffect(() => {
-    dispatch(getProducts());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(getProducts());
+  // }, [dispatch]);
+
+  // useEffect(() => {
+  //   if (products.length) {
+  //     setTableData(products);
+  //   }
+  // }, [products]);
 
   useEffect(() => {
-    if (products.length) {
-      setTableData(products);
-    }
-  }, [products]);
+    setTableData(stockData);
+  },[dispatch])
 
   const dataFiltered = applyFilter({
     inputData: tableData,
