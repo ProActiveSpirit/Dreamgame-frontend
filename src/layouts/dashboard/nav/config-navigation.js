@@ -98,16 +98,13 @@ const navConfig = [
         ],
       },
 
-      // BLOG
       {
-        title: 'SALES',
+        title: 'SALESORDERS',
         path: PATH_DASHBOARD.blog.root,
         icon: ICONS.booking,
         children: [
-          // { title: 'posts', path: PATH_DASHBOARD.blog.posts },
-          // { title: 'post', path: PATH_DASHBOARD.blog.demoView },
-          // { title: 'create', path: PATH_DASHBOARD.blog.new },
-          { title: 'Sales Orders', path: PATH_DASHBOARD.blog.new },
+          { title: 'SalesOrders', path: PATH_DASHBOARD.salesorder.list },
+          { title: 'Add', path: PATH_DASHBOARD.salesorder.add },
         ],
       },
       {
