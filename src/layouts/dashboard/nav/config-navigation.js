@@ -36,35 +36,35 @@ const ICONS = {
 const navConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
-  // {
-  //   subheader: 'general',
-  //   items: [
-  //     { title: 'app', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
-  //     { title: 'ecommerce', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
-  //     { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
-  //     { title: 'banking', path: PATH_DASHBOARD.general.banking, icon: ICONS.banking },
-  //     { title: 'booking', path: PATH_DASHBOARD.general.booking, icon: ICONS.booking },
-  //     { title: 'file', path: PATH_DASHBOARD.general.file, icon: ICONS.file },
-  //   ],
-  // },
+  {
+    // subheader: 'general',
+    items: [
+      { title: 'Dashboard', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
+      // { title: 'ecommerce', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
+      // { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
+      // { title: 'banking', path: PATH_DASHBOARD.general.banking, icon: ICONS.banking },
+      // { title: 'booking', path: PATH_DASHBOARD.general.booking, icon: ICONS.booking },
+      // { title: 'file', path: PATH_DASHBOARD.general.file, icon: ICONS.file },
+    ],
+  },
 
   // MANAGEMENT
   // ----------------------------------------------------------------------
   {
-    subheader: 'management',
+    // subheader: 'management',
     items: [
       // USER
       {
-        title: 'user',
+        title: 'CUSTOMERS',
         path: PATH_DASHBOARD.user.root,
         icon: ICONS.user,
         children: [
-          { title: 'profile', path: PATH_DASHBOARD.user.profile },
-          { title: 'cards', path: PATH_DASHBOARD.user.cards },
-          { title: 'list', path: PATH_DASHBOARD.user.list },
+          { title: 'Customers', path: PATH_DASHBOARD.user.profile },
+          // { title: 'cards', path: PATH_DASHBOARD.user.cards },
+          // { title: 'list', path: PATH_DASHBOARD.user.list },
           // { title: 'create', path: PATH_DASHBOARD.user.new },
           // { title: 'edit', path: PATH_DASHBOARD.user.demoEdit },
-          { title: 'account', path: PATH_DASHBOARD.user.account },
+          // { title: 'account', path: PATH_DASHBOARD.user.account },
         ],
       },
 
@@ -72,7 +72,7 @@ const navConfig = [
       {
         title: 'CATALOG',
         path: PATH_DASHBOARD.eCommerce.root,
-        icon: ICONS.cart,
+        icon: ICONS.menuItem,
         children: [
           { title: 'Product', path: PATH_DASHBOARD.eCommerce.list },
           { title: 'Stock', path: PATH_DASHBOARD.eCommerce.stock },
@@ -89,7 +89,7 @@ const navConfig = [
       {
         title: 'PURCHASES',
         path: PATH_DASHBOARD.invoice.root,
-        icon: ICONS.blog,
+        icon: ICONS.banking,
         children: [
           { title: 'list', path: PATH_DASHBOARD.invoice.list },
           { title: 'details', path: PATH_DASHBOARD.invoice.demoView },
@@ -102,27 +102,28 @@ const navConfig = [
       {
         title: 'SALES',
         path: PATH_DASHBOARD.blog.root,
-        icon: ICONS.blog,
+        icon: ICONS.booking,
         children: [
-          { title: 'posts', path: PATH_DASHBOARD.blog.posts },
-          { title: 'post', path: PATH_DASHBOARD.blog.demoView },
-          { title: 'create', path: PATH_DASHBOARD.blog.new },
+          // { title: 'posts', path: PATH_DASHBOARD.blog.posts },
+          // { title: 'post', path: PATH_DASHBOARD.blog.demoView },
+          // { title: 'create', path: PATH_DASHBOARD.blog.new },
+          { title: 'Sales Orders', path: PATH_DASHBOARD.blog.new },
         ],
       },
       {
         title: 'REPORTS',
         path: PATH_DASHBOARD.fileManager,
-        icon: ICONS.folder,
+        icon: ICONS.analytics,
       },
       {
         title: 'SETTINGS',
         path: PATH_DASHBOARD.fileManager,
-        icon: ICONS.folder,
+        icon: ICONS.kanban,
       },
       {
         title: 'CUSTOMER API',
         path: PATH_DASHBOARD.fileManager,
-        icon: ICONS.folder,
+        icon: ICONS.external,
       },
     ],
   },
