@@ -16,9 +16,12 @@ import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 // sections
 import {
-  ProductInformation,
-  ProductSalesOrder,
-  ProductPurchaseOrder,
+  OrderInformation,
+  BillingInformation,
+  PurchaseOrder,
+  RelatedOrder,
+  ActivationKeys,
+  Packages
 } from '../detailed';
 //_mock
 import {
@@ -28,6 +31,7 @@ import {
   _userGallery,
   _userFollowers,
 } from 'src/_mock/arrays';
+import SaleOrders from '../order.json';
 // ----------------------------------------------------------------------
 
 SalesOrderEditPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
@@ -37,7 +41,7 @@ SalesOrderEditPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayou
 export default function SalesOrderEditPage() {
   const { themeStretch } = useSettingsContext();
 
-  const [currentTab, setCurrentTab] = useState('Product Information');
+  const [currentTab, setCurrentTab] = useState('Order Information');
 
   const dispatch = useDispatch();
 
@@ -46,30 +50,48 @@ export default function SalesOrderEditPage() {
     query: { name },
   } = useRouter();
 
-  const currentProduct = useSelector((state) =>
-    state.product.products.find((product) => paramCase(product.name) === name)
-  );
+  const currentProduct = SaleOrders.find((order) => paramCase(order.NUMBER) === name);
 
-  useEffect(() => {
-    dispatch(getProducts());
-  }, [dispatch]);
-
+  // useEffect(() => {
+  //   dispatch(getProducts());
+  // }, [dispatch]);
   const TABS = [
     {
-      value: 'Product Information',
-      label: 'Product Information',
-      component: <ProductInformation />,
+      value: 'Order Information',
+      label: 'Order Information',
+      component: <OrderInformation />,
     },
     {
-      value: 'Sales Orders',
-      label: 'Sales Orders',
-      component: <ProductSalesOrder />,
+      value: 'Billing Information',
+      label: 'Billing Information',
+      component: <BillingInformation />,
     },
     {
-      value: 'Purchase Orders',
-      label: 'Purchase Orders',
+      value: 'PO Templates',
+      label: 'PO Templates',
       component: (
-        <ProductPurchaseOrder />
+        <PurchaseOrder />
+      ),
+    },
+    {
+      value: 'Related Purchase Orders',
+      label: 'Related Purchase Orders',
+      component: (
+        <RelatedOrder />
+      ),
+    },
+    {
+      value: 'Activation Keys',
+      label: 'Activation Keys',
+      component: (
+        <ActivationKeys />
+      ),
+    },
+    {
+      value: 'Packages',
+      label: 'Packages',
+      component: (
+        <Packages />
       ),
     }
   ];
@@ -83,9 +105,9 @@ export default function SalesOrderEditPage() {
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'Sales Order',
-              href: PATH_DASHBOARD.sa,
+              href: PATH_DASHBOARD.salesorder.list,
             },
-            { name: currentProduct?.name },
+            { name: currentProduct?.NUMBER },
           ]}
         />
         <Card

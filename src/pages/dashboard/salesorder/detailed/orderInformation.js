@@ -4,9 +4,9 @@ import { Box, Radio, TextField, Tooltip , RadioGroup, FormControlLabel, Containe
 import { Masonry } from '@mui/lab';
 
 import Label from 'src/components/label';
-import ExtendPrice from './extprice'
+// import ExtendPrice from './extprice'
 
-export default function ProductInformation({ variant }) {
+export default function OrderInformation({ variant }) {
   const [values, setValues] = useState({
     amount: '',
     password: '',
@@ -104,7 +104,7 @@ export default function ProductInformation({ variant }) {
         </Masonry>
 
       </Container>
-      <ExtendPrice />
+      {/* <ExtendPrice /> */}
     </>
   );
 }

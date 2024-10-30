@@ -98,7 +98,7 @@ export const PATH_DASHBOARD = {
   salesorder: {
     list: path(ROOTS_DASHBOARD, '/salesorder/list'),
     add: path(ROOTS_DASHBOARD, '/salesorder/add'),
-    view: (name) => path(ROOTS_DASHBOARD, `/salesorder/${name}`)
+    view: (name) => path(ROOTS_DASHBOARD, `/salesorder/${name}/edit`)
   },
 };
 
