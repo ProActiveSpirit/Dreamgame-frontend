@@ -53,10 +53,7 @@ export default function StockTableRow({
         <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>
-        <TableCell align="center">{NUMBER}</TableCell>
-        <TableCell align="center">{CUSTOMER}</TableCell>
-
-        <TableCell>
+        <TableCell align="center">
           <Stack direction="row" alignItems="center" spacing={2}>
             <Link
               noWrap
@@ -65,9 +62,23 @@ export default function StockTableRow({
               onClick={onViewRow}
               sx={{ cursor: 'pointer' }}
             >
+              {NUMBER}
+            </Link>
+          </Stack>
+        </TableCell>
+        <TableCell align="center">{CUSTOMER}</TableCell>
+
+        <TableCell>
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <Link
+              noWrap
+              color="inherit"
+              variant="subtitle2"
+              // onClick={onViewRow}
+              sx={{ cursor: 'pointer' }}
+            >
               <p>{PRODUCT}</p>
             </Link>
-            {/* <p style={{wordWrap:"break-word"}}>{DETAILED}</p> */}
           </Stack>
         </TableCell>
 
