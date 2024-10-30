@@ -12,6 +12,7 @@ import {
   MenuItem,
   TextField,
   Typography,
+  Autocomplete,
   InputAdornment,
   Card,
   Table,
@@ -42,6 +43,8 @@ import Scrollbar from 'src/components/scrollbar';
 import ConfirmDialog from 'src/components/confirm-dialog';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import orderData from './order.json';
+import { DateTimePicker} from '@mui/x-date-pickers';
+
 // sections
 import { SalesOrderTableRow, SalesOrderTableToolbar } from 'src/sections/@dashboard/salesorder/list';
 
@@ -304,117 +307,28 @@ export default function SalesOrderAddPage() {
           >
             <Grid item xs={5} md={6}>
               <Stack spacing={2}>
-                <Block>
-                  <RHFTextField name="fullName" label="Full Name" />
-                </Block>
-
-                <Block>
-                  <RHFTextField name="email" label="Email address" />
-                </Block>
-
-                <Block>
-                  <RHFTextField
-                    name="age"
-                    label="Age"
-                    onChange={(event) =>
-                      setValue('age', Number(event.target.value), { shouldValidate: true })
-                    }
-                    InputProps={{
-                      type: 'number',
-                    }}
-                  />
-                </Block>
-
-                <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
-                  <Controller
-                    name="startDate"
-                    control={control}
-                    render={({ field, fieldState: { error } }) => (
-                      <DatePicker
-                        {...field}
-                        label="Start date"
-                        inputFormat="dd/MM/yyyy"
-                        renderInput={(params) => (
-                          <TextField
-                            fullWidth
-                            {...params}
-                            error={!!error}
-                            helperText={error?.message}
-                          />
-                        )}
-                      />
-                    )}
-                  />
-
-                  <Controller
-                    name="endDate"
-                    control={control}
-                    render={({ field, fieldState: { error } }) => (
-                      <DatePicker
-                        {...field}
-                        label="End date"
-                        inputFormat="dd/MM/yyyy"
-                        renderInput={(params) => (
-                          <TextField
-                            fullWidth
-                            {...params}
-                            error={!!error}
-                            helperText={error?.message}
-                          />
-                        )}
-                      />
-                    )}
-                  />
-                </Stack>
-
-                <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
-                  <Block>
-                    <RHFTextField
-                      name="password"
-                      label="Password"
-                      type={showPassword ? 'text' : 'password'}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                              <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
-                            </IconButton>
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  </Block>
-
-                  <Block>
-                    <RHFTextField
-                      name="confirmPassword"
-                      label="Confirm Password"
-                      type={showPassword ? 'text' : 'password'}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                              <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
-                            </IconButton>
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  </Block>
-                </Stack>
-
-                <Block label="RHFAutocomplete">
-                  <RHFAutocomplete
-                    name="autocomplete"
-                    label="Autocomplete"
-                    options={OPTIONS}
-                    getOptionLabel={(option) => option.label}
-                    isOptionEqualToValue={(option, value) => option.value === value.value}
-                  />
-                </Block>
+              <Block title="Basic">
+                <DateTimePicker
+                  renderInput={(props) => <TextField {...props} fullWidth />}
+                  label="Order Date"
+                  // value={value}
+                  // onChange={setValue}
+                />
+              </Block>
 
                 <Block label="RHFSelect">
-                  <RHFSelect name="singleSelect" label="Single select">
+                  <RHFSelect name="singleSelect" label="Customer">
+                    <MenuItem value="">None</MenuItem>
+                    <Divider sx={{ borderStyle: 'dashed' }} />
+                    {OPTIONS.map((option) => (
+                      <MenuItem key={option.value} value={option.label}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </RHFSelect>
+                </Block>
+                <Block label="RHFSelect">
+                  <RHFSelect name="singleSelect" label="Product">
                     <MenuItem value="">None</MenuItem>
                     <Divider sx={{ borderStyle: 'dashed' }} />
                     {OPTIONS.map((option) => (
@@ -425,19 +339,111 @@ export default function SalesOrderAddPage() {
                   </RHFSelect>
                 </Block>
 
-                <Block label="RHFMultiSelect">
-                  <RHFMultiSelect
-                    chip
-                    checkbox
-                    name="multiSelect"
-                    label="Multi select"
-                    options={OPTIONS}
-                  />
-                </Block>
+                <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
+                  <Block title="Basic">
+                    <DateTimePicker
+                      renderInput={(props) => <TextField {...props} fullWidth />}
+                      label="Start Date"
+                      // value={value}
+                      // onChange={setValue}
+                    />
+                  </Block>
 
-                <Block label="RHFEditor">
-                  <RHFEditor simple name="editor" sx={{ height: 200 }} />
-                </Block>
+                  <Block title="Basic">
+                    <DateTimePicker
+                      renderInput={(props) => <TextField {...props} fullWidth />}
+                      label="End Date"
+                      // value={value}
+                      // onChange={setValue}
+                    />
+                 </Block>
+                </Stack>
+                <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
+                  <Block>
+                    <RHFTextField
+                      name="age"
+                      label="Quantity"
+                      onChange={(event) =>
+                        setValue('age', Number(event.target.value), { shouldValidate: true })
+                      }
+                      InputProps={{
+                        type: 'number',
+                      }}
+                    />
+                  </Block>
+                  <Block>
+                    <TextField
+                      variant={"outlined"}
+                      fullWidth
+                      // value={values.weight}
+                      // onChange={handleChange('weight')}
+                      // helperText="Weight"
+                      InputProps={{
+                        endAdornment: <InputAdornment position="end">Kg</InputAdornment>,
+                      }}
+                    />
+                  </Block>
+                </Stack>
+                <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
+                  <Block label="RHFAutocomplete">
+                    <Autocomplete
+                      fullWidth
+                      value={"EUR"}
+                      options={["EUR","Dollar"]}
+                      onChange={(event, newValue) => {
+                        setValue(newValue);
+                      }}
+                      // // inputValue={inputValue}
+                      // onInputChange={(event, newInputValue) => {
+                      //   setInputValue(newInputValue);
+                      // }}
+                      renderInput={(params) => <TextField {...params} label="Sales Currency" />}
+                    />
+                  </Block>
+                  <Block>
+                    <TextField
+                      variant={"outlined"}
+                      fullWidth
+                      // value={values.weight}
+                      // onChange={handleChange('weight')}
+                      label="Sales Ext Vat"
+                      // helperText="Weight"
+                      InputProps={{
+                        endAdornment: <InputAdornment position="end">EUR</InputAdornment>,
+                      }}
+                    />
+                  </Block>
+                </Stack>
+                <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
+                  <Block label="RHFAutocomplete">
+                    <Autocomplete
+                      fullWidth
+                      value={"EUR"}
+                      options={["EUR","Dollar"]}
+                      onChange={(event, newValue) => {
+                        setValue(newValue);
+                      }}
+                      // // inputValue={inputValue}
+                      // onInputChange={(event, newInputValue) => {
+                      //   setInputValue(newInputValue);
+                      // }}
+                      renderInput={(params) => <TextField {...params} label="Sales Vat" />}
+                    />
+                  </Block>
+                  <Block>
+                    <TextField
+                      variant={"outlined"}
+                      fullWidth
+                      // value={values.weight}
+                      // onChange={handleChange('weight')}
+                      label="Sales Inc Vat"
+                      // helperText="Weight"
+                      InputProps={{
+                        endAdornment: <InputAdornment position="end">EUR</InputAdornment>,
+                      }}
+                    />
+                  </Block>
+                </Stack>
                 <LoadingButton
                   fullWidth
                   color="info"
@@ -446,7 +452,7 @@ export default function SalesOrderAddPage() {
                   variant="contained"
                   loading={isSubmitting}
                 >
-                  Submit to check
+                  Submit to add
                 </LoadingButton>
               </Stack>
             </Grid>
