@@ -36,26 +36,26 @@ import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 import ConfirmDialog from 'src/components/confirm-dialog';
 // sections
-import { SalesOrderTableRow, SalesOrderTableToolbar } from 'src/sections/@dashboard/e-commerce/details/salesorder';
+import { PurchaseOrderTableRow, PurchaseOrderTableToolbar } from 'src/sections/@dashboard/e-commerce/details/purchase';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'Number', label: 'Sales Order Number', align: 'left', width: 300 },
-  { id: 'Customer', label: 'Customer', align: 'center' },
-  // { id: 'price', label: 'PRICE', align: 'center' },
+  { id: 'number', label: 'Purchase Order Number', align: 'left', width: 300 },
   { id: 'Product', label: 'Product', align: 'center' },
   { id: 'Provider', label: 'Provider', align: 'center' },
   { id: 'Region', label: 'Region', align: 'center' },
-  { id: 'vat', label: 'Sales Inc Vat', align: 'center' },
-  { id: 'status', label: 'Quantity', align: 'center' },
+  { id: 'CostIncVat', label: 'Cost Inc Vat', align: 'center' },
+  { id: 'Quantity', label: 'Quantity', align: 'center' },
+  { id: 'TotalCostIncVat', label: 'Total Cost Inc Vat', align: 'center' },
   { id: 'created', label: 'Created On', align: 'center' },
+
 ];
 
 
 // ----------------------------------------------------------------------
 
-export default function PurchaseOrder() {
+export default function ActivationKeys() {
   const {
     dense,
     page,
@@ -159,7 +159,7 @@ export default function PurchaseOrder() {
     if (page > 0) {
       if (selectedRows.length === dataInPage.length) {
         setPage(page - 1);
-      } else if (selectedRows.length === dataFiltered.length) { 
+      } else if (selectedRows.length === dataFiltered.length) {
         setPage(0);
       } else if (selectedRows.length > dataInPage.length) {
         const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
@@ -211,7 +211,7 @@ export default function PurchaseOrder() {
         /> */}
 
         <Card>
-          <SalesOrderTableToolbar
+          <PurchaseOrderTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
@@ -263,7 +263,7 @@ export default function PurchaseOrder() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <SalesOrderTableRow
+                        <PurchaseOrderTableRow
                           key={row.name}
                           row={row}
                           selected={selected.includes(row.name)}

@@ -15,12 +15,12 @@ import {
   TableContainer,
 } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from '../../../../../redux/store';
-import { getProducts } from '../../../../../redux/slices/product';
+import { useDispatch, useSelector } from 'src/redux/store';
+import { getProducts } from 'src/redux/slices/product';
 // routes
-import { PATH_DASHBOARD } from '../../../../../routes/paths';
+import { PATH_DASHBOARD } from 'src/routes/paths';
 // components
-import { useSettingsContext } from '../../../../../components/settings';
+import { useSettingsContext } from 'src/components/settings';
 import {
   useTable,
   getComparator,
@@ -31,31 +31,31 @@ import {
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
-} from '../../../../../components/table';
-import Iconify from '../../../../../components/iconify';
-import Scrollbar from '../../../../../components/scrollbar';
-import ConfirmDialog from '../../../../../components/confirm-dialog';
+} from 'src/components/table';
+import Iconify from 'src/components/iconify';
+import Scrollbar from 'src/components/scrollbar';
+import ConfirmDialog from 'src/components/confirm-dialog';
 // sections
-import { SalesOrderTableRow, SalesOrderTableToolbar } from '../../../../../sections/@dashboard/e-commerce/details/salesorder';
+import { PurchaseOrderTableRow, PurchaseOrderTableToolbar } from 'src/sections/@dashboard/e-commerce/details/purchase';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'Number', label: 'Sales Order Number', align: 'left', width: 300 },
-  { id: 'Customer', label: 'Customer', align: 'center' },
-  // { id: 'price', label: 'PRICE', align: 'center' },
+  { id: 'number', label: 'Purchase Order Number', align: 'left', width: 300 },
   { id: 'Product', label: 'Product', align: 'center' },
   { id: 'Provider', label: 'Provider', align: 'center' },
   { id: 'Region', label: 'Region', align: 'center' },
-  { id: 'vat', label: 'Sales Inc Vat', align: 'center' },
-  { id: 'status', label: 'Quantity', align: 'center' },
+  { id: 'CostIncVat', label: 'Cost Inc Vat', align: 'center' },
+  { id: 'Quantity', label: 'Quantity', align: 'center' },
+  { id: 'TotalCostIncVat', label: 'Total Cost Inc Vat', align: 'center' },
   { id: 'created', label: 'Created On', align: 'center' },
+
 ];
 
 
 // ----------------------------------------------------------------------
 
-export default function ProductSalesOrder() {
+export default function BillingInformation() {
   const {
     dense,
     page,
@@ -159,7 +159,7 @@ export default function ProductSalesOrder() {
     if (page > 0) {
       if (selectedRows.length === dataInPage.length) {
         setPage(page - 1);
-      } else if (selectedRows.length === dataFiltered.length) { 
+      } else if (selectedRows.length === dataFiltered.length) {
         setPage(0);
       } else if (selectedRows.length > dataInPage.length) {
         const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
@@ -211,7 +211,7 @@ export default function ProductSalesOrder() {
         /> */}
 
         <Card>
-          <SalesOrderTableToolbar
+          <PurchaseOrderTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
@@ -263,7 +263,7 @@ export default function ProductSalesOrder() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <SalesOrderTableRow
+                        <PurchaseOrderTableRow
                           key={row.name}
                           row={row}
                           selected={selected.includes(row.name)}

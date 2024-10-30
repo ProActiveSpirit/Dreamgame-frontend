@@ -14,11 +14,10 @@ import {
 // components
 import Iconify from '../../../../components/iconify';
 import ConfirmDialog from 'src/components/confirm-dialog';
-import { CustomAvatar } from 'src/components/custom-avatar';
 import Label from 'src/components/label';
 // ----------------------------------------------------------------------
 
-StockTableRow.propTypes = {
+SalesOrderTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
@@ -27,7 +26,7 @@ StockTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
 };
 
-export default function StockTableRow({
+export default function SalesOrderTableRow({
   row,
   selected,
   onSelectRow,
