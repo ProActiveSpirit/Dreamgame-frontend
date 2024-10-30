@@ -459,7 +459,7 @@ export default function SalesOrderAddPage() {
           </Grid>
         </FormProvider>
 
-        <Card>
+        {/* <Card>
           <SalesOrderTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -547,7 +547,7 @@ export default function SalesOrderAddPage() {
             dense={dense}
             onChangeDense={onChangeDense}
           />
-        </Card>
+        </Card> */}
       </Container>
 
       <ConfirmDialog

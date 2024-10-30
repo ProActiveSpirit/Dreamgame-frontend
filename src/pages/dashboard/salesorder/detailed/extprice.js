@@ -15,14 +15,12 @@ import {
   TableContainer,
 } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from '../../../redux/store';
-import { getProducts } from '../../../redux/slices/product';
+import { useDispatch, useSelector } from '../../../../../redux/store';
+import { getProducts } from '../../../../../redux/slices/product';
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
-// layouts
-import DashboardLayout from '../../../layouts/dashboard';
+import { PATH_DASHBOARD } from '../../../../../routes/paths';
 // components
-import { useSettingsContext } from '../../../components/settings';
+import { useSettingsContext } from '../../../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -33,42 +31,31 @@ import {
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
-} from '../../../components/table';
-import Iconify from '../../../components/iconify';
-import Scrollbar from '../../../components/scrollbar';
-import ConfirmDialog from '../../../components/confirm-dialog';
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
-import orderData from './order.json';
+} from '../../../../../components/table';
+import Iconify from '../../../../../components/iconify';
+import Scrollbar from '../../../../../components/scrollbar';
+import ConfirmDialog from '../../../../../components/confirm-dialog';
 // sections
-import { SalesOrderTableRow, SalesOrderTableToolbar } from '../../../sections/@dashboard/salesorder/list';
+import { PurchaseOrderTableRow, PurchaseOrderTableToolbar } from '../../../../../sections/@dashboard/e-commerce/details/purchase';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'NUMBER', label: 'SALES ORDER NUMBER', align: 'center'},
-  { id: 'CUSTOMER', label: 'CUSTOMER', align: 'center' },
-  { id: 'PRODUCT', label: 'PRODUCT', align: 'center' , width: 300 },
-  { id: 'PRICE', label: 'PRODUCT PRICE', align: 'center' },
-  { id: 'QUANTITY', label: 'QUANTITY', align: 'center' },
-  { id: 'ORDERTOTAL', label: 'ORDER TOTAL', align: 'center' },
-  { id: 'CREATEDON', label: 'CREATED ON', align: 'center' },
-  { id: 'STATUS', label: 'STATUS', align: 'center' },
-  { id: 'N_A', label: 'N/A', align: 'center' },
+  { id: 'Region', label: 'Region', align: 'left' },
+  { id: 'EUR', label: 'Cost-EUR', align: 'center' },
+  { id: 'ExcVat', label: 'Cost Exc Vat', align: 'center' },
+  { id: 'CostVat', label: 'Cost Vat', align: 'center' },
+  { id: 'CostIncVat', label: 'Cost Inc Vat', align: 'center' },
+  { id: 'SalesVat', label: 'Sales Exc Vat', align: 'center' },
+  { id: 'SalesIncVat', label: 'Sales Inc Vat', align: 'center' },
+  { id: 'SRPIncVat', label: 'SRP Inc Vat', align: 'center' },
+
 ];
 
-// const STATUS_OPTIONS = [
-//   { value: 'in_stock', label: 'In stock' },
-//   { value: 'low_stock', label: 'Low stock' },
-//   { value: 'out_of_stock', label: 'Out of stock' },
-// ];
 
 // ----------------------------------------------------------------------
 
-SalesOrderListPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
-
-// ----------------------------------------------------------------------
-
-export default function SalesOrderListPage() {
+export default function ExtendPrice() {
   const {
     dense,
     page,
@@ -106,19 +93,15 @@ export default function SalesOrderListPage() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-//   useEffect(() => {
-//     dispatch(getProducts());
-//   }, [dispatch]);
-
-//   useEffect(() => {
-//     if (products.length) {
-//       setTableData(products);
-//     }
-//   }, [products]);
+  useEffect(() => {
+    dispatch(getProducts());
+  }, [dispatch]);
 
   useEffect(() => {
-    setTableData(orderData);
-  },[dispatch])
+    if (products.length) {
+      setTableData(products);
+    }
+  }, [products]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -157,7 +140,7 @@ export default function SalesOrderListPage() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.NUMBER !== id);
+    const deleteRow = tableData.filter((row) => row.name !== id);
     setSelected([]);
     setTableData(deleteRow);
 
@@ -169,7 +152,7 @@ export default function SalesOrderListPage() {
   };
 
   const handleDeleteRows = (selectedRows) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row.NUMBER));
+    const deleteRows = tableData.filter((row) => !selectedRows.includes(row.name));
     setSelected([]);
     setTableData(deleteRows);
 
@@ -190,7 +173,7 @@ export default function SalesOrderListPage() {
   };
 
   const handleViewRow = (id) => {
-    push(PATH_DASHBOARD.salesorder.view(paramCase(id)));
+    push(PATH_DASHBOARD.eCommerce.view(paramCase(id)));
   };
 
   const handleResetFilter = () => {
@@ -200,25 +183,31 @@ export default function SalesOrderListPage() {
 
   return (
     <>
-      <Head>
-        <title> Ecommerce: Product List | Minimal UI</title>
-      </Head>
-
       <Container maxWidth={themeStretch ? false : 'mg'}>
-        <CustomBreadcrumbs
-          heading="SalesOrder List"
+        {/* <CustomBreadcrumbs
+          heading="Product List"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'SalesOrder',
-              href: PATH_DASHBOARD.salesorder.list,
+              name: 'E-Commerce',
+              href: PATH_DASHBOARD.eCommerce.root,
             },
             { name: 'List' },
           ]}
-        />
+          action={
+            <Button
+              component={NextLink}
+              href={PATH_DASHBOARD.eCommerce.new}
+              variant="contained"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+            >
+              New Product
+            </Button>
+          }
+        /> */}
 
         <Card>
-          <SalesOrderTableToolbar
+          <PurchaseOrderTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
@@ -236,7 +225,7 @@ export default function SalesOrderListPage() {
               onSelectAllRows={(checked) =>
                 onSelectAllRows(
                   checked,
-                  tableData.map((row) => row.NUMBER)
+                  tableData.map((row) => row.name)
                 )
               }
               action={
@@ -260,7 +249,7 @@ export default function SalesOrderListPage() {
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.NUMBER)
+                      tableData.map((row) => row.name)
                     )
                   }
                 />
@@ -270,14 +259,14 @@ export default function SalesOrderListPage() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <SalesOrderTableRow
-                          key={row.NUMBER}
+                        <PurchaseOrderTableRow
+                          key={row.name}
                           row={row}
-                          selected={selected.includes(row.NUMBER)}
-                          onSelectRow={() => onSelectRow(row.NUMBER)}
-                          onDeleteRow={() => handleDeleteRow(row.NUMBER)}
-                          onEditRow={() => handleEditRow(row.NUMBER)}
-                          onViewRow={() => handleViewRow(row.NUMBER)}
+                          selected={selected.includes(row.name)}
+                          onSelectRow={() => onSelectRow(row.name)}
+                          onDeleteRow={() => handleDeleteRow(row.name)}
+                          onEditRow={() => handleEditRow(row.name)}
+                          onViewRow={() => handleViewRow(row.name)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
