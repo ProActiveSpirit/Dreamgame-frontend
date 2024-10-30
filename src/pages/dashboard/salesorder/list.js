@@ -215,15 +215,6 @@ export default function SalesOrderListPage() {
             },
             { name: 'List' },
           ]}
-          // action={
-          //   <Button
-          //     href={PATH_DASHBOARD.eCommerce.new}
-          //     variant="contained"
-          //     startIcon={<Iconify icon="eva:plus-fill" />}
-          //   >
-          //     New Product
-          //   </Button>
-          // }
         />
 
         <Card>
