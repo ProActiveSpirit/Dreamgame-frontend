@@ -19,8 +19,6 @@ import { useDispatch, useSelector } from 'src/redux/store';
 import { getProducts } from 'src/redux/slices/product';
 // routes
 import { PATH_DASHBOARD } from 'src/routes/paths';
-// layouts
-import DashboardLayout from 'src/layouts/dashboard';
 // components
 import { useSettingsContext } from 'src/components/settings';
 import {
@@ -37,40 +35,27 @@ import {
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 import ConfirmDialog from 'src/components/confirm-dialog';
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
-import orderData from './relatedorder.json';
 // sections
-import { RelatedOrderTableRow, RelatedOrderTableToolbar } from 'src/sections/@dashboard/salesorder/detailed/relatedorder';
+import { PurchaseOrderTableRow, PurchaseOrderTableToolbar } from 'src/sections/@dashboard/e-commerce/details/purchase';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'NUMBER', label: 'SALES ORDER NUMBER', align: 'center'},
-  { id: 'PRODUCT', label: 'PRODUCT', align: 'center'},
-  { id: 'PROVIDER', label: 'PROVIDER', align: 'center' },
-  { id: 'REGION', label: 'REGION', align: 'center' },
-  { id: 'INCVAT', label: 'COST INC VAT', align: 'center' },
-  { id: 'QUANTITY', label: 'QUANTITY', align: 'center' },
-  { id: 'STOCKING', label: 'STOCKING', align: 'center' },
-  { id: 'TOTALVAT', label: 'TOTAL COST INC VAT', align: 'center' },
-  { id: 'JOB', label: 'JOB', align: 'center' },
-  { id: 'STATUS', label: 'STATUS', align: 'center' },
-  { id: 'DATE', label: 'START/END', align: 'center', width: 300 },
+  { id: 'Region', label: 'Region', align: 'left' },
+  { id: 'EUR', label: 'Cost-EUR', align: 'center' },
+  { id: 'ExcVat', label: 'Cost Exc Vat', align: 'center' },
+  { id: 'CostVat', label: 'Cost Vat', align: 'center' },
+  { id: 'CostIncVat', label: 'Cost Inc Vat', align: 'center' },
+  { id: 'SalesVat', label: 'Sales Exc Vat', align: 'center' },
+  { id: 'SalesIncVat', label: 'Sales Inc Vat', align: 'center' },
+  { id: 'SRPIncVat', label: 'SRP Inc Vat', align: 'center' },
+
 ];
 
-// const STATUS_OPTIONS = [
-//   { value: 'in_stock', label: 'In stock' },
-//   { value: 'low_stock', label: 'Low stock' },
-//   { value: 'out_of_stock', label: 'Out of stock' },
-// ];
 
 // ----------------------------------------------------------------------
 
-RelatedOrderListPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
-
-// ----------------------------------------------------------------------
-
-export default function RelatedOrderListPage() {
+export default function ExtendPrice() {
   const {
     dense,
     page,
@@ -108,19 +93,15 @@ export default function RelatedOrderListPage() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-//   useEffect(() => {
-//     dispatch(getProducts());
-//   }, [dispatch]);
-
-//   useEffect(() => {
-//     if (products.length) {
-//       setTableData(products);
-//     }
-//   }, [products]);
+  useEffect(() => {
+    dispatch(getProducts());
+  }, [dispatch]);
 
   useEffect(() => {
-    setTableData(orderData);
-  },[dispatch])
+    if (products.length) {
+      setTableData(products);
+    }
+  }, [products]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -159,7 +140,7 @@ export default function RelatedOrderListPage() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.NUMBER !== id);
+    const deleteRow = tableData.filter((row) => row.name !== id);
     setSelected([]);
     setTableData(deleteRow);
 
@@ -171,7 +152,7 @@ export default function RelatedOrderListPage() {
   };
 
   const handleDeleteRows = (selectedRows) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row.NUMBER));
+    const deleteRows = tableData.filter((row) => !selectedRows.includes(row.name));
     setSelected([]);
     setTableData(deleteRows);
 
@@ -192,7 +173,7 @@ export default function RelatedOrderListPage() {
   };
 
   const handleViewRow = (id) => {
-    push(PATH_DASHBOARD.salesorder.view(paramCase(id)));
+    push(PATH_DASHBOARD.eCommerce.view(paramCase(id)));
   };
 
   const handleResetFilter = () => {
@@ -202,30 +183,28 @@ export default function RelatedOrderListPage() {
 
   return (
     <>
-      <Head>
-        <title> Ecommerce: Product List | Minimal UI</title>
-      </Head>
-
       <Container maxWidth={themeStretch ? false : 'mg'}>
+
         <Card>
-          {/* <SalesOrderTableToolbar
+          <PurchaseOrderTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
             onFilterStatus={handleFilterStatus}
+            // statusOptions={STATUS_OPTIONS}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
-          /> */}
+          />
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            {/* <TableSelectedAction
+            <TableSelectedAction
               dense={dense}
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
                 onSelectAllRows(
                   checked,
-                  tableData.map((row) => row.NUMBER)
+                  tableData.map((row) => row.name)
                 )
               }
               action={
@@ -235,7 +214,7 @@ export default function RelatedOrderListPage() {
                   </IconButton>
                 </Tooltip>
               }
-            /> */}
+            />
 
             <Scrollbar>
               <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 1200 }}>
@@ -246,12 +225,12 @@ export default function RelatedOrderListPage() {
                   rowCount={tableData.length}
                   numSelected={selected.length}
                   onSort={onSort}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row) => row.NUMBER)
-                  //   )
-                  // }
+                  onSelectAllRows={(checked) =>
+                    onSelectAllRows(
+                      checked,
+                      tableData.map((row) => row.name)
+                    )
+                  }
                 />
 
                 <TableBody>
@@ -259,14 +238,14 @@ export default function RelatedOrderListPage() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <RelatedOrderTableRow
-                          key={row.NUMBER}
+                        <PurchaseOrderTableRow
+                          key={row.name}
                           row={row}
-                          selected={selected.includes(row.NUMBER)}
-                          onSelectRow={() => onSelectRow(row.NUMBER)}
-                          onDeleteRow={() => handleDeleteRow(row.NUMBER)}
-                          onEditRow={() => handleEditRow(row.NUMBER)}
-                          onViewRow={() => handleViewRow(row.NUMBER)}
+                          selected={selected.includes(row.name)}
+                          onSelectRow={() => onSelectRow(row.name)}
+                          onDeleteRow={() => handleDeleteRow(row.name)}
+                          onEditRow={() => handleEditRow(row.name)}
+                          onViewRow={() => handleViewRow(row.name)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
