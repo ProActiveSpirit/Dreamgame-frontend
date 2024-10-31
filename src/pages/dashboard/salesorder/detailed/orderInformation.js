@@ -4,6 +4,8 @@ import { Box, Radio, TextField, Tooltip , RadioGroup, FormControlLabel, Containe
 import { Masonry } from '@mui/lab';
 
 import Label from 'src/components/label';
+import { DateTimePicker} from '@mui/x-date-pickers';
+
 // import ExtendPrice from './extprice'
 
 export default function OrderInformation({ variant }) {
@@ -23,84 +25,38 @@ export default function OrderInformation({ variant }) {
     <>
       <Container maxWidth={'md'} >
         <Masonry columns={{ xs: 1}} spacing={4}>
+          <Label color={'warning'} variant="filled">
+            {"Pending"}
+          </Label>
           <TextField
             variant={variant}
             required
             fullWidth
-            label="Name"
-            size="small"
-            defaultValue="13000 CALL OF DUTY POINTS (MV IIII, MIW II, Warzone) - [XBOX Series X|S /XBOX One]"
+            label="Customer"
+            defaultValue="Dreamgame"
           />
-          <Box
-            sx={{
-              p: 1,
-              display: 'flex',
-              flexWrap: 'wrap',
-              alignItems: 'left',
-              justifyContent: 'left',
-              '& > *': { mx: 0.5 },
-            }}
-          >
-              {COLORS.map((color, index) => (
-                <Tooltip key={color} title={Status[index]}>
-                  <Label color={color} variant="filled">
-                    {Stock[index]}
-                  </Label>
-                </Tooltip>
-              ))}
-          </Box>
+
+          <DateTimePicker
+            renderInput={(props) => <TextField {...props} fullWidth />}
+            label="Start Date"
+            // value={value}
+            // onChange={setValue}
+          />
+
+          <DateTimePicker
+            renderInput={(props) => <TextField {...props} fullWidth />}
+            label="Created On"
+            // value={value}
+            // onChange={setValue}
+          />
+
           <TextField
             variant={variant}
             required
             fullWidth
             label="Provider"
-            size="small"
             defaultValue=""
           />
-
-          <TextField
-            variant={variant}
-            required
-            fullWidth
-            label="Sku"
-            size="small"
-            defaultValue="8806188752425"
-          />
-
-          <TextField
-            variant={variant}
-            required
-            fullWidth
-            label="Publisher"
-            size="small"
-            defaultValue="Activision"
-          />
-
-          <TextField
-            variant={variant}
-            required
-            fullWidth
-            label="Provider Status"
-            size="small"
-            defaultValue=""
-          />
-
-          <Box
-            sx={{
-              p: 1,
-              display: 'flex',
-              flexWrap: 'wrap',
-              alignItems: 'left',
-              justifyContent: 'left',
-              '& > *': { mx: 2 },
-            }}
-          >
-            <RadioGroup row defaultValue="g">
-              <FormControlLabel value="g" control={<Radio />} label="Yes" />
-              <FormControlLabel value="p" control={<Radio size="small" />} label="No" />
-            </RadioGroup>
-          </Box>
-
         </Masonry>
 
       </Container>
