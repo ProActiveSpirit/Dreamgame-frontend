@@ -26,7 +26,7 @@ export default function ProductInformation({ variant }) {
           <TextField
             variant={variant}
             required
-            fullWidth
+            // fullWidth
             label="Name"
             size="small"
             defaultValue="13000 CALL OF DUTY POINTS (MV IIII, MIW II, Warzone) - [XBOX Series X|S /XBOX One]"

@@ -1,10 +1,12 @@
 import { useState } from 'react';
 // @mui
-import { Box, Radio, TextField, Tooltip , RadioGroup, FormControlLabel, Container} from '@mui/material';
+import { Box, Radio, TextField, Stack , RadioGroup, FormControlLabel, Container} from '@mui/material';
 import { Masonry } from '@mui/lab';
 
 import Label from 'src/components/label';
 import { DateTimePicker} from '@mui/x-date-pickers';
+import InvoiceNewEditDetails from 'src/sections/@dashboard/invoice/form/InvoiceNewEditDetails';
+import { height } from '@mui/system';
 
 // import ExtendPrice from './extprice'
 
@@ -25,13 +27,23 @@ export default function OrderInformation({ variant }) {
     <>
       <Container maxWidth={'md'} >
         <Masonry columns={{ xs: 1}} spacing={4}>
-          <Label color={'warning'} variant="filled">
-            {"Pending"}
-          </Label>
+          <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
+            <Label color={'warning'} variant="filled" style={{height:36}}>
+              {"Pending"}
+            </Label>
+            <TextField
+              variant={variant}
+              required
+              // fullWidth
+              size="small"
+              label="Provider"
+              defaultValue=""
+            />
+          </Stack>
           <TextField
             variant={variant}
             required
-            fullWidth
+            // fullWidth
             label="Customer"
             defaultValue="Dreamgame"
           />
@@ -50,16 +62,12 @@ export default function OrderInformation({ variant }) {
             // onChange={setValue}
           />
 
-          <TextField
-            variant={variant}
-            required
-            fullWidth
-            label="Provider"
-            defaultValue=""
-          />
+
         </Masonry>
 
       </Container>
+      {/* <InvoiceNewEditDetails /> */}
+
       {/* <ExtendPrice /> */}
     </>
   );
