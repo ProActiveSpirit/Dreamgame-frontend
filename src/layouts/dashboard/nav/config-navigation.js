@@ -107,7 +107,7 @@ const navConfig = [
       },
       {
         title: 'REPORTS',
-        path: PATH_DASHBOARD.fileManager,
+        path: PATH_DASHBOARD.report,
         icon: ICONS.analytics,
       },
       {

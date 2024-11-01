@@ -39,6 +39,7 @@ export const PATH_DASHBOARD = {
   kanban: path(ROOTS_DASHBOARD, '/kanban'),
   calendar: path(ROOTS_DASHBOARD, '/calendar'),
   fileManager: path(ROOTS_DASHBOARD, '/files-manager'),
+  report: path(ROOTS_DASHBOARD, '/analytics'),
   permissionDenied: path(ROOTS_DASHBOARD, '/permission-denied'),
   blank: path(ROOTS_DASHBOARD, '/blank'),
   general: {
@@ -99,7 +100,7 @@ export const PATH_DASHBOARD = {
     list: path(ROOTS_DASHBOARD, '/salesorder/list'),
     add: path(ROOTS_DASHBOARD, '/salesorder/add'),
     view: (name) => path(ROOTS_DASHBOARD, `/salesorder/${name}/edit`)
-  },
+  }
 };
 
 export const PATH_DOCS = {
