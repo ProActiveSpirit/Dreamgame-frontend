@@ -4,11 +4,11 @@ import Head from 'next/head';
 import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography } from '@mui/material';
 // layouts
-import DashboardLayout from '../../layouts/dashboard';
+import DashboardLayout from 'src/layouts/dashboard';
 // _mock_
-import { _analyticPost, _analyticOrderTimeline, _analyticTraffic } from '../../_mock/arrays';
+import { _analyticPost, _analyticOrderTimeline, _analyticTraffic } from 'src/_mock/arrays';
 // components
-import { useSettingsContext } from '../../components/settings';
+import { useSettingsContext } from 'src/components/settings';
 // sections
 import {
   AnalyticsTasks,
@@ -20,7 +20,7 @@ import {
   AnalyticsWidgetSummary,
   AnalyticsCurrentSubject,
   AnalyticsConversionRates,
-} from '../../sections/@dashboard/general/analytics';
+} from 'src/sections/@dashboard/general/analytics';
 
 // ----------------------------------------------------------------------
 
