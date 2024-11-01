@@ -1,11 +1,95 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
+
 // @mui
-import { Box, Radio, Tooltip , RadioGroup,Checkbox, FormControlLabel, Container, Stack, TextField} from '@mui/material';
+import { Box, Radio, Tooltip , RadioGroup,Checkbox, FormControlLabel, Container,IconButton , Stack, TextField} from '@mui/material';
 import { Masonry } from '@mui/lab';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
-import ExtendPrice from './extprice'
+import { DataGrid } from '@mui/x-data-grid';
+import TableData from "./keys.json";
+
+// ----------------------------------------------------------------------
+
+const columns = [
+  {
+    field: 'CUSTOMER',
+    headerName: 'CUSTOMER',
+    width: 120,
+  },
+  {
+    field: 'SCHEDULED',
+    headerName: 'SCHEDULED DATE',
+    width: 160,
+    editable: true,
+  },
+  { 
+    field: 'STATUS',
+    headerName: 'STATUS',
+    width: 160,
+    editable: true,
+  },
+  {
+    field: 'NUMBER',
+    headerName: 'ORDER NUMBER / NOTES',
+    type: 'number',
+    width: 120,
+    editable: true,
+    align: 'center',
+    headerAlign: 'center',
+  },
+  {
+    field: 'KEYS',
+    headerName: 'KEYS',
+    type: 'number',
+    width: 120,
+    editable: true,
+    align: 'center',
+    headerAlign: 'center',
+  },
+  {
+    field: 'PO',
+    headerName: 'PO',
+    type: 'number',
+    width: 120,
+    editable: true,
+    align: 'center',
+    headerAlign: 'center',
+  },
+  {
+    field: 'PACKED',
+    headerName: 'PACKED',
+    type: 'number',
+    width: 120,
+    editable: true,
+    align: 'center',
+    headerAlign: 'center',
+  },
+  {
+    field: 'RESULT',
+    headerName: 'RESULT',
+    type: 'number',
+    width: 120,
+    editable: true,
+    align: 'center',
+    headerAlign: 'center',
+  }
+  // {
+  //   field: 'action',
+  //   headerName: ' ',
+  //   width: 80,
+  //   align: 'right',
+  //   sortable: false,
+  //   disableColumnMenu: true,
+  //   renderCell: () => (
+  //     <IconButton>
+  //       <Iconify icon="eva:more-vertical-fill" />
+  //     </IconButton>
+  //   ),
+  // },
+];
+
 
 export default function ProductInformation({ variant }) {
   const [values, setValues] = useState({
@@ -30,7 +114,7 @@ export default function ProductInformation({ variant }) {
               required
               // fullWidth
               label="Quantity"
-              // size="small"
+              size="small"
               defaultValue="100"
             />
             <Box
@@ -117,7 +201,7 @@ export default function ProductInformation({ variant }) {
         </Masonry>
 
       </Container>
-      <ExtendPrice />
+      <DataGrid columns={columns} rows={TableData} checkboxSelection disableSelectionOnClick />
     </>
   );
 }

@@ -84,20 +84,6 @@ const navConfig = [
           // { title: 'Nintendo Catalog', path: PATH_DASHBOARD.eCommerce.checkout },
         ],
       },
-
-      // INVOICE
-      {
-        title: 'PURCHASES',
-        path: PATH_DASHBOARD.invoice.root,
-        icon: ICONS.banking,
-        children: [
-          { title: 'list', path: PATH_DASHBOARD.invoice.list },
-          { title: 'details', path: PATH_DASHBOARD.invoice.demoView },
-          { title: 'create', path: PATH_DASHBOARD.invoice.new },
-          { title: 'edit', path: PATH_DASHBOARD.invoice.demoEdit },
-        ],
-      },
-
       {
         title: 'SALESORDERS',
         path: PATH_DASHBOARD.blog.root,
@@ -107,6 +93,18 @@ const navConfig = [
           { title: 'Add', path: PATH_DASHBOARD.salesorder.add },
         ],
       },
+      // INVOICE
+      {
+        title: 'INVOICE',
+        path: PATH_DASHBOARD.invoice.root,
+        icon: ICONS.banking,
+        children: [
+          { title: 'list', path: PATH_DASHBOARD.invoice.list },
+          { title: 'details', path: PATH_DASHBOARD.invoice.demoView },
+          { title: 'create', path: PATH_DASHBOARD.invoice.new },
+          { title: 'edit', path: PATH_DASHBOARD.invoice.demoEdit },
+        ],
+      },
       {
         title: 'REPORTS',
         path: PATH_DASHBOARD.fileManager,
@@ -114,13 +112,13 @@ const navConfig = [
       },
       {
         title: 'SETTINGS',
-        path: PATH_DASHBOARD.fileManager,
+        path: PATH_DASHBOARD.blank,
         icon: ICONS.kanban,
       },
       {
         title: 'CUSTOMER API',
         path: PATH_DASHBOARD.fileManager,
-        icon: ICONS.external,
+        icon: ICONS.kanban,
       },
     ],
   },
