@@ -1,0 +1,65 @@
+[
+    {
+        "REGION": "NO",
+        "Cost-EUR": "29.9281 EUR",
+        "Cost Exc Vat": "357.7200 NOK",
+        "Sales Exc Vat": "474.0500 NOK",
+        "Sales Vat": "0%"
+    },
+    {
+        "REGION": "BE",
+        "Cost-EUR": "37.02 EUR",
+        "Cost Exc Vat": "37.0200 EUR",
+        "Sales Exc Vat": "474.4900 EUR",
+        "Sales Vat": "0%"
+    },
+    {
+        "REGION": "DE",
+        "Cost-EUR": "37.02 EUR",
+        "Cost Exc Vat": "37.02 EUR",
+        "Sales Exc Vat": "474.4900 EUR",
+        "Sales Vat": "0%"
+    },
+    {
+        "REGION": "ES",
+        "Cost-EUR": "37.02 EUR",
+        "Cost Exc Vat": "37.02 EUR",
+        "Sales Exc Vat": "474.4900 EUR",
+        "Sales Vat": "0%"
+    },
+    {
+        "REGION": "FR",
+        "Cost-EUR": "37.02 EUR",
+        "Cost Exc Vat": "37.02 EUR",
+        "Sales Exc Vat": "474.4900 EUR",
+        "Sales Vat": "0%"
+    },
+    {
+        "REGION": "NL",
+        "Cost-EUR": "37.02 EUR",
+        "Cost Exc Vat": "37.02 EUR",
+        "Sales Exc Vat": "474.4900 EUR",
+        "Sales Vat": "0%"
+    },
+    {
+        "REGION": "PT",
+        "Cost-EUR": "37.02 EUR",
+        "Cost Exc Vat": "37.02 EUR",
+        "Sales Exc Vat": "474.4900 EUR",
+        "Sales Vat": "0%"
+    },
+    {
+        "REGION": "PL",
+        "Cost-EUR": "37.02 EUR",
+        "Cost Exc Vat": "37.02 EUR",
+        "Sales Exc Vat": "474.4900 EUR",
+        "Sales Vat": "0%"
+    },
+    {
+        "REGION": "GB",
+        "Cost-EUR": "39.9116 EUR",
+        "Cost Exc Vat": "33.6000 GBP",
+        "Sales Exc Vat": "42.7400 GBP",
+        "Sales Vat": "0%"
+    }
+]

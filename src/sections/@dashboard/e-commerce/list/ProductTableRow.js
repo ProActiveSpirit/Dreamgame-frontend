@@ -1,22 +1,15 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
 // @mui
 import {
   Stack,
-  Button,
   TableRow,
   Checkbox,
-  MenuItem,
   TableCell,
   IconButton,
   Link,
 } from '@mui/material';
-// utils
-import { fCurrency } from '../../../../utils/formatNumber';
 // components
 import Iconify from '../../../../components/iconify';
-import MenuPopover from '../../../../components/menu-popover';
-import ConfirmDialog from '../../../../components/confirm-dialog';
 
 // ----------------------------------------------------------------------
 
@@ -33,31 +26,10 @@ export default function ProductTableRow({
   row,
   selected,
   onSelectRow,
-  onDeleteRow,
   onEditRow,
   onViewRow,
 }) {
-  const { name, stock, price, provider, region, sku, publisher, status, createAt } = row;
-
-  const [openConfirm, setOpenConfirm] = useState(false);
-
-  const [openPopover, setOpenPopover] = useState(null);
-
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
-
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
-
-  const handleOpenPopover = (event) => {
-    setOpenPopover(event.currentTarget);
-  };
-
-  const handleClosePopover = () => {
-    setOpenPopover(null);
-  };
+  const { name, stock, provider, region, sku, publisher, status } = row;
 
   return (
     <>
@@ -68,14 +40,6 @@ export default function ProductTableRow({
 
         <TableCell width={300}>
           <Stack direction="row" alignItems="center" spacing={2}>
-            {/* <Image
-              disabledEffect
-              visibleByDefault
-              alt={name}
-              src={cover}
-              sx={{ borderRadius: 1.5, width: 48, height: 48 }}
-            /> */}
-
             <Link
               noWrap
               color="inherit"
@@ -89,75 +53,18 @@ export default function ProductTableRow({
         </TableCell>
 
         <TableCell align="center">{stock}</TableCell>
-
-        {/* <TableCell>{fDate(createdAt)}</TableCell> */}
-
-        {/* <TableCell align="center">
-          <Label
-            variant="soft"
-            color={
-              (inventoryType === 'out_of_stock' && 'error') ||
-              (inventoryType === 'low_stock' && 'warning') ||
-              'success'
-            }
-            sx={{ textTransform: 'capitalize' }}
-          >
-            {inventoryType ? sentenceCase(inventoryType) : ''}
-          </Label>
-        </TableCell> */}
         <TableCell align="center">{provider}</TableCell>
         <TableCell align="center">{region}</TableCell>
         <TableCell align="center">{sku}</TableCell>
         <TableCell align="center">{publisher}</TableCell>
         <TableCell align="center">{status}</TableCell>
-        <TableCell align="center">{createAt}</TableCell>
 
-        <TableCell align="right">
-          <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
-            <Iconify icon="eva:more-vertical-fill" />
+        <TableCell align="center"  width={50}>
+          <IconButton onClick={() => onEditRow()}>
+            <Iconify icon="eva:edit-fill" />
           </IconButton>
         </TableCell>
       </TableRow>
-
-      <MenuPopover
-        open={openPopover}
-        onClose={handleClosePopover}
-        arrow="right-top"
-        sx={{ width: 140 }}
-      >
-        <MenuItem
-          onClick={() => {
-            handleOpenConfirm();
-            handleClosePopover();
-          }}
-          sx={{ color: 'error.main' }}
-        >
-          <Iconify icon="eva:trash-2-outline" />
-          Delete
-        </MenuItem>
-
-        <MenuItem
-          onClick={() => {
-            onEditRow();
-            handleClosePopover();
-          }}
-        >
-          <Iconify icon="eva:edit-fill" />
-          Edit
-        </MenuItem>
-      </MenuPopover>
-
-      <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title="Delete"
-        content="Are you sure want to delete?"
-        action={
-          <Button variant="contained" color="error" onClick={onDeleteRow}>
-            Delete
-          </Button>
-        }
-      />
     </>
   );
 }

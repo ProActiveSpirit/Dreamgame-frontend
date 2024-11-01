@@ -39,11 +39,13 @@ export const PATH_DASHBOARD = {
   kanban: path(ROOTS_DASHBOARD, '/kanban'),
   calendar: path(ROOTS_DASHBOARD, '/calendar'),
   fileManager: path(ROOTS_DASHBOARD, '/files-manager'),
+  // report: path(ROOTS_DASHBOARD, '/report'),
   permissionDenied: path(ROOTS_DASHBOARD, '/permission-denied'),
   blank: path(ROOTS_DASHBOARD, '/blank'),
   general: {
     app: path(ROOTS_DASHBOARD, '/app'),
     ecommerce: path(ROOTS_DASHBOARD, '/ecommerce'),
+    report: path(ROOTS_DASHBOARD, '/report'),
     analytics: path(ROOTS_DASHBOARD, '/analytics'),
     banking: path(ROOTS_DASHBOARD, '/banking'),
     booking: path(ROOTS_DASHBOARD, '/booking'),
@@ -70,7 +72,7 @@ export const PATH_DASHBOARD = {
   },
   eCommerce: {
     root: path(ROOTS_DASHBOARD, '/e-commerce'),
-    shop: path(ROOTS_DASHBOARD, '/e-commerce/shop'),
+    stock: path(ROOTS_DASHBOARD, '/e-commerce/stock'),
     list: path(ROOTS_DASHBOARD, '/e-commerce/list'),
     checkout: path(ROOTS_DASHBOARD, '/e-commerce/checkout'),
     new: path(ROOTS_DASHBOARD, '/e-commerce/product/new'),
@@ -95,6 +97,18 @@ export const PATH_DASHBOARD = {
     view: (title) => path(ROOTS_DASHBOARD, `/blog/post/${title}`),
     demoView: path(ROOTS_DASHBOARD, '/blog/post/apply-these-7-secret-techniques-to-improve-event'),
   },
+  salesorder: {
+    list: path(ROOTS_DASHBOARD, '/salesorder/list'),
+    add: path(ROOTS_DASHBOARD, '/salesorder/add'),
+    view: (name) => path(ROOTS_DASHBOARD, `/salesorder/${name}/edit`)
+  },
+  report: {
+    root: path(ROOTS_DASHBOARD, '/report/general'),
+    bestseller: path(ROOTS_DASHBOARD, '/report/bestseller'),
+    sales: path(ROOTS_DASHBOARD, '/report/salesreport'),
+    purchase: path(ROOTS_DASHBOARD, '/report/purchase'),
+    monthlypurchase: path(ROOTS_DASHBOARD, '/report/monthlypurchase')
+  }
 };
 
 export const PATH_DOCS = {
