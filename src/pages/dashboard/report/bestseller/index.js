@@ -1,25 +1,20 @@
-import PropTypes from 'prop-types';
 // @mui
 import { DataGrid } from '@mui/x-data-grid';
-import { IconButton } from '@mui/material';
-// components
-import Iconify from 'src/components/iconify';
-// _mock_
-import _mock, { randomInArray } from 'src/_mock';
-// next
-import Head from 'next/head';
+
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Grid, Container, Typography } from '@mui/material';
+import {  Container } from '@mui/material';
 // layouts
-import DashboardLayout from 'src/layouts/dashboard';
+import DashboardLayout from '../../../../layouts/dashboard';
 // _mock_
-import { _analyticPost, _analyticOrderTimeline, _analyticTraffic } from 'src/_mock/arrays';
+// import { _analyticPost, _analyticOrderTimeline, _analyticTraffic } from '../../../../_mock/arrays';
 // components
-import { useSettingsContext } from 'src/components/settings';
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
+import { useSettingsContext } from '../../../../components/settings';
+import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
+// _mock_
+import _mock from '../../../../_mock';
 // routes
-import { PATH_DASHBOARD } from 'src/routes/paths';
+import { PATH_DASHBOARD } from '../../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -28,7 +23,7 @@ GeneralReportPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout
 // ----------------------------------------------------------------------
 
 export default function GeneralReportPage() {
-  const theme = useTheme();
+  // const theme = useTheme();
 
   const columns = [
     {

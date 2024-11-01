@@ -14,9 +14,8 @@ import {
   IconButton,
   TableContainer,
 } from '@mui/material';
-// redux
-import { useDispatch, useSelector } from '../../../redux/store';
-import { getProducts } from '../../../redux/slices/product';
+
+// import { getProducts } from '../../../redux/slices/product';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // layouts
@@ -37,8 +36,10 @@ import {
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog';
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
+import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 import orderData from './order.json';
+// redux
+import { useDispatch, useSelector } from '../../../redux/store';
 // sections
 import { SalesOrderTableRow, SalesOrderTableToolbar } from '../../../sections/@dashboard/salesorder/list';
 
@@ -96,7 +97,7 @@ export default function SalesOrderListPage() {
 
   const dispatch = useDispatch();
 
-  const { products, isLoading } = useSelector((state) => state.product);
+  // const { products, isLoading } = useSelector((state) => state.product);
 
   const [tableData, setTableData] = useState([]);
 

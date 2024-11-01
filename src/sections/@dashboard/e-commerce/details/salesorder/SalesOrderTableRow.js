@@ -5,11 +5,8 @@ import {
   TableRow,
   Checkbox,
   TableCell,
-  IconButton,
   Link,
 } from '@mui/material';
-// components
-import Iconify from '../../../../../components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -19,7 +16,7 @@ SalesOrderTableRow.propTypes = {
   onEditRow: PropTypes.func,
   onViewRow: PropTypes.func,
   onSelectRow: PropTypes.func,
-  onDeleteRow: PropTypes.func,
+  // onDeleteRow: PropTypes.func,
 };
 
 export default function SalesOrderTableRow({

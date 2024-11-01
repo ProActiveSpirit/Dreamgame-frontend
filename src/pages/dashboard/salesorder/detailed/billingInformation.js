@@ -1,14 +1,11 @@
 import { useState } from 'react';
 // @mui
-import { Box, Radio, TextField, Tooltip , RadioGroup, FormControlLabel, Container} from '@mui/material';
+import { TextField, Container} from '@mui/material';
 import { Masonry } from '@mui/lab';
-
-import Label from 'src/components/label';
-import { DateTimePicker} from '@mui/x-date-pickers';
 
 // import ExtendPrice from './extprice'
 
-export default function BillingInformation({ variant }) {
+export default function BillingInformation(variant) {
   const [values, setValues] = useState({
     amount: '',
     password: '',

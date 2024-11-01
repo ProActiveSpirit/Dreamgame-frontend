@@ -14,39 +14,21 @@ import {
   Typography,
   Autocomplete,
   InputAdornment,
-  Card,
-  Table,
   Button,
-  Tooltip,
-  TableBody,
-  IconButton,
-  TableContainer,
 } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from 'src/redux/store';
-import { getProducts } from 'src/redux/slices/product';
+import { useDispatch, useSelector } from '../../../../redux/store';
 // components
-import { useSettingsContext } from 'src/components/settings';
+import { useSettingsContext } from '../../../../components/settings';
 import {
   useTable,
   getComparator,
-  emptyRows,
-  TableNoData,
-  TableSkeleton,
-  TableEmptyRows,
-  TableHeadCustom,
-  TableSelectedAction,
-  TablePaginationCustom,
-} from 'src/components/table';
-import Iconify from 'src/components/iconify';
-import Scrollbar from 'src/components/scrollbar';
-import ConfirmDialog from 'src/components/confirm-dialog';
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
+} from '../../../../components/table';
+import ConfirmDialog from '../../../../components/confirm-dialog';
+import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
 import orderData from './order.json';
 import { DateTimePicker} from '@mui/x-date-pickers';
 
-// sections
-import { SalesOrderTableRow, SalesOrderTableToolbar } from 'src/sections/@dashboard/salesorder/list';
 
 // ----------------------------------------------------------------------
 
@@ -68,17 +50,14 @@ import { useForm, Controller } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
 import { DatePicker } from '@mui/x-date-pickers';
 // routes
-import { PATH_DASHBOARD } from 'src/routes/paths';
+import { PATH_DASHBOARD } from '../../../../routes/paths';
 // layouts
-import DashboardLayout from 'src/layouts/dashboard';
+import DashboardLayout from '../../../../layouts/dashboard';
 // components
 import FormProvider, {
-  RHFEditor,
   RHFSelect,
   RHFTextField,
-  RHFMultiSelect,
-  RHFAutocomplete,
-} from 'src/components/hook-form';
+} from '../../../../components/hook-form';
 //
 import { FormSchema } from './schema';
 import ValuesPreview from './ValuesPreview';
@@ -133,22 +112,13 @@ SalesOrderAddPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout
 
 export default function SalesOrderAddPage() {
   const {
-    dense,
     page,
     order,
     orderBy,
     rowsPerPage,
     setPage,
-    //
     selected,
     setSelected,
-    onSelectRow,
-    onSelectAllRows,
-    //
-    onSort,
-    onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'name',
   });
@@ -158,10 +128,6 @@ export default function SalesOrderAddPage() {
   const { push } = useRouter();
 
   const dispatch = useDispatch();
-
-  const { products, isLoading } = useSelector((state) => state.product);
-
-  const [showPassword, setShowPassword] = useState(false);
 
   const [tableData, setTableData] = useState([]);
 
@@ -214,43 +180,9 @@ export default function SalesOrderAddPage() {
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
-  const denseHeight = dense ? 60 : 80;
-
-  const isFiltered = filterName !== '' || !!filterStatus.length;
-
-  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
-
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
-
+  
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
-  };
-
-  const handleFilterName = (event) => {
-    setPage(0);
-    setFilterName(event.target.value);
-  };
-
-  const handleFilterStatus = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setPage(0);
-    setFilterStatus(typeof value === 'string' ? value.split(',') : value);
-  };
-
-  const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.name !== id);
-    setSelected([]);
-    setTableData(deleteRow);
-
-    if (page > 0) {
-      if (dataInPage.length < 2) {
-        setPage(page - 1);
-      }
-    }
   };
 
   const handleDeleteRows = (selectedRows) => {

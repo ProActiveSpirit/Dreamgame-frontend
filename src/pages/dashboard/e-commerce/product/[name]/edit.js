@@ -20,14 +20,6 @@ import {
   ProductSalesOrder,
   ProductPurchaseOrder,
 } from '../detailed';
-//_mock
-import {
-  _userAbout,
-  _userFeeds,
-  _userFriends,
-  _userGallery,
-  _userFollowers,
-} from '../../../../../_mock/arrays';
 // ----------------------------------------------------------------------
 
 EcommerceProductEditPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;

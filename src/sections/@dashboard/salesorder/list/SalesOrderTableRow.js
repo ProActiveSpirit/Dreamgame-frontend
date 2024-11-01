@@ -13,8 +13,8 @@ import {
 } from '@mui/material';
 // components
 import Iconify from '../../../../components/iconify';
-import ConfirmDialog from 'src/components/confirm-dialog';
-import Label from 'src/components/label';
+import ConfirmDialog from '../../../../components/confirm-dialog';
+import Label from '../../../../components/label';
 // ----------------------------------------------------------------------
 
 SalesOrderTableRow.propTypes = {
@@ -87,7 +87,7 @@ export default function SalesOrderTableRow({
         <TableCell align="center">{CREATEDON}</TableCell>
         <TableCell align="center">
           {(() => {
-            const color = (STATUS == "Processing" ? "info" : "success");
+            const color = (STATUS === "Processing" ? "info" : "success");
             return <Label color={color} variant="filled">{STATUS}</Label>;
           })()}
         </TableCell>
@@ -95,7 +95,7 @@ export default function SalesOrderTableRow({
         <TableCell align="center" width={50}>
           <IconButton  onClick={() => {
             handleOpenConfirm();
-            handleClosePopover();
+            // handleClosePopover();
           }}>
             <Iconify icon="eva:trash-2-fill" />
           </IconButton>

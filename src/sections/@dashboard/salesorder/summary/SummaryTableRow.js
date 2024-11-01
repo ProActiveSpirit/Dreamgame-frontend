@@ -19,7 +19,6 @@ SummaryTableRow.propTypes = {
   onEditRow: PropTypes.func,
   onViewRow: PropTypes.func,
   onSelectRow: PropTypes.func,
-  onDeleteRow: PropTypes.func,
 };
 
 export default function SummaryTableRow({
