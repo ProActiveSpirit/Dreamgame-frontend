@@ -49,7 +49,7 @@ export default function UserProfilePage() {
     {
       value: 'profile',
       label: 'Profile',
-      icon: <Iconify icon="ic:round-account-box" />,
+      // icon: <Iconify icon="ic:round-account-box" />,
       component: <Profile info={_userAbout} posts={_userFeeds} />,
     },
     {

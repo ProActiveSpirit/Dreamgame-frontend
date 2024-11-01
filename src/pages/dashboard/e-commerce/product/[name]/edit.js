@@ -1,10 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { paramCase } from 'change-case';
 // next
-import Head from 'next/head';
 import { useRouter } from 'next/router';
 // @mui
-import { Container } from '@mui/material';
+import { Tab, Card, Tabs, Container, Box } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../../../redux/store';
 import { getProducts } from '../../../../../redux/slices/product';
@@ -16,8 +15,19 @@ import DashboardLayout from '../../../../../layouts/dashboard';
 import { useSettingsContext } from '../../../../../components/settings';
 import CustomBreadcrumbs from '../../../../../components/custom-breadcrumbs';
 // sections
-import ProductNewEditForm from '../../../../../sections/@dashboard/e-commerce/ProductNewEditForm';
-
+import {
+  ProductInformation,
+  ProductSalesOrder,
+  ProductPurchaseOrder,
+} from '../detailed';
+//_mock
+import {
+  _userAbout,
+  _userFeeds,
+  _userFriends,
+  _userGallery,
+  _userFollowers,
+} from '../../../../../_mock/arrays';
 // ----------------------------------------------------------------------
 
 EcommerceProductEditPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
@@ -27,7 +37,10 @@ EcommerceProductEditPage.getLayout = (page) => <DashboardLayout>{page}</Dashboar
 export default function EcommerceProductEditPage() {
   const { themeStretch } = useSettingsContext();
 
+  const [currentTab, setCurrentTab] = useState('Product Information');
+
   const dispatch = useDispatch();
+
 
   const {
     query: { name },
@@ -41,13 +54,29 @@ export default function EcommerceProductEditPage() {
     dispatch(getProducts());
   }, [dispatch]);
 
+  const TABS = [
+    {
+      value: 'Product Information',
+      label: 'Product Information',
+      component: <ProductInformation />,
+    },
+    {
+      value: 'Sales Orders',
+      label: 'Sales Orders',
+      component: <ProductSalesOrder />,
+    },
+    {
+      value: 'Purchase Orders',
+      label: 'Purchase Orders',
+      component: (
+        <ProductPurchaseOrder />
+      ),
+    }
+  ];
+
   return (
     <>
-      <Head>
-        <title> Ecommerce: Edit product | Minimal UI</title>
-      </Head>
-
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={themeStretch ? 'lg' : false}>
         <CustomBreadcrumbs
           heading="Edit product"
           links={[
@@ -59,8 +88,39 @@ export default function EcommerceProductEditPage() {
             { name: currentProduct?.name },
           ]}
         />
+        <Card
+          sx={{
+            mb: 3,
+            height: 50,
+            position: 'relative',
+          }}
+        >
+          <Tabs
+            value={currentTab}
+            onChange={(event, newValue) => setCurrentTab(newValue)}
+            sx={{
+              width: 1,
+              zIndex: 9,
+              position: 'absolute',
+              bgcolor: 'background.paper',
+              '& .MuiTabs-flexContainer': {
+                pl: { md: 3 },
+                justifyContent: {
+                  sm: 'center',
+                  md: 'flex-start',
+                },
+              },
+            }}
+          >
+            {TABS.map((tab) => (
+              <Tab key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
+            ))}
+          </Tabs>
+        </Card>
 
-        <ProductNewEditForm isEdit currentProduct={currentProduct} />
+        {TABS.map(
+          (tab) => tab.value === currentTab && <Box key={tab.value}> {tab.component} </Box>
+        )}
       </Container>
     </>
   );
