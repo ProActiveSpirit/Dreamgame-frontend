@@ -13,9 +13,8 @@ import {
 } from '@mui/material';
 // components
 import Iconify from '../../../../components/iconify';
-import ConfirmDialog from 'src/components/confirm-dialog';
-import { CustomAvatar } from 'src/components/custom-avatar';
-import Label from 'src/components/label';
+import Label from '../../../../components/label';
+import ConfirmDialog from '../../../../components/confirm-dialog';
 // ----------------------------------------------------------------------
 
 StockTableRow.propTypes = {
@@ -86,7 +85,6 @@ export default function StockTableRow({
         <TableCell align="center" width={50}>
           <IconButton  onClick={() => {
             handleOpenConfirm();
-            handleClosePopover();
           }}>
             <Iconify icon="eva:trash-2-fill" />
           </IconButton>

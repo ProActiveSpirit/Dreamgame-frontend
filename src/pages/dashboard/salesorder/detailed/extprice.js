@@ -15,12 +15,12 @@ import {
   TableContainer,
 } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from 'src/redux/store';
-import { getProducts } from 'src/redux/slices/product';
+import { useDispatch, useSelector } from '../../../../redux/store';
+import { getProducts } from '../../../../redux/slices/product';
 // routes
-import { PATH_DASHBOARD } from 'src/routes/paths';
+import { PATH_DASHBOARD } from '../../../../routes/paths';
 // components
-import { useSettingsContext } from 'src/components/settings';
+import { useSettingsContext } from '../../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -31,12 +31,12 @@ import {
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
-} from 'src/components/table';
-import Iconify from 'src/components/iconify';
-import Scrollbar from 'src/components/scrollbar';
-import ConfirmDialog from 'src/components/confirm-dialog';
+} from '../../../../components/table';
+import Iconify from '../../../../components/iconify';
+import Scrollbar from '../../../../components/scrollbar';
+import ConfirmDialog from '../../../../components/confirm-dialog';
 // sections
-import { PurchaseOrderTableRow, PurchaseOrderTableToolbar } from 'src/sections/@dashboard/e-commerce/details/purchase';
+import { PurchaseOrderTableRow, PurchaseOrderTableToolbar } from '../../../../sections/@dashboard/e-commerce/details/purchase';
 
 // ----------------------------------------------------------------------
 

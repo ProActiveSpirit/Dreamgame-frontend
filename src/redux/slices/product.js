@@ -200,7 +200,7 @@ export function getProducts() {
       // console.log('Nintendo : ', Nintendo.data.products);
       // console.log('Epay : ', Epay.data.products);
 
-      let response = [...Nintendo.data.products, ...Epay.data.products];
+      const response = [...Nintendo.data.products, ...Epay.data.products];
       dispatch(slice.actions.getProductsSuccess(response));
     } catch (error) {
       console.log("error: " , error);

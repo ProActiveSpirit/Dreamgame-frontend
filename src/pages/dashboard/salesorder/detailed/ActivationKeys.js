@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import { Box, Radio, Tooltip , RadioGroup,Checkbox, FormControlLabel, Container,IconButton , Stack, TextField} from '@mui/material';
 import { Masonry } from '@mui/lab';
 
-import Label from 'src/components/label';
-import Iconify from 'src/components/iconify';
+import Label from '../../../../components/label';
+import Iconify from '../../../../components/iconify';
 import { DataGrid } from '@mui/x-data-grid';
 import TableData from "./keys.json";
 

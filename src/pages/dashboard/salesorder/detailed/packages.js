@@ -1,17 +1,11 @@
 import PropTypes from 'prop-types';
 // @mui
 import { DataGrid } from '@mui/x-data-grid';
-import { IconButton } from '@mui/material';
 // components
-import Iconify from 'src/components/iconify';
-// _mock_
-import _mock, { randomInArray } from 'src/_mock';
+import _mock from '../../../../_mock';
 
 // ----------------------------------------------------------------------
 
-DataGridBasic.propTypes = {
-  data: PropTypes.array,
-};
 
 export default function DataGridBasic() {
   const columns = [
