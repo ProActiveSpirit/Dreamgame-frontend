@@ -13,9 +13,8 @@ import {
 } from '@mui/material';
 // components
 import Iconify from '../../../../components/iconify';
-import ConfirmDialog from 'src/components/confirm-dialog';
-import { CustomAvatar } from 'src/components/custom-avatar';
-import Label from 'src/components/label';
+import Label from '../../../../components/label';
+import ConfirmDialog from '../../../../components/confirm-dialog';
 // ----------------------------------------------------------------------
 
 StockTableRow.propTypes = {
@@ -69,13 +68,12 @@ export default function StockTableRow({
         </TableCell>
 
         <TableCell align="center">
-          {<Label color={"primary"} variant="filled">{STOCK}</Label>}
+          <Label color="primary" variant="filled">{STOCK}</Label>
         </TableCell>
         <TableCell align="center">{COST}</TableCell>
         <TableCell align="center">{PROVIDER}</TableCell>
         <TableCell align="center">{REGION}</TableCell>
         <TableCell align="center">{SKU}</TableCell>
-        <TableCell align="center"></TableCell>
         <TableCell align="center">
           {(() => {
             const icon = STATUS === "true" ? "eva:checkmark-circle-2-fill" : "eva:checkmark-circle-2-fill";
@@ -86,7 +84,6 @@ export default function StockTableRow({
         <TableCell align="center" width={50}>
           <IconButton  onClick={() => {
             handleOpenConfirm();
-            handleClosePopover();
           }}>
             <Iconify icon="eva:trash-2-fill" />
           </IconButton>

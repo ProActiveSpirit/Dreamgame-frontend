@@ -1,7 +1,6 @@
 import { paramCase } from 'change-case';
 import { useState, useEffect } from 'react';
 // next
-import Head from 'next/head';
 import { useRouter } from 'next/router';
 // @mui
 import {

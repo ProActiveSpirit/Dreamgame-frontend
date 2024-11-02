@@ -8,21 +8,18 @@ import {
   Card,
   Table,
   Button,
-  Tooltip,
   TableBody,
   Container,
-  IconButton,
   TableContainer,
 } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from 'src/redux/store';
-import { getProducts } from 'src/redux/slices/product';
+import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
-import { PATH_DASHBOARD } from 'src/routes/paths';
+import { PATH_DASHBOARD } from '../../../../routes/paths';
 // layouts
-import DashboardLayout from 'src/layouts/dashboard';
+import DashboardLayout from '../../../../layouts/dashboard';
 // components
-import { useSettingsContext } from 'src/components/settings';
+import { useSettingsContext } from '../../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -31,16 +28,13 @@ import {
   TableSkeleton,
   TableEmptyRows,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
-} from 'src/components/table';
-import Iconify from 'src/components/iconify';
-import Scrollbar from 'src/components/scrollbar';
-import ConfirmDialog from 'src/components/confirm-dialog';
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
+} from '../../../../components/table';
+import Scrollbar from '../../../../components/scrollbar';
+import ConfirmDialog from '../../../../components/confirm-dialog';
 import orderData from './relatedorder.json';
 // sections
-import { RelatedOrderTableRow, RelatedOrderTableToolbar } from 'src/sections/@dashboard/salesorder/detailed/relatedorder';
+import { RelatedOrderTableRow } from '../../../../sections/@dashboard/salesorder/detailed/relatedorder';
 
 // ----------------------------------------------------------------------
 
@@ -78,12 +72,9 @@ export default function RelatedOrderListPage() {
     orderBy,
     rowsPerPage,
     setPage,
-    //
     selected,
     setSelected,
     onSelectRow,
-    onSelectAllRows,
-    //
     onSort,
     onChangeDense,
     onChangePage,
@@ -137,25 +128,8 @@ export default function RelatedOrderListPage() {
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
-
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
-  };
-
-  const handleFilterName = (event) => {
-    setPage(0);
-    setFilterName(event.target.value);
-  };
-
-  const handleFilterStatus = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setPage(0);
-    setFilterStatus(typeof value === 'string' ? value.split(',') : value);
   };
 
   const handleDeleteRow = (id) => {
@@ -195,10 +169,6 @@ export default function RelatedOrderListPage() {
     push(PATH_DASHBOARD.salesorder.view(paramCase(id)));
   };
 
-  const handleResetFilter = () => {
-    setFilterName('');
-    setFilterStatus([]);
-  };
 
   return (
     <>

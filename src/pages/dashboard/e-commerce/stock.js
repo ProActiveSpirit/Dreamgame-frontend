@@ -38,7 +38,7 @@ import {
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog';
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
+import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 // sections
 import { StockTableRow, StockTableToolbar } from '../../../sections/@dashboard/e-commerce/stock';
 

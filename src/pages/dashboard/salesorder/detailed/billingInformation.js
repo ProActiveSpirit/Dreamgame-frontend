@@ -1,25 +1,22 @@
 import { useState } from 'react';
 // @mui
-import { Box, Radio, TextField, Tooltip , RadioGroup, FormControlLabel, Container} from '@mui/material';
+import { TextField, Container} from '@mui/material';
 import { Masonry } from '@mui/lab';
-
-import Label from 'src/components/label';
-import { DateTimePicker} from '@mui/x-date-pickers';
 
 // import ExtendPrice from './extprice'
 
-export default function BillingInformation({ variant }) {
-  const [values, setValues] = useState({
-    amount: '',
-    password: '',
-    weight: '',
-    weightRange: '',
-    showPassword: false,
-  });
+export default function BillingInformation(variant) {
+  // const [values, setValues] = useState({
+  //   amount: '',
+  //   password: '',
+  //   weight: '',
+  //   weightRange: '',
+  //   showPassword: false,
+  // });
 
   return (
     <>
-      <Container maxWidth={'md'} >
+      <Container maxWidth='md' >
         <Masonry columns={{ xs: 1}} spacing={2}>
           <TextField
             variant={variant}

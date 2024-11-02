@@ -5,15 +5,15 @@ import { useRouter } from 'next/router';
 // @mui
 import { Tab, Card, Tabs, Container, Box } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from 'src/redux/store';
-import { getProducts } from 'src/redux/slices/product';
+import { useDispatch, useSelector } from '../../../../redux/store';
+// import { getProducts } from '../../../../redux/slices/product';
 // routes
-import { PATH_DASHBOARD } from 'src/routes/paths';
+import { PATH_DASHBOARD } from '../../../../routes/paths';
 // layouts
-import DashboardLayout from 'src/layouts/dashboard';
+import DashboardLayout from '../../../../layouts/dashboard';
 // components
-import { useSettingsContext } from 'src/components/settings';
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
+import { useSettingsContext } from '../../../../components/settings';
+import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
 // sections
 import {
   OrderInformation,
@@ -23,14 +23,7 @@ import {
   ActivationKeys,
   Packages
 } from '../detailed';
-//_mock
-import {
-  _userAbout,
-  _userFeeds,
-  _userFriends,
-  _userGallery,
-  _userFollowers,
-} from 'src/_mock/arrays';
+
 import SaleOrders from '../order.json';
 // ----------------------------------------------------------------------
 
@@ -43,7 +36,7 @@ export default function SalesOrderEditPage() {
 
   const [currentTab, setCurrentTab] = useState('Order Information');
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
 
   const {
