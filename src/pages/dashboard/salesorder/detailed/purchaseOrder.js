@@ -1,12 +1,14 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
+
 // @mui
 import { Box, Autocomplete, TextField, Stack, InputAdornment, Container} from '@mui/material';
 import { Masonry } from '@mui/lab';
 
+import { DateTimePicker} from '@mui/x-date-pickers';
+
 import Label from '../../../../components/label';
 import Iconify from '../../../../components/iconify';
-
-import { DateTimePicker} from '@mui/x-date-pickers';
 
 // import ExtendPrice from './extprice'
 
@@ -33,9 +35,9 @@ export default function BillingInformation({ variant }) {
           
           <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
             <TextField
-              variant={"outlined"}
+              variant="outlined"
               fullWidth
-              value={"38"}
+              value="38"
               // onChange={handleChange('weight')}
               label="Sales"
               // helperText="Weight"
@@ -44,9 +46,9 @@ export default function BillingInformation({ variant }) {
               }}
             />
             <TextField
-              variant={"outlined"}
+              variant="outlined"
               fullWidth
-              value={"36"}
+              value="36"
               // onChange={handleChange('weight')}
               label="Expected Cost"
               // helperText="Weight"
@@ -100,6 +102,9 @@ export default function BillingInformation({ variant }) {
   );
 }
 
+BillingInformation.propTypes = {
+  variant: PropTypes.string.isRequired,
+};
 
 // ----------------------------------------------------------------------
 
