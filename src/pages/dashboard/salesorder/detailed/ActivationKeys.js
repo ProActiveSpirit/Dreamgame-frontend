@@ -106,7 +106,7 @@ export default function ProductInformation({ variant }) {
 
   return (
     <>
-      <Container maxWidth={'md'} >
+      <Container maxWidth='md' >
         <Masonry columns={{ xs: 1}} spacing={4}>
           <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
             <TextField
@@ -138,18 +138,18 @@ export default function ProductInformation({ variant }) {
           </Stack>
 
           <FormControlLabel
-            key={'start'}
-            value={'start'}
-            label={'Include Pending Stocks'}
+            key='start'
+            value='start'
+            label='Include Pending Stocks'
             // labelPlacement={''}
             control={<Checkbox />}
             sx={{ textTransform: 'capitalize' }}
           />
 
           <FormControlLabel
-            key={'start'}
-            value={'start'}
-            label={'Include Processing Stocks'}
+            key='start'
+            value='start'
+            label='Include Processing Stocks'
             // labelPlacement={'start'}
             control={<Checkbox />}
             sx={{ textTransform: 'capitalize' }}
@@ -163,7 +163,7 @@ export default function ProductInformation({ variant }) {
             <Label variant="filled" color="primary" startIcon={<Iconify icon="eva:email-fill" />}>
               Resovle Keys
             </Label>
-            <Label>{"0"}</Label>
+            <Label>"0"</Label>
           </Stack>
 
           <Box

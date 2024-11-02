@@ -13,7 +13,7 @@ export default function ProductInformation( variant ) {
 
   return (
     <>
-      <Container maxWidth={'md'} >
+      <Container maxWidth='md' >
         <Masonry columns={{ xs: 1}} spacing={4}>
           <TextField
             variant={variant}

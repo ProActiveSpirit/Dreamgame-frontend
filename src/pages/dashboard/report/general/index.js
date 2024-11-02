@@ -1,7 +1,5 @@
 // @mui
 import { DataGrid } from '@mui/x-data-grid';
-// _mock_
-import _mock from '../../../../_mock';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import {  Container } from '@mui/material';
@@ -14,6 +12,8 @@ import { useSettingsContext } from '../../../../components/settings';
 import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
 // routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
+// _mock_
+import _mock from '../../../../_mock';
 
 // ----------------------------------------------------------------------
 

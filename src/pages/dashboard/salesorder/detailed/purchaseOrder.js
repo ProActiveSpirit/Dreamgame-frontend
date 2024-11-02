@@ -5,6 +5,7 @@ import { Masonry } from '@mui/lab';
 
 import Label from '../../../../components/label';
 import Iconify from '../../../../components/iconify';
+
 import { DateTimePicker} from '@mui/x-date-pickers';
 
 // import ExtendPrice from './extprice'
@@ -20,7 +21,7 @@ export default function BillingInformation({ variant }) {
 
   return (
     <>
-      <Container maxWidth={'md'} >
+      <Container maxWidth='md' >
         <Masonry columns={{ xs: 1}} spacing={2}>
           <TextField
             variant={variant}
