@@ -1,13 +1,13 @@
-import { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-
 // @mui
-import { Box, Radio, Tooltip , RadioGroup,Checkbox, FormControlLabel, Container,IconButton , Stack, TextField} from '@mui/material';
+import { Box, Radio, Tooltip, RadioGroup, Checkbox, FormControlLabel, Container, Stack, TextField } from '@mui/material';
 import { Masonry } from '@mui/lab';
-
+import { DataGrid } from '@mui/x-data-grid';
+// components
 import Label from '../../../../components/label';
 import Iconify from '../../../../components/iconify';
-import { DataGrid } from '@mui/x-data-grid';
+
 import TableData from "./keys.json";
 
 // ----------------------------------------------------------------------
@@ -75,44 +75,21 @@ const columns = [
     align: 'center',
     headerAlign: 'center',
   }
-  // {
-  //   field: 'action',
-  //   headerName: ' ',
-  //   width: 80,
-  //   align: 'right',
-  //   sortable: false,
-  //   disableColumnMenu: true,
-  //   renderCell: () => (
-  //     <IconButton>
-  //       <Iconify icon="eva:more-vertical-fill" />
-  //     </IconButton>
-  //   ),
-  // },
 ];
 
-
 export default function ProductInformation({ variant }) {
-  const [values, setValues] = useState({
-    amount: '',
-    password: '',
-    weight: '',
-    weightRange: '',
-    showPassword: false,
-  });
-
-  const COLORS = ['primary', 'warning','info', 'secondary'];
-  const Stock = ['1','0','0','1' ];
-  const Status = ['generated keys' ,'pending keys to generate,','sold keys','sold keys pending generations'];
+  const COLORS = ['primary', 'warning', 'info', 'secondary'];
+  const Stock = ['1', '0', '0', '1'];
+  const Status = ['generated keys', 'pending keys to generate', 'sold keys', 'sold keys pending generations'];
 
   return (
     <>
-      <Container maxWidth='md' >
-        <Masonry columns={{ xs: 1}} spacing={4}>
+      <Container maxWidth='md'>
+        <Masonry columns={{ xs: 1 }} spacing={4}>
           <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
             <TextField
               variant={variant}
               required
-              // fullWidth
               label="Quantity"
               size="small"
               defaultValue="100"
@@ -127,13 +104,13 @@ export default function ProductInformation({ variant }) {
                 '& > *': { mx: 0.5 },
               }}
             >
-                {COLORS.map((color, index) => (
-                  <Tooltip key={color} title={Status[index]}>
-                    <Label color={color} variant="filled">
-                      {Stock[index]}
-                    </Label>
-                  </Tooltip>
-                ))}
+              {COLORS.map((color, index) => (
+                <Tooltip key={color} title={Status[index]}>
+                  <Label color={color} variant="filled">
+                    {Stock[index]}
+                  </Label>
+                </Tooltip>
+              ))}
             </Box>
           </Stack>
 
@@ -141,7 +118,6 @@ export default function ProductInformation({ variant }) {
             key='start'
             value='start'
             label='Include Pending Stocks'
-            // labelPlacement={''}
             control={<Checkbox />}
             sx={{ textTransform: 'capitalize' }}
           />
@@ -150,7 +126,6 @@ export default function ProductInformation({ variant }) {
             key='start'
             value='start'
             label='Include Processing Stocks'
-            // labelPlacement={'start'}
             control={<Checkbox />}
             sx={{ textTransform: 'capitalize' }}
           />
@@ -159,13 +134,12 @@ export default function ProductInformation({ variant }) {
             <Label variant="filled" color="primary" startIcon={<Iconify icon="eva:email-fill" />}>
               Assign Keys
             </Label>
-            <p>{"   Total assigned: 100"}</p>
+            <p>{'   Total assigned: 100'}</p>
             <Label variant="filled" color="primary" startIcon={<Iconify icon="eva:email-fill" />}>
-              Resovle Keys
+              Resolve Keys
             </Label>
-            <Label>"0"</Label>
+            <Label>0</Label>
           </Stack>
-
           <Box
             sx={{
               p: 1,
@@ -197,11 +171,13 @@ export default function ProductInformation({ variant }) {
               <FormControlLabel value="p" control={<Radio size="small" />} label="Pending (100)" />
             </RadioGroup>
           </Box>
-
         </Masonry>
-
       </Container>
       <DataGrid columns={columns} rows={TableData} checkboxSelection disableSelectionOnClick />
     </>
   );
 }
+
+ProductInformation.propTypes = {
+  variant: PropTypes.string.isRequired,
+};

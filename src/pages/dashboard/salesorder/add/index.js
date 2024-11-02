@@ -1,10 +1,5 @@
-import { paramCase } from 'change-case';
 import { useState, useEffect } from 'react';
-// next
-import Head from 'next/head';
 import { useRouter } from 'next/router';
-// redux
-import { useDispatch, useSelector } from '../../../../redux/store';
 // @mui
 import {
   Grid,
@@ -18,6 +13,15 @@ import {
   InputAdornment,
   Button,
 } from '@mui/material';
+// validation schema
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import PropTypes from 'prop-types';
+
+import { LoadingButton } from '@mui/lab';
+import { DateTimePicker } from '@mui/x-date-pickers';
+// redux
+import { useDispatch } from '../../../../redux/store';
 // components
 import { useSettingsContext } from '../../../../components/settings';
 import {
@@ -26,48 +30,25 @@ import {
 } from '../../../../components/table';
 import ConfirmDialog from '../../../../components/confirm-dialog';
 import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
-import orderData from './order.json';
-import { DateTimePicker} from '@mui/x-date-pickers';
-
-
-// ----------------------------------------------------------------------
-
-const TABLE_HEAD = [
-  { id: 'NUMBER', label: 'SALES ORDER NUMBER', align: 'center'},
-  { id: 'CUSTOMER', label: 'CUSTOMER', align: 'center' },
-  { id: 'PRODUCT', label: 'PRODUCT', align: 'center' , width: 300 },
-  { id: 'PRICE', label: 'PRODUCT PRICE', align: 'center' },
-  { id: 'QUANTITY', label: 'QUANTITY', align: 'center' },
-  { id: 'ORDERTOTAL', label: 'ORDER TOTAL', align: 'center' },
-  { id: 'CREATEDON', label: 'CREATED ON', align: 'center' },
-  { id: 'STATUS', label: 'STATUS', align: 'center' },
-  { id: 'N_A', label: 'N/A', align: 'center' },
-];
-
-import PropTypes from 'prop-types';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm, Controller } from 'react-hook-form';
-import { LoadingButton } from '@mui/lab';
-import { DatePicker } from '@mui/x-date-pickers';
-// routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
-// layouts
-import DashboardLayout from '../../../../layouts/dashboard';
-// components
 import FormProvider, {
   RHFSelect,
   RHFTextField,
 } from '../../../../components/hook-form';
-//
+// routes
+import { PATH_DASHBOARD } from '../../../../routes/paths';
+// layouts
+import DashboardLayout from '../../../../layouts/dashboard';
+
+// custom components
 import { FormSchema } from './schema';
-import ValuesPreview from './ValuesPreview';
+import orderData from './order.json';
 
 // ----------------------------------------------------------------------
 
 const OPTIONS = [
   { value: 'option 1', label: 'Option 1' },
   { value: 'option 2', label: 'Option 2' },
-  { value: 'option 3', label: 'Option 8' },
+  { value: 'option 3', label: 'Option 3' },
   { value: 'option 4', label: 'Option 4' },
   { value: 'option 5', label: 'Option 5' },
   { value: 'option 6', label: 'Option 6' },
@@ -79,27 +60,20 @@ export const defaultValues = {
   age: 0,
   email: '',
   fullName: '',
-  //
   editor: '',
   switch: false,
   radioGroup: '',
   autocomplete: null,
-  //
   password: '',
   confirmPassword: '',
-  //
   startDate: new Date(),
   endDate: null,
-  //
   singleUpload: null,
   multiUpload: [],
-  //
   singleSelect: '',
   multiSelect: [],
-  //
   checkbox: false,
   multiCheckbox: [],
-  //
   slider: 8,
   sliderRange: [15, 80],
 };
@@ -125,15 +99,9 @@ export default function SalesOrderAddPage() {
 
   const { themeStretch } = useSettingsContext();
 
-  const { push } = useRouter();
-
   const dispatch = useDispatch();
 
   const [tableData, setTableData] = useState([]);
-
-  const [filterName, setFilterName] = useState('');
-
-  const [filterStatus, setFilterStatus] = useState([]);
 
   const [openConfirm, setOpenConfirm] = useState(false);
   
@@ -143,9 +111,7 @@ export default function SalesOrderAddPage() {
   });
 
   const {
-    watch,
     reset,
-    control,
     setValue,
     handleSubmit,
     formState: { isSubmitting },
@@ -157,30 +123,17 @@ export default function SalesOrderAddPage() {
     reset();
   };
 
-//   useEffect(() => {
-//     dispatch(getProducts());
-//   }, [dispatch]);
-
-//   useEffect(() => {
-//     if (products.length) {
-//       setTableData(products);
-//     }
-//   }, [products]);
-
   useEffect(() => {
     setTableData(orderData);
-  },[dispatch])
+  }, [dispatch]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
-    filterName,
-    filterStatus,
   });
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
-  
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
   };
@@ -202,22 +155,8 @@ export default function SalesOrderAddPage() {
     }
   };
 
-  const handleEditRow = (id) => {
-    push(PATH_DASHBOARD.eCommerce.edit(paramCase(id)));
-  };
-
-  const handleViewRow = (id) => {
-    push(PATH_DASHBOARD.eCommerce.view(paramCase(id)));
-  };
-
-  const handleResetFilter = () => {
-    setFilterName('');
-    setFilterStatus([]);
-  };
-
   return (
     <>
-
       <Container maxWidth={themeStretch ? false : 'mg'}>
         <CustomBreadcrumbs
           heading="SalesOrder Add"
@@ -239,14 +178,12 @@ export default function SalesOrderAddPage() {
           >
             <Grid item xs={5} md={6}>
               <Stack spacing={2}>
-              <Block title="Basic">
-                <DateTimePicker
-                  renderInput={(props) => <TextField {...props} fullWidth />}
-                  label="Order Date"
-                  // value={value}
-                  // onChange={setValue}
-                />
-              </Block>
+                <Block title="Basic">
+                  <DateTimePicker
+                    renderInput={(props) => <TextField {...props} fullWidth />}
+                    label="Order Date"
+                  />
+                </Block>
 
                 <Block label="RHFSelect">
                   <RHFSelect name="singleSelect" label="Customer">
@@ -276,8 +213,6 @@ export default function SalesOrderAddPage() {
                     <DateTimePicker
                       renderInput={(props) => <TextField {...props} fullWidth />}
                       label="Start Date"
-                      // value={value}
-                      // onChange={setValue}
                     />
                   </Block>
 
@@ -285,10 +220,8 @@ export default function SalesOrderAddPage() {
                     <DateTimePicker
                       renderInput={(props) => <TextField {...props} fullWidth />}
                       label="End Date"
-                      // value={value}
-                      // onChange={setValue}
                     />
-                 </Block>
+                  </Block>
                 </Stack>
                 <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
                   <Block>
@@ -307,9 +240,6 @@ export default function SalesOrderAddPage() {
                     <TextField
                       variant="outlined"
                       fullWidth
-                      // value={values.weight}
-                      // onChange={handleChange('weight')}
-                      // helperText="Weight"
                       InputProps={{
                         endAdornment: <InputAdornment position="end">Kg</InputAdornment>,
                       }}
@@ -320,15 +250,11 @@ export default function SalesOrderAddPage() {
                   <Block label="RHFAutocomplete">
                     <Autocomplete
                       fullWidth
-                      value={"EUR"}
-                      options={["EUR","Dollar"]}
+                      value="EUR"
+                      options={["EUR", "Dollar"]}
                       onChange={(event, newValue) => {
                         setValue(newValue);
                       }}
-                      // // inputValue={inputValue}
-                      // onInputChange={(event, newInputValue) => {
-                      //   setInputValue(newInputValue);
-                      // }}
                       renderInput={(params) => <TextField {...params} label="Sales Currency" />}
                     />
                   </Block>
@@ -336,10 +262,7 @@ export default function SalesOrderAddPage() {
                     <TextField
                       variant="outlined"
                       fullWidth
-                      // value={values.weight}
-                      // onChange={handleChange('weight')}
                       label="Sales Ext Vat"
-                      // helperText="Weight"
                       InputProps={{
                         endAdornment: <InputAdornment position="end">EUR</InputAdornment>,
                       }}
@@ -350,15 +273,11 @@ export default function SalesOrderAddPage() {
                   <Block label="RHFAutocomplete">
                     <Autocomplete
                       fullWidth
-                      value={"EUR"}
-                      options={["EUR","Dollar"]}
+                      value="EUR"
+                      options={["EUR", "Dollar"]}
                       onChange={(event, newValue) => {
                         setValue(newValue);
                       }}
-                      // // inputValue={inputValue}
-                      // onInputChange={(event, newInputValue) => {
-                      //   setInputValue(newInputValue);
-                      // }}
                       renderInput={(params) => <TextField {...params} label="Sales Vat" />}
                     />
                   </Block>
@@ -366,10 +285,7 @@ export default function SalesOrderAddPage() {
                     <TextField
                       variant="outlined"
                       fullWidth
-                      // value={values.weight}
-                      // onChange={handleChange('weight')}
                       label="Sales Inc Vat"
-                      // helperText="Weight"
                       InputProps={{
                         endAdornment: <InputAdornment position="end">EUR</InputAdornment>,
                       }}
@@ -390,96 +306,6 @@ export default function SalesOrderAddPage() {
             </Grid>
           </Grid>
         </FormProvider>
-
-        {/* <Card>
-          <SalesOrderTableToolbar
-            filterName={filterName}
-            filterStatus={filterStatus}
-            onFilterName={handleFilterName}
-            onFilterStatus={handleFilterStatus}
-            // statusOptions={STATUS_OPTIONS}
-            isFiltered={isFiltered}
-            onResetFilter={handleResetFilter}
-          />
-
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
-              dense={dense}
-              numSelected={selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row.name)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
-            />
-
-            <Scrollbar>
-              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 1200 }}>
-                <TableHeadCustom
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
-                  numSelected={selected.length}
-                  onSort={onSort}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row.name)
-                    )
-                  }
-                />
-
-                <TableBody>
-                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) =>
-                      row ? (
-                        <SalesOrderTableRow
-                          key={row.name}
-                          row={row}
-                          selected={selected.includes(row.name)}
-                          onSelectRow={() => onSelectRow(row.name)}
-                          onDeleteRow={() => handleDeleteRow(row.name)}
-                          onEditRow={() => handleEditRow(row.name)}
-                          onViewRow={() => handleViewRow(row.name)}
-                        />
-                      ) : (
-                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                      )
-                    )}
-
-                  <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  />
-
-                  <TableNoData isNotFound={isNotFound} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
-
-          <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-            //
-            dense={dense}
-            onChangeDense={onChangeDense}
-          />
-        </Card> */}
       </Container>
 
       <ConfirmDialog
@@ -488,7 +314,7 @@ export default function SalesOrderAddPage() {
         title="Delete"
         content={
           <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
+            Are you sure you want to delete <strong>{selected.length}</strong> items?
           </>
         }
         action={
@@ -510,7 +336,7 @@ export default function SalesOrderAddPage() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus }) {
+function applyFilter({ inputData, comparator }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
@@ -521,19 +347,8 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
 
   inputData = stabilizedThis.map((el) => el[0]);
 
-  if (filterName) {
-    inputData = inputData.filter(
-      (product) => product.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-    );
-  }
-
-  if (filterStatus.length) {
-    inputData = inputData.filter((product) => filterStatus.includes(product.inventoryType));
-  }
-
   return inputData;
 }
-
 
 // ----------------------------------------------------------------------
 
@@ -554,7 +369,7 @@ function Block({ label = 'RHFTextField', sx, children }) {
           color: 'text.disabled',
         }}
       >
-        {/* {label} */}
+        {label}
       </Typography>
       {children}
     </Stack>
