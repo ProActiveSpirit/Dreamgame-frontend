@@ -6,17 +6,17 @@ import { Masonry } from '@mui/lab';
 // import ExtendPrice from './extprice'
 
 export default function BillingInformation(variant) {
-  const [values, setValues] = useState({
-    amount: '',
-    password: '',
-    weight: '',
-    weightRange: '',
-    showPassword: false,
-  });
+  // const [values, setValues] = useState({
+  //   amount: '',
+  //   password: '',
+  //   weight: '',
+  //   weightRange: '',
+  //   showPassword: false,
+  // });
 
   return (
     <>
-      <Container maxWidth={'md'} >
+      <Container maxWidth='md' >
         <Masonry columns={{ xs: 1}} spacing={2}>
           <TextField
             variant={variant}

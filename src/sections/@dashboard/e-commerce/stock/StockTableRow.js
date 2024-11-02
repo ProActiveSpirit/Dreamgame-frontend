@@ -68,13 +68,12 @@ export default function StockTableRow({
         </TableCell>
 
         <TableCell align="center">
-          {<Label color={"primary"} variant="filled">{STOCK}</Label>}
+          <Label color="primary" variant="filled">{STOCK}</Label>
         </TableCell>
         <TableCell align="center">{COST}</TableCell>
         <TableCell align="center">{PROVIDER}</TableCell>
         <TableCell align="center">{REGION}</TableCell>
         <TableCell align="center">{SKU}</TableCell>
-        <TableCell align="center"></TableCell>
         <TableCell align="center">
           {(() => {
             const icon = STATUS === "true" ? "eva:checkmark-circle-2-fill" : "eva:checkmark-circle-2-fill";

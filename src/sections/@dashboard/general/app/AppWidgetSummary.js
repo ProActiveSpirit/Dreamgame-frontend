@@ -54,8 +54,6 @@ export default function AppWidgetSummary({ title, percent, total, chart, sx, ...
         <Typography variant="subtitle3">{title}</Typography>
 
         {/* <TrendingInfo percent={percent} /> */}
-        <br></br>
-        <br></br>
         <Typography variant="h3">{fNumber(total)}</Typography>
       </Box>
 

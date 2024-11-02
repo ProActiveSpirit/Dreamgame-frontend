@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 // next
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+// redux
+import { useDispatch, useSelector } from '../../../../redux/store';
 // @mui
 import {
   Grid,
@@ -16,8 +18,6 @@ import {
   InputAdornment,
   Button,
 } from '@mui/material';
-// redux
-import { useDispatch, useSelector } from '../../../../redux/store';
 // components
 import { useSettingsContext } from '../../../../components/settings';
 import {
@@ -305,7 +305,7 @@ export default function SalesOrderAddPage() {
                   </Block>
                   <Block>
                     <TextField
-                      variant={"outlined"}
+                      variant="outlined"
                       fullWidth
                       // value={values.weight}
                       // onChange={handleChange('weight')}
@@ -334,7 +334,7 @@ export default function SalesOrderAddPage() {
                   </Block>
                   <Block>
                     <TextField
-                      variant={"outlined"}
+                      variant="outlined"
                       fullWidth
                       // value={values.weight}
                       // onChange={handleChange('weight')}
@@ -364,7 +364,7 @@ export default function SalesOrderAddPage() {
                   </Block>
                   <Block>
                     <TextField
-                      variant={"outlined"}
+                      variant="outlined"
                       fullWidth
                       // value={values.weight}
                       // onChange={handleChange('weight')}

@@ -3,8 +3,9 @@ import { useState } from 'react';
 import { TextField, Stack , Container} from '@mui/material';
 import { Masonry } from '@mui/lab';
 
-import Label from '../../../components/label';
 import { DateTimePicker} from '@mui/x-date-pickers';
+import Label from '../../../components/label';
+
 
 // import ExtendPrice from './extprice'
 
@@ -23,7 +24,7 @@ export default function OrderInformation({ variant }) {
 
   return (
     <>
-      <Container maxWidth={'md'} >
+      <Container maxWidth='md' >
         <Masonry columns={{ xs: 1}} spacing={4}>
           <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
             <Label color={'warning'} variant="filled" style={{height:36}}>

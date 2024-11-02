@@ -97,7 +97,7 @@ export default function SalesOrderListPage() {
 
   const dispatch = useDispatch();
 
-  // const { products, isLoading } = useSelector((state) => state.product);
+  const { products, isLoading } = useSelector((state) => state.product);
 
   const [tableData, setTableData] = useState([]);
 
