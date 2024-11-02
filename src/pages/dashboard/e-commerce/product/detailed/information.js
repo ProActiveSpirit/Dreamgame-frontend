@@ -1,19 +1,11 @@
-import { useState } from 'react';
 // @mui
 import { Box, Radio, TextField, Tooltip , RadioGroup, FormControlLabel, Container} from '@mui/material';
 import { Masonry } from '@mui/lab';
 
-import Label from 'src/components/label';
+import Label from '../../../../../components/label'
 import ExtendPrice from './extprice'
 
-export default function ProductInformation({ variant }) {
-  const [values, setValues] = useState({
-    amount: '',
-    password: '',
-    weight: '',
-    weightRange: '',
-    showPassword: false,
-  });
+export default function ProductInformation( variant ) {
 
   const COLORS = ['primary', 'warning','info', 'secondary'];
   const Stock = ['1','0','0','1' ];
@@ -21,7 +13,7 @@ export default function ProductInformation({ variant }) {
 
   return (
     <>
-      <Container maxWidth={'md'} >
+      <Container maxWidth='md' >
         <Masonry columns={{ xs: 1}} spacing={4}>
           <TextField
             variant={variant}

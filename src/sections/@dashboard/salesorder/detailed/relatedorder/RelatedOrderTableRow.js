@@ -5,16 +5,12 @@ import { useState } from 'react';
 import {
   Stack,
   TableRow,
-  Checkbox,
   TableCell,
-  IconButton,
   Link,
-  Button
 } from '@mui/material';
 // components
 import Iconify from '../../../../../components/iconify';
-import ConfirmDialog from 'src/components/confirm-dialog';
-import Label from 'src/components/label';
+import Label from '../../../../../components/label';
 // ----------------------------------------------------------------------
 
 RelatedOrderTableRow.propTypes = {
@@ -36,15 +32,7 @@ export default function RelatedOrderTableRow({
 }) {
   const { NUMBER, PRODUCT, DETAILED, PROVIDER, REGION, INCVAT, QUANTITY, STOCKING, TOTALINCVAT, JOB, STATUS,  DATE} = row;
 
-  const [openConfirm, setOpenConfirm] = useState(false);
-
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
-
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
+  // const [openConfirm, setOpenConfirm] = useState(false);
 
   return (
     <>
@@ -92,7 +80,7 @@ export default function RelatedOrderTableRow({
         </TableCell>
         <TableCell align="center">
           {(() => {
-            const color = (STATUS == "Processing" ? "info" : "success");
+            const color = (STATUS === "Processing" ? "info" : "success");
             return <Label color={color} variant="filled">{STATUS}</Label>;
           })()}
         </TableCell>
