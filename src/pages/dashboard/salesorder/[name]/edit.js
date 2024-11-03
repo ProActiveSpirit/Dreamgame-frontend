@@ -15,14 +15,12 @@ import DashboardLayout from '../../../../layouts/dashboard';
 import { useSettingsContext } from '../../../../components/settings';
 import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
 // sections
-import {
-  OrderInformation,
-  BillingInformation,
-  PurchaseOrder,
-  RelatedOrder,
-  ActivationKeys,
-  Packages
-} from '../detailed';
+import OrderInformation from '../detailed/orderInformation';
+import BillingInformation from '../detailed/billingInformation';
+import PurchaseOrder from '../detailed/purchaseOrder';
+import RelatedOrder from '../detailed/relatedOrder';
+import ActivationKeys from '../detailed/ActivationKeys';
+import Packages from '../detailed/packages';
 
 import SaleOrders from '../order.json';
 // ----------------------------------------------------------------------
