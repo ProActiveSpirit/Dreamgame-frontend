@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 
 // ----------------------------------------------------------------------
 
-export const FormSchema = Yup.object().shape({
+const FormSchema = Yup.object().shape({
   fullName: Yup.string()
     .required('Full name is required')
     .min(6, 'Mininum 6 characters')
@@ -44,3 +44,6 @@ export const FormSchema = Yup.object().shape({
   editor: Yup.string().required('Editor is required'),
   autocomplete: Yup.mixed().required('Autocomplete is required'),
 });
+
+
+export default FormSchema;
