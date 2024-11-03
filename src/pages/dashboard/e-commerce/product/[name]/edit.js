@@ -15,11 +15,10 @@ import DashboardLayout from '../../../../../layouts/dashboard';
 import { useSettingsContext } from '../../../../../components/settings';
 import CustomBreadcrumbs from '../../../../../components/custom-breadcrumbs';
 // sections
-import {
-  ProductInformation,
-  ProductSalesOrder,
-  ProductPurchaseOrder,
-} from '../detailed';
+import ProductInformation from '../detailed/information';
+import ProductSalesOrder from '../detailed/information';
+import ProductPurchaseOrder from '../detailed/information';
+
 // ----------------------------------------------------------------------
 
 EcommerceProductEditPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;

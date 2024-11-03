@@ -111,9 +111,9 @@ const navConfig = [
         icon: ICONS.analytics,
         children: [
           { title: 'Best Seller', path: PATH_DASHBOARD.report.bestseller },
-          { title: 'Customer Sales Reports', path: PATH_DASHBOARD.report.sales },
-          { title: 'Provider Purchase Reports', path: PATH_DASHBOARD.report.purchase },
-          { title: 'Provider Monthly Purchase Reports', path: PATH_DASHBOARD.report.monthlypurchase },
+          { title: 'Customer Sales', path: PATH_DASHBOARD.report.sales },
+          { title: 'Provider Purchase', path: PATH_DASHBOARD.report.purchase },
+          { title: 'Provider Monthly Purchase', path: PATH_DASHBOARD.report.monthlypurchase },
         ],
       },
       {
