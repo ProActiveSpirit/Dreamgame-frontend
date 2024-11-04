@@ -34,7 +34,7 @@ export default function SalesOrderTableRow({
   onDeleteRow,
   onViewRow,
 }) {
-  const { NUMBER, CUSTOMER, PRODUCT, DETAILED, PRICE, QUANTITY, TOTAL, CREATEDON, STATUS, N_A } = row;
+  const { NUMBER, CUSTOMER, PRODUCT, DETAILED, PRICE, QUANTITY, REGION,TOTAL, CREATEDON, STATUS, N_A } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -83,6 +83,7 @@ export default function SalesOrderTableRow({
 
         <TableCell align="right">{PRICE}</TableCell>
         <TableCell align="center">{QUANTITY}</TableCell>
+        <TableCell align="center">{REGION}</TableCell>
         <TableCell align="center">{TOTAL}</TableCell>
         <TableCell align="center">{CREATEDON}</TableCell>
         <TableCell align="center">
