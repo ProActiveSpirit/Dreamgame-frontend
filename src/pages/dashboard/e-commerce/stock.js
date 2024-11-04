@@ -49,10 +49,11 @@ const TABLE_HEAD = [
   { id: 'STOCK', label: 'STOCK', align: 'center' },
   // { id: 'price', label: 'PRICE', align: 'center' },
   { id: 'STOCKCOST', label: 'STOCK COST', align: 'center' },
+  { id: 'AVERAGE', label: 'AVERAGE COST', align: 'center' },
   { id: 'PROVIDER', label: 'PROVIDER', align: 'center' },
   { id: 'REGION', label: 'REGION', align: 'center' },
   { id: 'SKU', label: 'SKU', align: 'center' },
-  { id: 'Prices', label: 'Prices', align: 'center' },
+  { id: 'Prices', label: 'PRICES', align: 'center' },
   { id: 'STATUS', label: 'STATUS', align: 'center' },
 ];
 
