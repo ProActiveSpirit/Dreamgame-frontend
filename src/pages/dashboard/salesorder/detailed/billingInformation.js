@@ -5,7 +5,7 @@ import { Masonry } from '@mui/lab';
 
 // import ExtendPrice from './extprice'
 
-export default function BillingInformation({ variant = 'outlined' }) {
+export default function BillingInformation( variant = 'outlined' ) {
   return (
     <Container maxWidth='md'>
       <Masonry columns={{ xs: 1 }} spacing={2}>
