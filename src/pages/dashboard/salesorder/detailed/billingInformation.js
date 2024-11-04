@@ -5,12 +5,12 @@ import { Masonry } from '@mui/lab';
 
 // import ExtendPrice from './extprice'
 
-export default function BillingInformation( variant = 'outlined' ) {
+export default function BillingInformation() {
   return (
     <Container maxWidth='md'>
       <Masonry columns={{ xs: 1 }} spacing={2}>
         <TextField
-          variant={variant}
+          variant="outlined"
           required
           fullWidth
           label="Customer"
@@ -18,7 +18,7 @@ export default function BillingInformation( variant = 'outlined' ) {
         />
         
         <TextField
-          variant={variant}
+          variant="outlined"
           required
           fullWidth
           type="email"
@@ -27,7 +27,7 @@ export default function BillingInformation( variant = 'outlined' ) {
         />
 
         <TextField
-          variant={variant}
+          variant="outlined"
           required
           fullWidth
           label="Address"
@@ -35,7 +35,7 @@ export default function BillingInformation( variant = 'outlined' ) {
         />
 
         <TextField
-          variant={variant}
+          variant="outlined"
           required
           fullWidth
           label="ZipCode"
@@ -43,7 +43,7 @@ export default function BillingInformation( variant = 'outlined' ) {
         />
 
         <TextField
-          variant={variant}
+          variant="outlined"
           required
           fullWidth
           label="City"
@@ -51,7 +51,7 @@ export default function BillingInformation( variant = 'outlined' ) {
         />
 
         <TextField
-          variant={variant}
+          variant="outlined"
           required
           fullWidth
           label="State"
@@ -59,7 +59,7 @@ export default function BillingInformation( variant = 'outlined' ) {
         />
 
         <TextField
-          variant={variant}
+          variant="outlined"
           required
           fullWidth
           label="Country Code"
@@ -67,7 +67,7 @@ export default function BillingInformation( variant = 'outlined' ) {
         />
 
         <TextField
-          variant={variant}
+          variant="outlined"
           required
           fullWidth
           label="Region"
@@ -75,7 +75,7 @@ export default function BillingInformation( variant = 'outlined' ) {
         />
 
         <TextField
-          variant={variant}
+          variant="outlined"
           required
           fullWidth
           label="Default Currency"
