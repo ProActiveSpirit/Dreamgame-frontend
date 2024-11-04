@@ -40,7 +40,7 @@ import { PATH_DASHBOARD } from '../../../../routes/paths';
 import DashboardLayout from '../../../../layouts/dashboard';
 
 // custom components
-import FormSchema from './schema';
+import { FormSchema } from '../../../../sections/_examples/extra/form/schema';
 import orderData from './order.json';
 
 // ----------------------------------------------------------------------
