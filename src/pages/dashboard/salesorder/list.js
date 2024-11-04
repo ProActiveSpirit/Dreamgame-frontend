@@ -15,6 +15,8 @@ import {
   TableContainer,
 } from '@mui/material';
 
+import { width } from '@mui/system';
+
 // import { getProducts } from '../../../redux/slices/product';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -42,7 +44,6 @@ import orderData from './order.json';
 import { useDispatch, useSelector } from '../../../redux/store';
 // sections
 import { SalesOrderTableRow, SalesOrderTableToolbar } from '../../../sections/@dashboard/salesorder/list';
-import { width } from '@mui/system';
 
 // ----------------------------------------------------------------------
 
