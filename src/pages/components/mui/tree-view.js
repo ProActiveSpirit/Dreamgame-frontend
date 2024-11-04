@@ -3,7 +3,7 @@ import Head from 'next/head';
 // @mui
 import { alpha, styled } from '@mui/material/styles';
 import { Box, Container } from '@mui/material';
-import { TreeView, TreeItem, treeItemClasses } from '@mui/lab';
+import { TreeView, TreeItem } from '@mui/x-tree-view'; // Updated import
 // routes
 import { PATH_PAGE } from '../../../routes/paths';
 // layouts
@@ -22,18 +22,23 @@ const StyledTreeView = styled(TreeView)({
   maxWidth: 400,
 });
 
-const StyledTreeItem = styled((props) => <TreeItem {...props} />)(({ theme }) => ({
-  [`& .${treeItemClasses.iconContainer}`]: {
-    '& .close': {
-      opacity: 0.3,
-    },
-  },
-  [`& .${treeItemClasses.group}`]: {
-    marginLeft: 15,
-    paddingLeft: 18,
-    borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
-  },
-}));
+const StyledTreeItem = (props) => (
+  <TreeItem
+    {...props}
+    sx={{
+      '& .MuiTreeItem-iconContainer': {
+        '& .close': {
+          opacity: 0.3,
+        },
+      },
+      '& .MuiTreeItem-group': {
+        marginLeft: 15,
+        paddingLeft: 18,
+        borderLeft: (theme) => `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
+      },
+    }}
+  />
+);
 
 // ----------------------------------------------------------------------
 
@@ -85,20 +90,20 @@ export default function MUITreesViewPage() {
               defaultExpandIcon={<Iconify icon="eva:chevron-right-fill" />}
               defaultEndIcon={null}
             >
-              <TreeItem nodeId="1" label="Applications">
-                <TreeItem nodeId="2" label="Calendar" />
-                <TreeItem nodeId="3" label="Chrome" />
-                <TreeItem nodeId="4" label="Webstorm" />
-              </TreeItem>
-              <TreeItem nodeId="5" label="Documents">
-                <TreeItem nodeId="10" label="OSS" />
-                <TreeItem nodeId="6" label="Material-UI">
-                  <TreeItem nodeId="7" label="src">
-                    <TreeItem nodeId="8" label="index.js" />
-                    <TreeItem nodeId="9" label="tree-view.js" />
-                  </TreeItem>
-                </TreeItem>
-              </TreeItem>
+              <StyledTreeItem nodeId="1" label="Applications">
+                <StyledTreeItem nodeId="2" label="Calendar" />
+                <StyledTreeItem nodeId="3" label="Chrome" />
+                <StyledTreeItem nodeId="4" label="Webstorm" />
+              </StyledTreeItem>
+              <StyledTreeItem nodeId="5" label="Documents">
+                <StyledTreeItem nodeId="10" label="OSS" />
+                <StyledTreeItem nodeId="6" label="Material-UI">
+                  <StyledTreeItem nodeId="7" label="src">
+                    <StyledTreeItem nodeId="8" label="index.js" />
+                    <StyledTreeItem nodeId="9" label="tree-view.js" />
+                  </StyledTreeItem>
+                </StyledTreeItem>
+              </StyledTreeItem>
             </StyledTreeView>
           </Block>
 
@@ -109,19 +114,19 @@ export default function MUITreesViewPage() {
               defaultExpandIcon={<Iconify icon="eva:chevron-right-fill" />}
               defaultEndIcon={null}
             >
-              <TreeItem nodeId="1" label="Applications">
-                <TreeItem nodeId="2" label="Calendar" />
-                <TreeItem nodeId="3" label="Chrome" />
-                <TreeItem nodeId="4" label="Webstorm" />
-              </TreeItem>
-              <TreeItem nodeId="5" label="Documents">
-                <TreeItem nodeId="6" label="Material-UI">
-                  <TreeItem nodeId="7" label="src">
-                    <TreeItem nodeId="8" label="index.js" />
-                    <TreeItem nodeId="9" label="tree-view.js" />
-                  </TreeItem>
-                </TreeItem>
-              </TreeItem>
+              <StyledTreeItem nodeId="1" label="Applications">
+                <StyledTreeItem nodeId="2" label="Calendar" />
+                <StyledTreeItem nodeId="3" label="Chrome" />
+                <StyledTreeItem nodeId="4" label="Webstorm" />
+              </StyledTreeItem>
+              <StyledTreeItem nodeId="5" label="Documents">
+                <StyledTreeItem nodeId="6" label="Material-UI">
+                  <StyledTreeItem nodeId="7" label="src">
+                    <StyledTreeItem nodeId="8" label="index.js" />
+                    <StyledTreeItem nodeId="9" label="tree-view.js" />
+                  </StyledTreeItem>
+                </StyledTreeItem>
+              </StyledTreeItem>
             </StyledTreeView>
           </Block>
 

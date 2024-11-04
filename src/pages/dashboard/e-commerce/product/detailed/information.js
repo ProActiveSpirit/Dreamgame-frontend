@@ -1,24 +1,22 @@
 // @mui
-import { Box, Radio, TextField, Tooltip , RadioGroup, FormControlLabel, Container} from '@mui/material';
-import { Masonry } from '@mui/lab';
+import { Box, Radio, TextField, Tooltip, RadioGroup, FormControlLabel, Container } from '@mui/material';
+import { Masonry } from '@mui/lab'; // Ensure this import is correct based on the version you're using
 
-import Label from '../../../../../components/label'
-import ExtendPrice from './extprice'
+import Label from '../../../../../components/label';
+import ExtendPrice from './extprice';
 
-export default function ProductInformation( variant ) {
-
-  const COLORS = ['primary', 'warning','info', 'secondary'];
-  const Stock = ['1','0','0','1' ];
-  const Status = ['generated keys' ,'pending keys to generate,','sold keys','sold keys pending generations'];
+export default function ProductInformation(variant = 'outline') { // Correctly destructure the variant prop
+  const COLORS = ['primary', 'warning', 'info', 'secondary'];
+  const Stock = ['1', '0', '0', '1'];
+  const Status = ['generated keys', 'pending keys to generate', 'sold keys', 'sold keys pending generations'];
 
   return (
     <>
-      <Container maxWidth='md' >
-        <Masonry columns={{ xs: 1}} spacing={4}>
+      <Container maxWidth='md'>
+        <Masonry columns={{ xs: 1 }} spacing={4}>
           <TextField
             variant={variant}
             required
-            // fullWidth
             label="Name"
             size="small"
             defaultValue="13000 CALL OF DUTY POINTS (MV IIII, MIW II, Warzone) - [XBOX Series X|S /XBOX One]"
@@ -33,13 +31,13 @@ export default function ProductInformation( variant ) {
               '& > *': { mx: 0.5 },
             }}
           >
-              {COLORS.map((color, index) => (
-                <Tooltip key={color} title={Status[index]}>
-                  <Label color={color} variant="filled">
-                    {Stock[index]}
-                  </Label>
-                </Tooltip>
-              ))}
+            {COLORS.map((color, index) => (
+              <Tooltip key={color} title={Status[index]}>
+                <Label color={color} variant="filled">
+                  {Stock[index]}
+                </Label>
+              </Tooltip>
+            ))}
           </Box>
           <TextField
             variant={variant}
@@ -49,7 +47,6 @@ export default function ProductInformation( variant ) {
             size="small"
             defaultValue=""
           />
-
           <TextField
             variant={variant}
             required
@@ -58,7 +55,6 @@ export default function ProductInformation( variant ) {
             size="small"
             defaultValue="8806188752425"
           />
-
           <TextField
             variant={variant}
             required
@@ -67,7 +63,6 @@ export default function ProductInformation( variant ) {
             size="small"
             defaultValue="Activision"
           />
-
           <TextField
             variant={variant}
             required
@@ -76,7 +71,6 @@ export default function ProductInformation( variant ) {
             size="small"
             defaultValue=""
           />
-
           <Box
             sx={{
               p: 1,
@@ -92,9 +86,7 @@ export default function ProductInformation( variant ) {
               <FormControlLabel value="p" control={<Radio size="small" />} label="No" />
             </RadioGroup>
           </Box>
-
         </Masonry>
-
       </Container>
       <ExtendPrice />
     </>
