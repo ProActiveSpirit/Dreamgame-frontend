@@ -223,17 +223,6 @@ export default function SalesOrderAddPage() {
                     />
                   </Block>
                 </Stack>
-                <Autocomplete
-                  multiple
-                  fullWidth
-                  options={top100Films}
-                  getOptionLabel={(option) => option.title}
-                  defaultValue={[top100Films[1]]}
-                  filterSelectedOptions
-                  renderInput={(params) => (
-                    <TextField {...params} label="Template Regions" placeholder="Country Code" />
-                  )}
-                />
                 <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
                   <Block>
                     <RHFTextField

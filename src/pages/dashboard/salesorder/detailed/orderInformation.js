@@ -6,7 +6,7 @@ import { Masonry } from '@mui/lab';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import Label from '../../../../components/label';
 
-export default function OrderInformation({ variant }) {
+export default function OrderInformation( {variant = 'outlined' }) {
   return (
     <>
       <Container maxWidth="md">
