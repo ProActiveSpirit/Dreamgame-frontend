@@ -223,6 +223,17 @@ export default function SalesOrderAddPage() {
                     />
                   </Block>
                 </Stack>
+                <Autocomplete
+                  multiple
+                  fullWidth
+                  options={top100Films}
+                  getOptionLabel={(option) => option.title}
+                  defaultValue={[top100Films[1]]}
+                  filterSelectedOptions
+                  renderInput={(params) => (
+                    <TextField {...params} label="Template Regions" placeholder="Country Code" />
+                  )}
+                />
                 <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
                   <Block>
                     <RHFTextField
@@ -375,3 +386,16 @@ function Block({ label = 'RHFTextField', sx, children }) {
     </Stack>
   );
 }
+
+
+export const top100Films = [
+  { title: 'BE', year: 1994 },
+  { title: 'DE', year: 1972 },
+  { title: 'ES', year: 1974 },
+  { title: 'FR', year: 2008 },
+  { title: 'NL', year: 1957 },
+  { title: "PT", year: 1993 },
+  { title: 'PL', year: 1994 },
+  { title: 'NO', year: 2003 },
+  { title: 'GB', year: 1966 },
+];
