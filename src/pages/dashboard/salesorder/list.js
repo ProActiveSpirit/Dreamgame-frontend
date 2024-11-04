@@ -53,7 +53,6 @@ const TABLE_HEAD = [
   { id: 'PRODUCT', label: 'PRODUCT', align: 'center' , width: 300 },
   { id: 'PRICE', label: 'PRODUCT PRICE', align: 'center' },
   { id: 'QUANTITY', label: 'QUANTITY', align: 'center' },
-  { id: 'REGION', label: 'REGION', align: 'center' , width:250},
   { id: 'ORDERTOTAL', label: 'ORDER TOTAL', align: 'center' },
   { id: 'CREATEDON', label: 'CREATED ON', align: 'center' },
   { id: 'STATUS', label: 'STATUS', align: 'center' },

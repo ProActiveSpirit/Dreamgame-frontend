@@ -31,39 +31,37 @@ export default function SummaryTableRow({
   const { name, stock, provider, region, sku, publisher, status } = row;
 
   return (
-    <>
-      <TableRow hover selected={selected}>
-        <TableCell padding="checkbox">
-          <Checkbox checked={selected} onClick={onSelectRow} />
-        </TableCell>
+    <TableRow hover selected={selected}>
+      <TableCell padding="checkbox">
+        <Checkbox checked={selected} onClick={onSelectRow} />
+      </TableCell>
 
-        <TableCell width={300}>
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Link
-              noWrap
-              color="inherit"
-              variant="subtitle2"
-              onClick={onViewRow}
-              sx={{ cursor: 'pointer' }}
-            >
-              {name}
-            </Link>
-          </Stack>
-        </TableCell>
+      <TableCell width={300}>
+        <Stack direction="row" alignItems="center" spacing={2}>
+          <Link
+            noWrap
+            color="inherit"
+            variant="subtitle2"
+            onClick={onViewRow}
+            sx={{ cursor: 'pointer' }}
+          >
+            {name}
+          </Link>
+        </Stack>
+      </TableCell>
 
-        <TableCell align="center">{stock}</TableCell>
-        <TableCell align="center">{provider}</TableCell>
-        <TableCell align="center">{region}</TableCell>
-        <TableCell align="center">{sku}</TableCell>
-        <TableCell align="center">{publisher}</TableCell>
-        <TableCell align="center">{status}</TableCell>
+      <TableCell align="center">{stock}</TableCell>
+      <TableCell align="center">{provider}</TableCell>
+      <TableCell align="center">{region}</TableCell>
+      <TableCell align="center">{sku}</TableCell>
+      <TableCell align="center">{publisher}</TableCell>
+      <TableCell align="center">{status}</TableCell>
 
-        <TableCell align="center"  width={50}>
-          <IconButton onClick={() => onEditRow()}>
-            <Iconify icon="eva:edit-fill" />
-          </IconButton>
-        </TableCell>
-      </TableRow>
-    </>
+      <TableCell align="center" width={50}>
+        <IconButton onClick={() => onEditRow()}>
+          <Iconify icon="eva:edit-fill" />
+        </IconButton>
+      </TableCell>
+    </TableRow>
   );
 }
