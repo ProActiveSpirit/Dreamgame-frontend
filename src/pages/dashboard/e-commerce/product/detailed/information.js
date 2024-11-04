@@ -5,7 +5,7 @@ import { Masonry } from '@mui/lab'; // Ensure this import is correct based on th
 import Label from '../../../../../components/label';
 import ExtendPrice from './extprice';
 
-export default function ProductInformation(variant = 'outline') { // Correctly destructure the variant prop
+export default function ProductInformation() { // Correctly destructure the variant prop
   const COLORS = ['primary', 'warning', 'info', 'secondary'];
   const Stock = ['1', '0', '0', '1'];
   const Status = ['generated keys', 'pending keys to generate', 'sold keys', 'sold keys pending generations'];
@@ -15,7 +15,7 @@ export default function ProductInformation(variant = 'outline') { // Correctly d
       <Container maxWidth='md'>
         <Masonry columns={{ xs: 1 }} spacing={4}>
           <TextField
-            variant={variant}
+            variant="outlined"
             required
             label="Name"
             size="small"
@@ -40,7 +40,7 @@ export default function ProductInformation(variant = 'outline') { // Correctly d
             ))}
           </Box>
           <TextField
-            variant={variant}
+            variant="outlined"
             required
             fullWidth
             label="Provider"
@@ -48,7 +48,7 @@ export default function ProductInformation(variant = 'outline') { // Correctly d
             defaultValue=""
           />
           <TextField
-            variant={variant}
+            variant="outlined"
             required
             fullWidth
             label="Sku"
@@ -56,7 +56,7 @@ export default function ProductInformation(variant = 'outline') { // Correctly d
             defaultValue="8806188752425"
           />
           <TextField
-            variant={variant}
+            variant="outlined"
             required
             fullWidth
             label="Publisher"
@@ -64,7 +64,7 @@ export default function ProductInformation(variant = 'outline') { // Correctly d
             defaultValue="Activision"
           />
           <TextField
-            variant={variant}
+            variant="outlined"
             required
             fullWidth
             label="Provider Status"
