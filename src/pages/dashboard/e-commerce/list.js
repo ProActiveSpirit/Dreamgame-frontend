@@ -85,7 +85,7 @@ export default function EcommerceProductListPage() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'name',
+    defaultOrderBy: 'sku',
   });
 
   const { themeStretch } = useSettingsContext();
@@ -180,6 +180,7 @@ export default function EcommerceProductListPage() {
   };
 
   const handleEditRow = (id) => {
+    console.log("handleEditRow , handleEditRow");
     push(PATH_DASHBOARD.eCommerce.edit(paramCase(id)));
   };
 
@@ -274,7 +275,7 @@ export default function EcommerceProductListPage() {
                     .map((row, index) =>
                       row ? (
                         <ProductTableRow
-                          key={row.name}
+                          key={row.sku}
                           row={row}
                           selected={selected.includes(row.name)}
                           onSelectRow={() => onSelectRow(row.name)}
