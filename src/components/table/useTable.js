@@ -58,6 +58,7 @@ export default function useTable(props) {
   }, []);
 
   const onChangePage = useCallback((event, newPage) => {
+    console.log("rowsPerPage" , rowsPerPage);
     setPage(newPage);
   }, []);
 
