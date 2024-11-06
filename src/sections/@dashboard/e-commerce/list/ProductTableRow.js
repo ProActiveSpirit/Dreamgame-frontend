@@ -44,7 +44,7 @@ export default function ProductTableRow({
               noWrap
               color="inherit"
               variant="subtitle2"
-              onClick={onViewRow}
+              onClick={() => onEditRow()}
               sx={{ cursor: 'pointer' }}
             >
               {name}
