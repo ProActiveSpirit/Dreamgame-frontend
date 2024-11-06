@@ -151,7 +151,7 @@ export default function EcommerceProductListPage() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.name !== id);
+    const deleteRow = tableData.filter((row) => row.region_sku !== id);
     setSelected([]);
     setTableData(deleteRow);
 
@@ -163,7 +163,7 @@ export default function EcommerceProductListPage() {
   };
 
   const handleDeleteRows = (selectedRows) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row.name));
+    const deleteRows = tableData.filter((row) => !selectedRows.includes(row.region_sku));
     setSelected([]);
     setTableData(deleteRows);
 
@@ -240,7 +240,7 @@ export default function EcommerceProductListPage() {
               onSelectAllRows={(checked) =>
                 onSelectAllRows(
                   checked,
-                  tableData.map((row) => row.name)
+                  tableData.map((row) => row.region_sku)
                 )
               }
               action={
@@ -264,7 +264,7 @@ export default function EcommerceProductListPage() {
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.name)
+                      tableData.map((row) => row.region_sku)
                     )
                   }
                 />
