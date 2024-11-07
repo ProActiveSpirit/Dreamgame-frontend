@@ -1,10 +1,9 @@
 import { paramCase } from 'change-case';
 import { useState, useEffect } from 'react';
-// next
+import { useSelector, useDispatch } from 'react-redux'; // Import Redux hooks
 import Head from 'next/head';
-import NextLink from 'next/link';
+// import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-// @mui
 import {
   Card,
   Table,
@@ -15,13 +14,8 @@ import {
   IconButton,
   TableContainer,
 } from '@mui/material';
-// routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
-// _mock_
-import { _userList } from '../../../_mock/arrays';
-// layouts
 import DashboardLayout from '../../../layouts/dashboard';
-// components
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog';
@@ -37,40 +31,17 @@ import {
   TableSelectedAction,
   TablePaginationCustom,
 } from '../../../components/table';
-// sections
 import { UserTableRow } from '../../../sections/@dashboard/user/list';
-
-// ----------------------------------------------------------------------
-
-// const STATUS_OPTIONS = ['all', 'active', 'banned'];
-
-// const ROLE_OPTIONS = [
-//   'all',
-//   'ux designer',
-//   'full stack designer',
-//   'backend developer',
-//   'project manager',
-//   'leader',
-//   'ui designer',
-//   'ui/ux designer',
-//   'front end developer',
-//   'full stack developer',
-// ];
+import { fetchUsers } from '../../../redux/slices/user'; // Import fetchUsers action
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'Email', label: 'Email', align: 'left' },
-  // { id: 'role', label: 'Role', align: 'center' },
+  { id: 'email', label: 'Email', align: 'left' },
   { id: 'isVerified', label: 'Verified', align: 'center' },
-  // { id: 'status', label: 'Status', align: 'center' },
   { id: '' },
 ];
 
-// ----------------------------------------------------------------------
-
 UserListPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
-
-// ----------------------------------------------------------------------
 
 export default function UserListPage() {
   const {
@@ -80,12 +51,10 @@ export default function UserListPage() {
     orderBy,
     rowsPerPage,
     setPage,
-    //
     selected,
     setSelected,
     onSelectRow,
     onSelectAllRows,
-    //
     onSort,
     onChangeDense,
     onChangePage,
@@ -93,21 +62,22 @@ export default function UserListPage() {
   } = useTable();
 
   const { themeStretch } = useSettingsContext();
-
   const { push } = useRouter();
 
-  const [tableData, setTableData] = useState([]);
+  const dispatch = useDispatch();
+  const { users, isLoading, error } = useSelector((state) => state.user); // Select user state from Redux
 
   const [openConfirm, setOpenConfirm] = useState(false);
-
   const [filterName] = useState('');
-
   const [filterRole] = useState('all');
-
   const [filterStatus] = useState('all');
 
+  useEffect(() => {
+    dispatch(fetchUsers()); // Fetch users when the component mounts
+  }, [dispatch]);
+
   const dataFiltered = applyFilter({
-    inputData: tableData,
+    inputData: users,
     comparator: getComparator(order, orderBy),
     filterName,
     filterRole,
@@ -121,11 +91,6 @@ export default function UserListPage() {
     (!dataFiltered.length && !!filterRole) ||
     (!dataFiltered.length && !!filterStatus);
 
-  useEffect(() => {
-    // Assuming _userList is the initial data
-    setTableData(_userList);
-  }, []);
-  
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
   };
@@ -134,59 +99,21 @@ export default function UserListPage() {
     setOpenConfirm(false);
   };
 
-  const handleFilterStatus = (event, newValue) => {
-    setPage(0);
-    setFilterStatus(newValue);
-  };
-
-  const handleFilterName = (event) => {
-    setPage(0);
-    setFilterName(event.target.value);
-  };
-
-  const handleFilterRole = (event) => {
-    setPage(0);
-    setFilterRole(event.target.value);
-  };
-
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.id !== id);
+    const deleteRow = users.filter((row) => row.id !== id);
     setSelected([]);
-    setTableData(deleteRow);
-
-    if (page > 0) {
-      if (dataInPage.length < 2) {
-        setPage(page - 1);
-      }
-    }
+    // Consider dispatching an action to update the user list in the store
   };
 
   const handleDeleteRows = (selectedRows) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row.id));
+    const deleteRows = users.filter((row) => !selectedRows.includes(row.id));
     setSelected([]);
-    setTableData(deleteRows);
-
-    if (page > 0) {
-      if (selectedRows.length === dataInPage.length) {
-        setPage(page - 1);
-      } else if (selectedRows.length === dataFiltered.length) {
-        setPage(0);
-      } else if (selectedRows.length > dataInPage.length) {
-        const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-        setPage(newPage);
-      }
-    }
+    // Consider dispatching an action to update the user list in the store
   };
 
   const handleEditRow = (id) => {
     push(PATH_DASHBOARD.user.edit(paramCase(id)));
   };
-
-  // const handleResetFilter = () => {
-  //   setFilterName('');
-  //   setFilterRole('all');
-  //   setFilterStatus('all');
-  // };
 
   return (
     <>
@@ -202,16 +129,6 @@ export default function UserListPage() {
             { name: 'User', href: PATH_DASHBOARD.user.root },
             { name: 'List' },
           ]}
-          // action={
-          //   <Button
-          //     component={NextLink}
-          //     href={PATH_DASHBOARD.user.new}
-          //     variant="contained"
-          //     startIcon={<Iconify icon="eva:plus-fill" />}
-          //   >
-          //     New User
-          //   </Button>
-          // }
         />
 
         <Card>
@@ -219,11 +136,11 @@ export default function UserListPage() {
             <TableSelectedAction
               dense={dense}
               numSelected={selected.length}
-              rowCount={tableData.length}
+              rowCount={users.length}
               onSelectAllRows={(checked) =>
                 onSelectAllRows(
                   checked,
-                  tableData.map((row) => row.id)
+                  users.map((row) => row.id)
                 )
               }
               action={
@@ -241,13 +158,13 @@ export default function UserListPage() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
+                  rowCount={users.length}
                   numSelected={selected.length}
                   onSort={onSort}
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.id)
+                      users.map((row) => row.id)
                     )
                   }
                 />
@@ -268,7 +185,7 @@ export default function UserListPage() {
 
                   <TableEmptyRows
                     height={52}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
+                    emptyRows={emptyRows(page, rowsPerPage, users.length)}
                   />
 
                   <TableNoData isNotFound={isNotFound} />
@@ -283,7 +200,6 @@ export default function UserListPage() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            //
             dense={dense}
             onChangeDense={onChangeDense}
           />
@@ -316,8 +232,7 @@ export default function UserListPage() {
   );
 }
 
-// ----------------------------------------------------------------------
-
+// Utility function for filtering
 function applyFilter({ inputData, comparator, filterName, filterStatus, filterRole }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
@@ -331,7 +246,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterRo
 
   if (filterName) {
     inputData = inputData.filter(
-      (user) => user.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (user) => user.name.toLowerCase().includes(filterName.toLowerCase())
     );
   }
 
