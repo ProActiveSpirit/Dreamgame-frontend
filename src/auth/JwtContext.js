@@ -38,7 +38,7 @@ const reducer = (state, action) => {
   if (action.type === 'REGISTER') {
     return {
       ...state,
-      isAuthenticated: true,
+      isAuthenticated: false,
       user: action.payload.user,
     };
   }
@@ -75,7 +75,7 @@ export function AuthProvider({ children }) {
       if (accessToken && isValidToken(accessToken)) {
         setSession(accessToken);
 
-        const response = await axios.get('/api/account/my-account');
+        const response = await axios.get('/api/auth/my-account');
 
         const { user } = response.data;
 
@@ -113,7 +113,7 @@ export function AuthProvider({ children }) {
 
   // LOGIN
   const login = useCallback(async (email, password) => {
-    const response = await axios.post('/api/account/login', {
+    const response = await axios.post('/api/auth/login', {
       email,
       password,
     });
@@ -131,20 +131,23 @@ export function AuthProvider({ children }) {
 
   // REGISTER
   const register = useCallback(async (email, password, firstName, lastName) => {
-    const response = await axios.post('/api/account/register', {
+    console.log("register:" , email , password , firstName , lastName);
+    const response = await axios.post('/api/auth/register', {
       email,
       password,
       firstName,
       lastName,
     });
-    const { accessToken, user } = response.data;
 
-    localStorage.setItem('accessToken', accessToken);
+    const message = response.message;
+    // const { accessToken, user } = response.data;
+
+    // localStorage.setItem('accessToken', accessToken);
 
     dispatch({
       type: 'REGISTER',
       payload: {
-        user,
+        message
       },
     });
   }, []);
