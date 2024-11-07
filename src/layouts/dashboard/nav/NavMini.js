@@ -14,7 +14,7 @@ import NavToggleButton from './NavToggleButton';
 // ----------------------------------------------------------------------
 
 export default function NavMini() {
-  const NavConfig = useNavConfig();
+  const navConfig = useNavConfig();
   
   return (
     <Box

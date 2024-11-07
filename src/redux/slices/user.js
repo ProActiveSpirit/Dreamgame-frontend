@@ -37,7 +37,7 @@ const userSlice = createSlice({
   },
 });
 
-export const { startLoading, hasError, getUsersSuccess, getUserSuccess } = userSlice.actions;
+export const { startLoading, hasError, getUsersSuccess, getUserSuccess, updateUser } = userSlice.actions;
 
 export default userSlice.reducer;
 
