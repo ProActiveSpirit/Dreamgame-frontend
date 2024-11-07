@@ -13,7 +13,7 @@ import Logo from '../../../components/logo';
 import Scrollbar from '../../../components/scrollbar';
 import { NavSectionVertical } from '../../../components/nav-section';
 //
-import navConfig from './config-navigation';
+import {useNavConfig} from './config-navigation';
 import NavDocs from './NavDocs';
 import NavToggleButton from './NavToggleButton';
 
@@ -26,6 +26,8 @@ NavVertical.propTypes = {
 
 export default function NavVertical({ openNav, onCloseNav }) {
   const { pathname } = useRouter();
+
+  const navConfig = useNavConfig();
 
   const isDesktop = useResponsive('up', 'lg');
 

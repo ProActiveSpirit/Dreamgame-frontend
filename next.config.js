@@ -3,8 +3,8 @@ module.exports = {
   trailingSlash: true,
   env: {
     // HOST
-    HOST_API_KEY: 'http://localhost:5000/',
-    // HOST_API_KEY: 'https://dreamgame-backend.vercel.app/',
+    // HOST_API_KEY: 'http://localhost:5000/',
+    HOST_API_KEY: 'https://dreamgame-backend.vercel.app/',
     // MAPBOX
     MAPBOX_API: '',
     // FIREBASE

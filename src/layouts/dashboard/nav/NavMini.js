@@ -8,12 +8,14 @@ import { hideScrollbarX } from '../../../utils/cssStyles';
 import Logo from '../../../components/logo';
 import { NavSectionMini } from '../../../components/nav-section';
 //
-import navConfig from './config-navigation';
+import {useNavConfig} from './config-navigation';
 import NavToggleButton from './NavToggleButton';
 
 // ----------------------------------------------------------------------
 
 export default function NavMini() {
+  const NavConfig = useNavConfig();
+  
   return (
     <Box
       component="nav"

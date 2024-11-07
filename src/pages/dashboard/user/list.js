@@ -121,7 +121,7 @@ export default function UserListPage() {
         <title> User: List | Minimal UI</title>
       </Head>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={themeStretch ? false : 'mg'}>
         <CustomBreadcrumbs
           heading="User List"
           links={[
