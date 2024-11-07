@@ -32,7 +32,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
 
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
-  const [checked , setChecked] = useState(role != "");
+  const [checked , setChecked] = useState(role !== "");
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
