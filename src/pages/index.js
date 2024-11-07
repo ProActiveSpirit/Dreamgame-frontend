@@ -1,5 +1,6 @@
 // next
 import Head from 'next/head';
+import {useRouter} from 'next/router';
 // @mui
 import { Box } from '@mui/material';
 // layouts
@@ -19,6 +20,7 @@ import {
   HomeCleanInterfaces,
   HomeHugePackElements,
 } from '../sections/home';
+import { useEffect } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -27,9 +29,15 @@ HomePage.getLayout = (page) => <MainLayout> {page} </MainLayout>;
 // ----------------------------------------------------------------------
 
 export default function HomePage() {
+  const router = useRouter();
+  
+  useEffect(() => {
+    router.push("/auth/login-unprotected");
+  },[router])
+  
   return (
     <>
-      <Head>
+      {/* <Head>
         <title> The starting point for your next project | Minimal UI</title>
       </Head>
 
@@ -61,7 +69,7 @@ export default function HomePage() {
         <HomeLookingFor />
 
         <HomeAdvertisement />
-      </Box>
+      </Box> */}
     </>
   );
 }

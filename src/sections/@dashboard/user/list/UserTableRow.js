@@ -3,7 +3,7 @@ import { useState } from 'react';
 // @mui
 import {
   Stack,
-  Avatar,
+  Switch,
   Button,
   Checkbox,
   TableRow,
@@ -58,23 +58,13 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>
 
-        <TableCell>
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar alt={name} src={avatarUrl} />
-
-            <Typography variant="subtitle2" noWrap>
-              {name}
-            </Typography>
-          </Stack>
-        </TableCell>
-
         <TableCell align="left">{company}</TableCell>
 
         <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
           {role}
         </TableCell>
 
-        <TableCell align="center">
+        {/* <TableCell align="center">
           <Iconify
             icon={isVerified ? 'eva:checkmark-circle-fill' : 'eva:clock-outline'}
             sx={{
@@ -84,23 +74,16 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
               ...(!isVerified && { color: 'warning.main' }),
             }}
           />
+        </TableCell> */}
+        <TableCell align="center">
+          <Switch color={"success"} />
         </TableCell>
 
-        <TableCell align="left">
-          <Label
-            variant="soft"
-            color={(status === 'banned' && 'error') || 'success'}
-            sx={{ textTransform: 'capitalize' }}
-          >
-            {status}
-          </Label>
-        </TableCell>
-
-        <TableCell align="right">
+        {/* <TableCell  >
           <IconButton color={openPopover ? 'inherit' : 'default'} onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
-        </TableCell>
+        </TableCell> */}
       </TableRow>
 
       <MenuPopover
