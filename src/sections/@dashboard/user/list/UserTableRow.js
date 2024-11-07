@@ -27,12 +27,12 @@ UserTableRow.propTypes = {
 };
 
 export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
-  const { id, firstName, lastName, email, adminVerified } = row;
+  const { id, firstName, lastName, email, role } = row;
   const dispatch = useDispatch(); // Initialize dispatch
 
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
-  const [checked , setChecked] = useState(adminVerified);
+  const [checked , setChecked] = useState(role != "");
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -51,8 +51,8 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
   };
 
   const handleToggleVerified = () => {
-    setChecked(!adminVerified)
-    dispatch(updateAdminVerified(id, !adminVerified)); // Dispatch the thunk to update the status
+    setChecked(!role)
+    dispatch(updateAdminVerified(id, !role)); // Dispatch the thunk to update the status
   };
 
   return (
