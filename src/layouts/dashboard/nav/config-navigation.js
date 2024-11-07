@@ -35,15 +35,14 @@ export const useNavConfig = () => {
   const { user } = useAuthContext();
 
   // Memoize the nav configuration to avoid unnecessary recalculations
-  return useMemo(() => {
-    return [
+  return useMemo(() => [
       {
         items: [{ title: 'Dashboard', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard }],
       },
       {
         items: [
           // Only display CUSTOMERS item if user is not an Admin
-          ...(user?.role == 'Admin' ? [{
+          ...(user?.role === 'Admin' ? [{
             title: 'CUSTOMERS',
             path: PATH_DASHBOARD.user.root,
             icon: ICONS.user,
@@ -219,6 +218,5 @@ export const useNavConfig = () => {
           // },
         ],
       },
-    ];
-  }, [user]);
+    ], [user]);
 };

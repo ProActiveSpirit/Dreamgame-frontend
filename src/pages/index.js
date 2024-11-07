@@ -1,5 +1,7 @@
 // next
 import Head from 'next/head';
+import { useEffect } from 'react';
+
 import {useRouter} from 'next/router';
 // @mui
 import { Box } from '@mui/material';
@@ -20,7 +22,6 @@ import {
   HomeCleanInterfaces,
   HomeHugePackElements,
 } from '../sections/home';
-import { useEffect } from 'react';
 
 // ----------------------------------------------------------------------
 
