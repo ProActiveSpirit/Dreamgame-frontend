@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-// @mui
+import { useDispatch } from 'react-redux'; // Import useDispatch
 import {
   Stack,
-  Avatar,
+  Switch,
   Button,
   Checkbox,
   TableRow,
@@ -12,13 +12,11 @@ import {
   IconButton,
   Typography,
 } from '@mui/material';
-// components
 import Label from '../../../../components/label';
 import Iconify from '../../../../components/iconify';
 import MenuPopover from '../../../../components/menu-popover';
 import ConfirmDialog from '../../../../components/confirm-dialog';
-
-// ----------------------------------------------------------------------
+import { updateAdminVerified } from '../../../../redux/slices/user'; // Import the thunk
 
 UserTableRow.propTypes = {
   row: PropTypes.object,
@@ -29,11 +27,12 @@ UserTableRow.propTypes = {
 };
 
 export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
-  const { name, avatarUrl, company, role, isVerified, status } = row;
+  const { id, firstName, lastName, email, role } = row;
+  const dispatch = useDispatch(); // Initialize dispatch
 
   const [openConfirm, setOpenConfirm] = useState(false);
-
   const [openPopover, setOpenPopover] = useState(null);
+  const [checked , setChecked] = useState(role != "");
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -51,6 +50,11 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
     setOpenPopover(null);
   };
 
+  const handleToggleVerified = () => {
+    setChecked(!role)
+    dispatch(updateAdminVerified(id, !role)); // Dispatch the thunk to update the status
+  };
+
   return (
     <>
       <TableRow hover selected={selected}>
@@ -58,48 +62,18 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>
 
-        <TableCell>
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar alt={name} src={avatarUrl} />
-
-            <Typography variant="subtitle2" noWrap>
-              {name}
-            </Typography>
-          </Stack>
-        </TableCell>
-
-        <TableCell align="left">{company}</TableCell>
+        <TableCell align="left">{`${firstName} ${lastName}`}</TableCell>
 
         <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-          {role}
+          {email}
         </TableCell>
 
         <TableCell align="center">
-          <Iconify
-            icon={isVerified ? 'eva:checkmark-circle-fill' : 'eva:clock-outline'}
-            sx={{
-              width: 20,
-              height: 20,
-              color: 'success.main',
-              ...(!isVerified && { color: 'warning.main' }),
-            }}
+          <Switch
+            color="success"
+            checked={checked}
+            onChange={handleToggleVerified} // Handle the change event
           />
-        </TableCell>
-
-        <TableCell align="left">
-          <Label
-            variant="soft"
-            color={(status === 'banned' && 'error') || 'success'}
-            sx={{ textTransform: 'capitalize' }}
-          >
-            {status}
-          </Label>
-        </TableCell>
-
-        <TableCell align="right">
-          <IconButton color={openPopover ? 'inherit' : 'default'} onClick={handleOpenPopover}>
-            <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
         </TableCell>
       </TableRow>
 
