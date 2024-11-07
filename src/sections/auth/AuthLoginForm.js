@@ -2,6 +2,7 @@ import { useState } from 'react';
 import * as Yup from 'yup';
 // next
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -21,6 +22,8 @@ import FormProvider, { RHFTextField } from '../../components/hook-form';
 export default function AuthLoginForm() {
   const { login } = useAuthContext();
 
+  const router = useRouter();
+
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
@@ -29,8 +32,8 @@ export default function AuthLoginForm() {
   });
 
   const defaultValues = {
-    email: 'demo@minimals.cc',
-    password: 'demo1234',
+    email: '',
+    password: '',
   };
 
   const methods = useForm({
@@ -48,6 +51,7 @@ export default function AuthLoginForm() {
   const onSubmit = async (data) => {
     try {
       await login(data.email, data.password);
+      router.push("/dashboard/app")
     } catch (error) {
       console.error(error);
       console.log('Login error');

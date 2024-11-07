@@ -1,20 +1,27 @@
 import { useState } from 'react';
 import * as Yup from 'yup';
+// next
+import { useRouter } from 'next/router';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Stack, IconButton, InputAdornment, Alert } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+// routes
+import { PATH_AUTH } from '../../routes/paths';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // components
 import Iconify from '../../components/iconify';
 import FormProvider, { RHFTextField } from '../../components/hook-form';
+// import { C } from '@fullcalendar/core/internal-common';
 
 // ----------------------------------------------------------------------
 
-export default function AuthRegisterForm() {
+export default function AuthRegisterForm() {  
+  const router = useRouter();
+
   const { register } = useAuthContext();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -33,7 +40,7 @@ export default function AuthRegisterForm() {
     password: '',
   };
 
-  const methods = useForm({
+  const methods = useForm( {
     resolver: yupResolver(RegisterSchema),
     defaultValues,
   });
@@ -49,6 +56,7 @@ export default function AuthRegisterForm() {
     try {
       if (register) {
         await register(data.email, data.password, data.firstName, data.lastName);
+        router.push('/auth/login-unprotected');
       }
     } catch (error) {
       console.error(error);

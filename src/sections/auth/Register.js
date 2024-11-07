@@ -7,16 +7,16 @@ import LoginLayout from '../../layouts/login';
 // routes
 import { PATH_AUTH } from '../../routes/paths';
 //
-import AuthWithSocial from './AuthWithSocial';
+// import AuthWithSocial from './AuthWithSocial';
 import AuthRegisterForm from './AuthRegisterForm';
 
 // ----------------------------------------------------------------------
 
 export default function Register() {
   return (
-    <LoginLayout title="Manage the job more effectively with Minimal">
+    <LoginLayout title="">
       <Stack spacing={2} sx={{ mb: 5, position: 'relative' }}>
-        <Typography variant="h4">Get started absolutely free.</Typography>
+        {/* <Typography variant="h4">Get started absolutely free.</Typography> */}
 
         <Stack direction="row" spacing={0.5}>
           <Typography variant="body2"> Already have an account? </Typography>
@@ -44,7 +44,7 @@ export default function Register() {
         .
       </Typography>
 
-      <AuthWithSocial />
+      {/* <AuthWithSocial /> */}
     </LoginLayout>
   );
 }

@@ -1,5 +1,5 @@
 import { paramCase } from 'change-case';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // next
 import Head from 'next/head';
 import NextLink from 'next/link';
@@ -59,10 +59,10 @@ import { UserTableRow } from '../../../sections/@dashboard/user/list';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'company', label: 'Company', align: 'left' },
-  { id: 'role', label: 'Role', align: 'left' },
+  { id: 'Email', label: 'Email', align: 'left' },
+  // { id: 'role', label: 'Role', align: 'center' },
   { id: 'isVerified', label: 'Verified', align: 'center' },
-  { id: 'status', label: 'Status', align: 'left' },
+  // { id: 'status', label: 'Status', align: 'center' },
   { id: '' },
 ];
 
@@ -96,7 +96,7 @@ export default function UserListPage() {
 
   const { push } = useRouter();
 
-  const [tableData, setTableData] = useState(_userList);
+  const [tableData, setTableData] = useState([]);
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -121,6 +121,11 @@ export default function UserListPage() {
     (!dataFiltered.length && !!filterRole) ||
     (!dataFiltered.length && !!filterStatus);
 
+  useEffect(() => {
+    // Assuming _userList is the initial data
+    setTableData(_userList);
+  }, []);
+  
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
   };
@@ -129,20 +134,20 @@ export default function UserListPage() {
     setOpenConfirm(false);
   };
 
-  // const handleFilterStatus = (event, newValue) => {
-  //   setPage(0);
-  //   setFilterStatus(newValue);
-  // };
+  const handleFilterStatus = (event, newValue) => {
+    setPage(0);
+    setFilterStatus(newValue);
+  };
 
-  // const handleFilterName = (event) => {
-  //   setPage(0);
-  //   setFilterName(event.target.value);
-  // };
+  const handleFilterName = (event) => {
+    setPage(0);
+    setFilterName(event.target.value);
+  };
 
-  // const handleFilterRole = (event) => {
-  //   setPage(0);
-  //   setFilterRole(event.target.value);
-  // };
+  const handleFilterRole = (event) => {
+    setPage(0);
+    setFilterRole(event.target.value);
+  };
 
   const handleDeleteRow = (id) => {
     const deleteRow = tableData.filter((row) => row.id !== id);
@@ -197,16 +202,16 @@ export default function UserListPage() {
             { name: 'User', href: PATH_DASHBOARD.user.root },
             { name: 'List' },
           ]}
-          action={
-            <Button
-              component={NextLink}
-              href={PATH_DASHBOARD.user.new}
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-            >
-              New User
-            </Button>
-          }
+          // action={
+          //   <Button
+          //     component={NextLink}
+          //     href={PATH_DASHBOARD.user.new}
+          //     variant="contained"
+          //     startIcon={<Iconify icon="eva:plus-fill" />}
+          //   >
+          //     New User
+          //   </Button>
+          // }
         />
 
         <Card>
