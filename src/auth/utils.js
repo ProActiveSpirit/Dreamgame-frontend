@@ -2,6 +2,7 @@
 import { PATH_AUTH } from '../routes/paths';
 // utils
 import axios from '../utils/axios';
+import Cookies from 'js-cookie';
 
 // ----------------------------------------------------------------------
 
@@ -63,13 +64,20 @@ export const setSession = (accessToken) => {
     localStorage.setItem('accessToken', accessToken);
 
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-
+    
+    Cookies.set('accessToken', accessToken, { expires: 1 }); // 1 day expiry
+    
     // This function below will handle when token is expired
     const { exp } = jwtDecode(accessToken); // ~3 days by minimals server
     tokenExpired(exp);
   } else {
     localStorage.removeItem('accessToken');
-
+    Cookies.remove('accessToken');
     delete axios.defaults.headers.common.Authorization;
   }
+};
+
+export const getSession = () => {
+  const accessToken = localStorage.getItem('accessToken');
+  return accessToken;
 };

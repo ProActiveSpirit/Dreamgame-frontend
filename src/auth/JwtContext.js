@@ -75,25 +75,25 @@ export function AuthProvider({ children }) {
       if (accessToken && isValidToken(accessToken)) {
         setSession(accessToken);
 
-        const response = await axios.post('/api/auth/my-account');
+      //   const response = await axios.post('/api/auth/my-account');
 
-        const { user } = response.data;
+      //   const { user } = response.data;
 
-        dispatch({
-          type: 'INITIAL',
-          payload: {
-            isAuthenticated: true,
-            user,
-          },
-        });
-      } else {
-        dispatch({
-          type: 'INITIAL',
-          payload: {
-            isAuthenticated: false,
-            user: null,
-          },
-        });
+      //   dispatch({
+      //     type: 'INITIAL',
+      //     payload: {
+      //       isAuthenticated: true,
+      //       user,
+      //     },
+      //   });
+      // } else {
+      //   dispatch({
+      //     type: 'INITIAL',
+      //     payload: {
+      //       isAuthenticated: false,
+      //       user: null,
+      //     },
+      //   });
       }
     } catch (error) {
       console.error(error);
@@ -118,7 +118,6 @@ export function AuthProvider({ children }) {
       password,
     });
     const { accessToken, user } = response.data;
-
     setSession(accessToken);
 
     dispatch({
@@ -140,7 +139,7 @@ export function AuthProvider({ children }) {
 
     const message = response.message;
     const { accessToken, user } = response.data;
-
+    setSession(accessToken);
     localStorage.setItem('accessToken', accessToken);
 
     dispatch({

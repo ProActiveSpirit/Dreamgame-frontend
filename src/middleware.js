@@ -1,21 +1,25 @@
-import { NextResponse } from 'next/server'
-import localStorageAvailable from './utils/localStorageAvailable';
- 
-// This function can be marked `async` if using `await` inside
+// middleware.js
+import { NextResponse } from 'next/server';
+import { isValidToken } from './auth/utils';
+
 export function middleware(request) {
-  const storageAvailable = localStorageAvailable();
-  const accessToken = storageAvailable ? localStorage.getItem('accessToken') : '';
-  console.log("accessToken middleware:" , accessToken);
-  if (!accessToken) 
-    return NextResponse.redirect(new URL('/auth/login/', request.url))
+  // Retrieve the token from cookies
+  const token = request.cookies.get('accessToken');
+  // Check if the token is valid
+  if (!token || !isValidToken(token)) {
+    // Redirect to login if not authenticated
+    return NextResponse.redirect(new URL('/auth/login-unprotected', request.url));
+  }
+
+  // Allow the request to proceed
   return NextResponse.next();
 }
- 
-// See "Matching Paths" below to learn more
+
+// Apply middleware to specific routes
 export const config = {
-    matcher: [
-      '/dashboard/:path*', // Protect the dashboard route and all its subroutes
-      '/profile/:path*',   // Protect the profile route and all its subroutes
-      '/settings/:path*',  // Add other protected routes as needed
-    ],
-  };
+  matcher: [
+    '/dashboard/:path*', // Protect the dashboard route and all its subroutes
+    '/profile/:path*',   // Protect the profile route and all its subroutes
+    '/settings/:path*',  // Add other protected routes as needed
+  ],
+};
