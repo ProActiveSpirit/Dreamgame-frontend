@@ -1,8 +1,9 @@
+import Cookies from 'js-cookie';
 // routes
 import { PATH_AUTH } from '../routes/paths';
 // utils
 import axios from '../utils/axios';
-import Cookies from 'js-cookie';
+
 
 // ----------------------------------------------------------------------
 
