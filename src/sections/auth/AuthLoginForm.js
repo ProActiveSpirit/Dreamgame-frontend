@@ -28,7 +28,7 @@ export default function AuthLoginForm() {
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    password: Yup.string().required('Password is required'),
+    password: Yup.string().required('Password is required').min(8, 'Password must be at least 8 characters'),
   });
 
   const defaultValues = {
@@ -51,10 +51,9 @@ export default function AuthLoginForm() {
   const onSubmit = async (data) => {
     try {
       await login(data.email, data.password);
-      router.push("/dashboard/app")
+      router.push('/dashboard/app');
     } catch (error) {
       console.error(error);
-      console.log('Login error');
       reset();
       setError('afterSubmit', {
         ...error,
@@ -68,12 +67,14 @@ export default function AuthLoginForm() {
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
-        <RHFTextField name="email" label="Email address" />
+        <RHFTextField name="email" label="Email address" error={!!errors.email} helperText={errors.email?.message} />
 
         <RHFTextField
           name="password"
           label="Password"
           type={showPassword ? 'text' : 'password'}
+          error={!!errors.password}
+          helperText={errors.password?.message}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
