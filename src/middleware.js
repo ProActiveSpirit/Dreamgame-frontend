@@ -1,12 +1,11 @@
 // middleware.js
 import { NextResponse } from 'next/server';
-import { isValidToken } from './auth/utils';
 
 export function middleware(request) {
   // Retrieve the token from cookies
   const token = request.cookies.get('accessToken');
   // Check if the token is valid
-  if (!token || !isValidToken(token)) {
+  if (!token) {
     // Redirect to login if not authenticated
     return NextResponse.redirect(new URL('/auth/login-unprotected', request.url));
   }
