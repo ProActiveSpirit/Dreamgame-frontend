@@ -10,7 +10,7 @@ import LoginLayout from '../../layouts/login';
 import { PATH_AUTH } from '../../routes/paths';
 //
 import AuthLoginForm from './AuthLoginForm';
-import AuthWithSocial from './AuthWithSocial';
+// import AuthWithSocial from './AuthWithSocial';
 
 // ----------------------------------------------------------------------
 
