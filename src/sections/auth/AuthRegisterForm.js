@@ -30,7 +30,7 @@ export default function AuthRegisterForm() {
     firstName: Yup.string().required('First name required'),
     lastName: Yup.string().required('Last name required'),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    password: Yup.string().required('Password is required'),
+    password: Yup.string().required('Password is required').length(8,"Password must be 8 letters"),
   });
 
   const defaultValues = {
