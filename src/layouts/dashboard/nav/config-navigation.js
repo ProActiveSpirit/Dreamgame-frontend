@@ -43,7 +43,7 @@ export const useNavConfig = () => {
         items: [
           // Only display CUSTOMERS item if user is not an Admin
           ...(user?.role === 'Admin' ? [{
-            title: 'CUSTOMERS',
+            title: 'USERS',
             path: PATH_DASHBOARD.user.root,
             icon: ICONS.user,
             children: [
