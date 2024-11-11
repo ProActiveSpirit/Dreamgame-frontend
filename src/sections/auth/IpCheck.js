@@ -16,7 +16,9 @@ export default function Ipcheck() {
         // Fetch the user's IP address from your server
         const ipResponse = await axios.post('/api/auth/ipcheck');
         setUserIP(ipResponse.data.userIp);
-        setRegion(ipResponse.data.region);
+        const response = await axios.get(`https://ipinfo.io/${userIp}?token=80a03cd4011e9c`);
+        console.log("response" , response);
+        setRegion(`${response.data.country} - ${response.data.region}`);
       } catch (error) {
         console.error('Error fetching IP address or region:', error); 
       }
