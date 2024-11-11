@@ -2,6 +2,7 @@
 import { NextResponse } from 'next/server';
 
 export function middleware(request) {
+  console.log("request:" , request);
   // Retrieve the token from cookies
   const token = request.cookies.get('accessToken');
   // Check if the token is valid
@@ -10,7 +11,7 @@ export function middleware(request) {
     return NextResponse.redirect(new URL('/auth/login-unprotected', request.url));
   }
 
-  // Allow the request to proceed
+  // Allow the request to proceed cv    
   return NextResponse.next();
 }
 
