@@ -11,6 +11,7 @@ import { PATH_AUTH } from '../../routes/paths';
 //
 import AuthLoginForm from './AuthLoginForm';
 // import AuthWithSocial from './AuthWithSocial';
+import Ipcheck from './IpCheck';
 
 // ----------------------------------------------------------------------
 
@@ -45,6 +46,7 @@ export default function Login() {
       </Alert> */}
 
       <AuthLoginForm />
+      <Ipcheck />
 
       {/* <AuthWithSocial /> */}
     </LoginLayout>
