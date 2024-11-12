@@ -8,7 +8,7 @@ export function middleware(request) {
   // Check if the token is valid
   if (!token) {
     // Redirect to login if not authenticated
-    return NextResponse.redirect(new URL('/auth/login-unprotected', request.url));
+    return NextResponse.redirect(new URL('/auth/login', request.url));
   }
 
   // Allow the request to proceed cv    
