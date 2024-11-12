@@ -9,6 +9,7 @@ import { PATH_AUTH } from '../../routes/paths';
 //
 // import AuthWithSocial from './AuthWithSocial';
 import AuthRegisterForm from './AuthRegisterForm';
+import Ipcheck from './IpCheck';
 
 // ----------------------------------------------------------------------
 
@@ -19,7 +20,7 @@ export default function Register() {
         {/* <Typography variant="h4">Get started absolutely free.</Typography> */}
 
         <Stack direction="row" spacing={0.5}>
-          <Typography variant="body2"> Already have an account? </Typography>
+          <Typography variant="body4"> Already have an account? </Typography>
 
           <Link component={NextLink} href={PATH_AUTH.login} variant="subtitle2">
             Sign in
@@ -29,7 +30,7 @@ export default function Register() {
 
       <AuthRegisterForm />
 
-      <Typography
+      {/* <Typography
         component="div"
         sx={{ color: 'text.secondary', mt: 3, typography: 'caption', textAlign: 'center' }}
       >
@@ -42,7 +43,8 @@ export default function Register() {
           Privacy Policy
         </Link>
         .
-      </Typography>
+      </Typography> */}
+      <Ipcheck />
 
       {/* <AuthWithSocial /> */}
     </LoginLayout>
