@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import { Box, Card, Typography, Stack } from '@mui/material';
 // utils
-import { fNumber, fPercent } from '../../../../utils/formatNumber';
+import { fNumber, fPercent , fCurrency} from '../../../../utils/formatNumber';
 // components
 import Iconify from '../../../../components/iconify';
 import Chart from '../../../../components/chart';
@@ -54,7 +54,7 @@ export default function AppWidgetSummary({ title, percent, total, chart, sx, ...
         <Typography variant="subtitle3">{title}</Typography>
 
         {/* <TrendingInfo percent={percent} /> */}
-        <Typography variant="h3">{fNumber(total)}</Typography>
+        <Typography variant="h3">{fCurrency(total)}</Typography>
       </Box>
 
       <Chart type="bar" series={[{ data: series }]} options={chartOptions} width={60} height={36} />
