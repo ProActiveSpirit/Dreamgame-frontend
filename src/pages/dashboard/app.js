@@ -72,7 +72,7 @@ export default function GeneralAppPage() {
             /> */}
             <Card sx={{ p: 3}} >
               <Typography variant="subtitle2" gutterBottom>
-                {"SALES SATISTICS"}
+                SALES SATISTICS
               </Typography>
 
               <Stack spacing={2}>
