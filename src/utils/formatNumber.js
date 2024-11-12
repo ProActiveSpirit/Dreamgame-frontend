@@ -7,9 +7,19 @@ export function fNumber(number) {
 }
 
 export function fCurrency(number) {
-  const format = number ? numeral(number).format('$0,0.00') : '';
+  if (number == null) return '';
 
-  return result(format, '.00');
+  const formatter = new Intl.NumberFormat('de-DE', {
+    style: 'currency',
+    currency: 'EUR',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  const formattedNumber = formatter.format(number);
+
+  const result = formattedNumber.replace('€', '').trim();
+  return `€ ${result}`;
 }
 
 export function fPercent(number) {

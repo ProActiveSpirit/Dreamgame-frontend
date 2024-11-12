@@ -2,13 +2,18 @@
 import Head from 'next/head';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Container, Grid } from '@mui/material';
+import { Container, Grid, Button, Card, Typography, Stack} from '@mui/material';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
+// utils
+import { fCurrency } from '../../utils/formatNumber';
 // layouts
 import DashboardLayout from '../../layouts/dashboard';
 // components
 import { useSettingsContext } from '../../components/settings';
+import {
+  AnalyticsWidgetSummary,
+} from '../../sections/@dashboard/general/analytics';
 // sections
 import {
   AppAreaInstalled,
@@ -56,7 +61,7 @@ export default function GeneralAppPage() {
           </Grid> */}
 
           <Grid item xs={12} md={4}>
-            <AppWidgetSummary
+            {/* <AppWidgetSummary
               title="SALES SATISTICS"
               percent={2.6}
               total={18765}
@@ -64,14 +69,58 @@ export default function GeneralAppPage() {
                 colors: [theme.palette.primary.main],
                 series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
               }}
-            />
+            /> */}
+            <Card sx={{ p: 3}} >
+              <Typography variant="subtitle2" gutterBottom>
+                {"SALES SATISTICS"}
+              </Typography>
+
+              <Stack spacing={2}>
+                {/* <Typography variant="h3">{fCurrency(62462462)}</Typography> */}
+                <Stack direction="row" justifyContent="space-between">
+                  <Stack justifyContent="space-between">
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                      Today
+                    </Typography>
+                    &nbsp;
+                    <Typography variant="body2">{fCurrency(625)}</Typography>
+                  </Stack>
+  
+                  <Stack  justifyContent="space-between">
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                      Yesterday
+                    </Typography>
+                    {/* &nbsp; */}
+                    <Typography variant="body2">- {fCurrency(63)}</Typography>
+                  </Stack>
+                </Stack>
+                <Stack direction="row" justifyContent="space-between">
+                  <Stack justifyContent="space-between">
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                      This month
+                    </Typography>
+                    {/* &nbsp; */}
+                    <Typography variant="subtitle1">{fCurrency(23434)}</Typography>
+                  </Stack>
+
+                  <Stack justifyContent="space-between">
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                      Last month
+                    </Typography>
+                    &nbsp;
+                    <Typography variant="subtitle1">{fCurrency(8345)}</Typography>
+                  </Stack>
+                </Stack>
+              </Stack>
+            </Card>
           </Grid>
 
           <Grid item xs={12} md={4}>
             <AppWidgetSummary
+              style={{height: "100%"}}
               title="Stock Value"
               percent={0.2}
-              total={4876}
+              total={7235}
               chart={{
                 colors: [theme.palette.info.main],
                 series: [20, 41, 63, 33, 28, 35, 50, 46, 11, 26],
@@ -81,6 +130,7 @@ export default function GeneralAppPage() {
 
           <Grid item xs={12} md={4}>
             <AppWidgetSummary
+              style={{height: "100%"}}
               title="Pending Stock Cost"
               percent={-0.1}
               total={678}
