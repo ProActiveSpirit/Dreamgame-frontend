@@ -33,7 +33,7 @@ export default function HomePage() {
   const router = useRouter();
   
   useEffect(() => {
-    router.push("/auth/login-unprotected");
+    router.push("/auth/login");
   },[router])
   
   return (
