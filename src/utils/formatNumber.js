@@ -18,8 +18,8 @@ export function fCurrency(number) {
 
   const formattedNumber = formatter.format(number);
 
-  const result = formattedNumber.replace('€', '').trim();
-  return `€ ${result}`;
+  const res = formattedNumber.replace('€', '').trim();
+  return `€ ${res}`;
 }
 
 export function fPercent(number) {
