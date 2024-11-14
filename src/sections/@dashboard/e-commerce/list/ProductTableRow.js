@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-// @mui
+import { useState } from 'react';
 import {
   Stack,
   TableRow,
@@ -8,8 +8,8 @@ import {
   IconButton,
   Link,
 } from '@mui/material';
-// components
 import Iconify from '../../../../components/iconify';
+import PriceDialog from './PriceDialog';
 
 // ----------------------------------------------------------------------
 
@@ -29,7 +29,17 @@ export default function ProductTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, stock, provider, region, price, sku, publisher, status } = row;
+  const { name, stock, provider, region, sku, publisher, status } = row;
+
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const onShowPrice = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
 
   return (
     <>
@@ -56,16 +66,24 @@ export default function ProductTableRow({
         <TableCell align="center">{provider}</TableCell>
         <TableCell align="center">{region}</TableCell>
         <TableCell align="center">{sku}</TableCell>
-        <TableCell align="center">{price}</TableCell>
+        <TableCell align="center">
+          <IconButton onClick={onShowPrice}>
+            <Iconify icon="eva:search-fill" />
+          </IconButton>
+        </TableCell>
         <TableCell align="center">{publisher}</TableCell>
         <TableCell align="center">{status}</TableCell>
 
-        <TableCell align="center"  width={50}>
+        <TableCell align="center" width={50}>
           <IconButton onClick={() => onEditRow()}>
             <Iconify icon="eva:edit-fill" />
           </IconButton>
         </TableCell>
       </TableRow>
+
+      {openDialog && (
+        <PriceDialog row={row} onCloseDialog={handleCloseDialog} />
+      )}
     </>
   );
 }

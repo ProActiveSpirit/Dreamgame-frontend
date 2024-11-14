@@ -1,8 +1,10 @@
+import { useState } from 'react';
+
 // next
 import Head from 'next/head';
 // @mui
-import { useTheme } from '@mui/material/styles';
-import { Container, Grid, Button, Card, Typography, Stack} from '@mui/material';
+import { useTheme , styled} from '@mui/material/styles';
+import { Container, Grid, Button,Collapse,  Paper, Card, Typography, Stack, List, ListItemText, ListItemIcon, ListItemButton} from '@mui/material';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // utils
@@ -11,6 +13,7 @@ import { fCurrency } from '../../utils/formatNumber';
 import DashboardLayout from '../../layouts/dashboard';
 // components
 import { useSettingsContext } from '../../components/settings';
+import Iconify from '../../components/iconify';
 import {
   AnalyticsWidgetSummary,
 } from '../../sections/@dashboard/general/analytics';
@@ -22,12 +25,34 @@ import {
 
 // ----------------------------------------------------------------------
 
+const StyledListContainer = styled(Paper)(({ theme }) => ({
+  width: '100%',
+  border: `solid 1px ${theme.palette.divider}`,
+}));
+
+function ListItemLink(props) {
+  return <ListItemButton component="a" {...props} />;
+}
+
+// ----------------------------------------------------------------------
+
 GeneralAppPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 // ----------------------------------------------------------------------
 
 export default function GeneralAppPage() {
   const theme = useTheme();
+
+  const [stopOpen, setStopOpen] = useState(true);
+  const [errorOpen, setErrorOpen] = useState(true);
+
+  const handleStopClick = () => {
+    setStopOpen(!stopOpen);
+  };
+
+  const handleErrorClick = () => {
+    setErrorOpen(!errorOpen);
+  };
 
   const { themeStretch } = useSettingsContext();
 
@@ -39,37 +64,7 @@ export default function GeneralAppPage() {
 
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={3}>
-          {/* <Grid item xs={12} md={8}>
-            <AppWelcome
-              title={`Welcome back! \n ${user?.displayName}`}
-              description="If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything."
-              img={
-                <SeoIllustration
-                  sx={{
-                    p: 3,
-                    width: 360,
-                    margin: { xs: 'auto', md: 'inherit' },
-                  }}
-                />
-              }
-              action={<Button variant="contained">Go Now</Button>}
-            />
-          </Grid> */}
-{/* 
           <Grid item xs={12} md={4}>
-            <AppFeatured list={_appFeatured} />
-          </Grid> */}
-
-          <Grid item xs={12} md={4}>
-            {/* <AppWidgetSummary
-              title="SALES SATISTICS"
-              percent={2.6}
-              total={18765}
-              chart={{
-                colors: [theme.palette.primary.main],
-                series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
-              }}
-            /> */}
             <Card sx={{ p: 3}} >
               <Typography variant="subtitle2" gutterBottom>
                 SALES SATISTICS
@@ -142,7 +137,7 @@ export default function GeneralAppPage() {
           </Grid>
           
           <Grid item xs={12} md={6}>
-            <AppWidgetSummary
+            {/* <AppWidgetSummary
               title="Stopped Purchase Orders"
               percent={-0.1}
               total={678}
@@ -150,11 +145,47 @@ export default function GeneralAppPage() {
                 colors: [theme.palette.warning.main],
                 series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
               }}
-            />
+            /> */}
+            <StyledListContainer>
+              <List
+                component="nav"
+                aria-labelledby="nested-list-subheader"
+              >
+                <ListItemButton onClick={handleStopClick}>
+                  <ListItemText primary="Stopped Purchase Orders (4)" style={{color :"red"}}  />
+                  <ListItemText primary="Date"style={{align:"center"}} />
+                  {stopOpen ? (
+                    <Iconify icon="ic:round-expand-less" width={24} />
+                  ) : (
+                    <Iconify icon="ic:round-expand-more" width={24} />
+                  )}
+                </ListItemButton>
+                <Collapse in={stopOpen} unmountOnExit>
+                  <List component="div" disablePadding>
+                    <ListItemButton>
+                      <ListItemText primary="The Legend of Zelda: Skyward Sword HD (SE)" />
+                      <ListItemText primary="13.11.2024 14:08" />
+                    </ListItemButton>
+                    <ListItemButton>
+                      <ListItemText primary="The Legend of Zelda: Skyward Sword HD (PL)" />
+                      <ListItemText primary="13.11.2024 14:08" />
+                    </ListItemButton>
+                    <ListItemButton>
+                      <ListItemText primary="The Legend of Zelda: Skyward Sword HD (DE)" />
+                      <ListItemText primary="13.11.2024 14:08" />
+                    </ListItemButton>
+                    <ListItemButton>
+                      <ListItemText primary="The Legend of Zelda: Skyward Sword HD (NL)" />
+                      <ListItemText primary="13.11.2024 14:08" />
+                    </ListItemButton>
+                  </List>
+                </Collapse>
+              </List>
+            </StyledListContainer>
           </Grid>
 
           <Grid item xs={12} md={6}>
-            <AppWidgetSummary
+            {/* <AppWidgetSummary
               title="Purchase orders with api error"
               percent={-0.1}
               total={678}
@@ -162,7 +193,43 @@ export default function GeneralAppPage() {
                 colors: [theme.palette.warning.main],
                 series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
               }}
-            />
+            /> */}
+                        <StyledListContainer>
+              <List
+                component="nav"
+                aria-labelledby="nested-list-subheader"
+              >
+                <ListItemButton onClick={handleErrorClick}>
+                  <ListItemText primary="Purchase orders with api error (0)" style={{color :"red"}} />
+                  <ListItemText primary="Date"style={{align:"center"}}/>
+                  {errorOpen ? (
+                    <Iconify icon="ic:round-expand-less" width={24} />
+                  ) : (
+                    <Iconify icon="ic:round-expand-more" width={24} />
+                  )}
+                </ListItemButton>
+                <Collapse in={errorOpen} unmountOnExit>
+                  <List component="div" disablePadding>
+                    {/* <ListItemButton>
+                      <ListItemText primary="The Legend of Zelda: Skyward Sword HD (SE)" />
+                      <ListItemText primary="13.11.2024 14:08" />
+                    </ListItemButton>
+                    <ListItemButton>
+                      <ListItemText primary="The Legend of Zelda: Skyward Sword HD (PL)" />
+                      <ListItemText primary="13.11.2024 14:08" />
+                    </ListItemButton>
+                    <ListItemButton>
+                      <ListItemText primary="The Legend of Zelda: Skyward Sword HD (DE)" />
+                      <ListItemText primary="13.11.2024 14:08" />
+                    </ListItemButton>
+                    <ListItemButton>
+                      <ListItemText primary="The Legend of Zelda: Skyward Sword HD (NL)" />
+                      <ListItemText primary="13.11.2024 14:08" />
+                    </ListItemButton> */}
+                  </List>
+                </Collapse>
+              </List>
+            </StyledListContainer>
           </Grid>
 
           {/* <Grid item xs={12} md={6} lg={4}>
