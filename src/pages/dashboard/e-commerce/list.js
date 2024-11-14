@@ -49,6 +49,7 @@ const TABLE_HEAD = [
   { id: 'provider', label: 'PROVIDER', align: 'center' },
   { id: 'region', label: 'REGION', align: 'center' },
   { id: 'sku', label: 'SKU', align: 'center' },
+  { id: 'price', label: 'PRICE', align: 'center' },
   { id: 'publisher', label: 'PUBLISHER', align: 'center' },
   { id: 'status', label: 'STATUS', align: 'center' },
 ];

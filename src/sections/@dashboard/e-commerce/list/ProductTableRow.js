@@ -29,7 +29,7 @@ export default function ProductTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, stock, provider, region, sku, publisher, status } = row;
+  const { name, stock, provider, region, price, sku, publisher, status } = row;
 
   return (
     <>
@@ -56,6 +56,7 @@ export default function ProductTableRow({
         <TableCell align="center">{provider}</TableCell>
         <TableCell align="center">{region}</TableCell>
         <TableCell align="center">{sku}</TableCell>
+        <TableCell align="center">{price}</TableCell>
         <TableCell align="center">{publisher}</TableCell>
         <TableCell align="center">{status}</TableCell>
 
