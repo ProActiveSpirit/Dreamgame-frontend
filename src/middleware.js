@@ -2,7 +2,7 @@
 import { NextResponse } from 'next/server';
 
 export function middleware(request) {
-  console.log("request:" , request);
+  // console.log("request:" , request);
   // Retrieve the token from cookies
   const token = request.cookies.get('accessToken');
   // Check if the token is valid
