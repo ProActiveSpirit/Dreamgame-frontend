@@ -18,15 +18,15 @@ import _mock from '../../../../_mock';
 
 export default function PriceDialog({row , onCloseDialog}) {
 
-  const { name, price } = row;
+  const { name, price , provider } = row;
 
   const [open, setOpen] = useState(true);
 
   const [fullWidth, setFullWidth] = useState(true);
 
-  const [maxWidth, setMaxWidth] = useState('md');
+  const [maxWidth, setMaxWidth] = useState( provider === "Nexway" ? 'md' : 'xs');
 
-  const columns = [
+  const columnsNexway = [
     {
       field: 'Region',
       headerName: 'Region',
@@ -58,9 +58,29 @@ export default function PriceDialog({row , onCloseDialog}) {
     }
   ];
 
+  const columns = [
+    {
+      field: 'Region',
+      headerName: 'Region',
+      width: 150,
+    },
+    {
+      field: 'CostEUR',
+      headerName: 'Cost-EUR',
+      width: 150,
+      editable: true,
+    }
+  ];
+
   const regions = ["NO","BE","DE","ES","FR","NL","PT","PL","GB"]
 
   const _dataGrid = [...Array(9)].map((_, index) => ({
+    id: _mock.id(index),
+    Region: regions[index],
+    CostEUR: `${price+index}EUR`,
+  }));
+
+  const _dataGridNexway = [...Array(9)].map((_, index) => ({
     id: _mock.id(index),
     Region: regions[index],
     CostEUR: `${price+index}EUR`,
@@ -82,8 +102,9 @@ export default function PriceDialog({row , onCloseDialog}) {
           <DialogContentText>
             Product Price
           </DialogContentText>
-
-          <DataGrid columns={columns} rows={_dataGrid} style={{height: 600}} />;
+          { provider === "Nexway" ? <DataGrid columns={columnsNexway} rows={_dataGridNexway} style={{height: 600}} />
+            : <DataGrid columns={columns} rows={_dataGrid} style={{height: 600}} />
+          }
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} variant="contained">

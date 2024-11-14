@@ -151,9 +151,9 @@ export default function GeneralAppPage() {
                 component="nav"
                 aria-labelledby="nested-list-subheader"
               >
-                <ListItemButton onClick={handleStopClick}>
+                <ListItemButton onClick={handleStopClick}  >
                   <ListItemText primary="Stopped Purchase Orders (4)" style={{color :"red"}}  />
-                  <ListItemText primary="Date"style={{align:"center"}} />
+                  <ListItemText primary="Date" style={{ textAlign: "center" }} />
                   {stopOpen ? (
                     <Iconify icon="ic:round-expand-less" width={24} />
                   ) : (
@@ -161,7 +161,7 @@ export default function GeneralAppPage() {
                   )}
                 </ListItemButton>
                 <Collapse in={stopOpen} unmountOnExit>
-                  <List component="div" disablePadding>
+                  <List component="div" disablePadding > 
                     <ListItemButton>
                       <ListItemText primary="The Legend of Zelda: Skyward Sword HD (SE)" />
                       <ListItemText primary="13.11.2024 14:08" />
@@ -199,9 +199,9 @@ export default function GeneralAppPage() {
                 component="nav"
                 aria-labelledby="nested-list-subheader"
               >
-                <ListItemButton onClick={handleErrorClick}>
+                <ListItemButton onClick={handleErrorClick} style={{ textAlign: "center" }}>
                   <ListItemText primary="Purchase orders with api error (0)" style={{color :"red"}} />
-                  <ListItemText primary="Date"style={{align:"center"}}/>
+                  <ListItemText primary="Date"  />
                   {errorOpen ? (
                     <Iconify icon="ic:round-expand-less" width={24} />
                   ) : (
