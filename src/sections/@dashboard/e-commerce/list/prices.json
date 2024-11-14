@@ -1,0 +1,74 @@
+[
+    {
+        "Region": "NO",
+        "EUR": "6.4072 EUR",
+        "CostExcVat": "72.27 NOK",
+        "SalesExtVat": "99.75 NOK",
+        "SalesIncVat": "99.75 NOK",
+        "SRPIncVat": "105 NOK"
+    },
+    {
+        "Region": "BE",
+        "EUR": "6.4072 EUR",
+        "CostExcVat": "72.27 NOK",
+        "SalesExtVat": "99.75 NOK",
+        "SalesIncVat": "99.75 NOK",
+        "SRPIncVat": "105 NOK"
+    },
+    {
+        "Region": "DE",
+        "EUR": "6.4072 EUR",
+        "CostExcVat": "72.27 NOK",
+        "SalesExtVat": "99.75 NOK",
+        "SalesIncVat": "99.75 NOK",
+        "SRPIncVat": "105 NOK"
+    },
+    {
+        "Region": "ES",
+        "EUR": "6.4072 EUR",
+        "CostExcVat": "72.27 NOK",
+        "SalesExtVat": "99.75 NOK",
+        "SalesIncVat": "99.75 NOK",
+        "SRPIncVat": "105 NOK"
+    },
+    {
+        "Region": "FR",
+        "EUR": "6.4072 EUR",
+        "CostExcVat": "72.27 NOK",
+        "SalesExtVat": "99.75 NOK",
+        "SalesIncVat": "99.75 NOK",
+        "SRPIncVat": "105 NOK"
+    },
+    {
+        "Region": "NL",
+        "EUR": "6.4072 EUR",
+        "CostExcVat": "72.27 NOK",
+        "SalesExtVat": "99.75 NOK",
+        "SalesIncVat": "99.75 NOK",
+        "SRPIncVat": "105 NOK"
+    },
+    {
+        "Region": "PT",
+        "EUR": "6.4072 EUR",
+        "CostExcVat": "72.27 NOK",
+        "SalesExtVat": "99.75 NOK",
+        "SalesIncVat": "99.75 NOK",
+        "SRPIncVat": "105 NOK"
+    },
+    {
+        "Region": "PL",
+        "EUR": "6.4072 EUR",
+        "CostExcVat": "72.27 NOK",
+        "SalesExtVat": "99.75 NOK",
+        "SalesIncVat": "99.75 NOK",
+        "SRPIncVat": "105 NOK"
+    },
+    {
+        "Region": "GB",
+        "EUR": "7.5294 EUR",
+        "CostExcVat": "72.27 NOK",
+        "SalesExtVat": "99.75 NOK",
+        "SalesIncVat": "99.75 NOK",
+        "SRPIncVat": "105 NOK"
+    }
+]
