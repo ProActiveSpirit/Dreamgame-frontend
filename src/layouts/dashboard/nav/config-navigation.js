@@ -37,7 +37,7 @@ export const useNavConfig = () => {
   // Memoize the nav configuration to avoid unnecessary recalculations
   return useMemo(() => [
       {
-        items: [{ title: 'Dashboard', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard }],
+        items: [{ title: 'DASHBOARD', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard }],
       },
       {
         items: [
@@ -61,11 +61,11 @@ export const useNavConfig = () => {
           },
           {
             title: 'ORDERS',
-            path: PATH_DASHBOARD.blog.root,
+            path: PATH_DASHBOARD.order.root,
             icon: ICONS.booking,
             children: [
-              { title: 'SalesOrders', path: PATH_DASHBOARD.salesorder.list },
-              { title: 'PurchaseOrders', path: PATH_DASHBOARD.purchaseorder.list },
+              { title: 'SalesOrders', path: PATH_DASHBOARD.order.salesorder },
+              { title: 'PurchaseOrders', path: PATH_DASHBOARD.order.purchaseorder },
               // { title: 'Add', path: PATH_DASHBOARD.salesorder.add },
             ],
           },
@@ -90,17 +90,7 @@ export const useNavConfig = () => {
               { title: 'Provider Purchase', path: PATH_DASHBOARD.report.purchase },
               { title: 'Provider Monthly Purchase', path: PATH_DASHBOARD.report.monthlypurchase },
             ],
-          },
-          {
-            title: 'SETTINGS',
-            path: PATH_DASHBOARD.blank,
-            icon: ICONS.kanban,
-          },
-          {
-            title: 'CUSTOMER API',
-            path: PATH_DASHBOARD.fileManager,
-            icon: ICONS.kanban,
-          },
+          }
           // APP
           // ----------------------------------------------------------------------
           // {

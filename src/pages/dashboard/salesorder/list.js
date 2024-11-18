@@ -218,14 +218,14 @@ export default function SalesOrderListPage() {
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'SalesOrder',
-              href: PATH_DASHBOARD.salesorder.list,
+              href: PATH_DASHBOARD.order.salesorder,
             },
             { name: 'List' },
           ]}
           action={
             <Button
               component={NextLink}
-              href={PATH_DASHBOARD.salesorder.add}
+              href={PATH_DASHBOARD.order.salesAdd}
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
             >
