@@ -70,7 +70,7 @@ export default function GeneralReportPage() {
                 { name: 'Dashboard', href: PATH_DASHBOARD.root },
                 {
                 name: 'Reports',
-                href: PATH_DASHBOARD.salesorder.list,
+                href: PATH_DASHBOARD.report.bestseller,
                 },
                 { name: 'BestSeller' },
             ]}
