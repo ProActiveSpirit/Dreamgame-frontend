@@ -13,11 +13,11 @@ import {
 } from '@mui/material';
 // components
 import Iconify from '../../../../components/iconify';
-import Label from '../../../../components/label';
 import ConfirmDialog from '../../../../components/confirm-dialog';
+import Label from '../../../../components/label';
 // ----------------------------------------------------------------------
 
-StockTableRow.propTypes = {
+PurchaseTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
@@ -26,7 +26,7 @@ StockTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
 };
 
-export default function StockTableRow({
+export default function PurchaseTableRow({
   row,
   selected,
   onSelectRow,
@@ -34,7 +34,7 @@ export default function StockTableRow({
   onDeleteRow,
   onViewRow,
 }) {
-  const { name, STOCK, COST, PROVIDER, REGION, SKU, STATUS } = row;
+  const { NUMBER, CUSTOMER, PRODUCT, DETAILED, PRICE, QUANTITY,TOTAL, CREATEDON, STATUS, N_A } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -52,8 +52,7 @@ export default function StockTableRow({
         <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>
-
-        <TableCell width={300}>
+        <TableCell align="center">
           <Stack direction="row" alignItems="center" spacing={2}>
             <Link
               noWrap
@@ -62,28 +61,41 @@ export default function StockTableRow({
               onClick={onViewRow}
               sx={{ cursor: 'pointer' }}
             >
-              {name}
+              {NUMBER}
+            </Link>
+          </Stack>
+        </TableCell>
+        <TableCell align="center">{CUSTOMER}</TableCell>
+
+        <TableCell>
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <Link
+              noWrap
+              color="inherit"
+              variant="subtitle2"
+              // onClick={onViewRow}
+              sx={{ cursor: 'pointer' }}
+            >
+              <p>{PRODUCT}</p>
             </Link>
           </Stack>
         </TableCell>
 
-        <TableCell align="center">
-          <Label color="primary" variant="filled">{STOCK}</Label>
-        </TableCell>
-        <TableCell align="center">{COST}</TableCell>
-        <TableCell align="center">{PROVIDER}</TableCell>
-        <TableCell align="center">{REGION}</TableCell>
-        <TableCell align="center">{SKU}</TableCell>
+        <TableCell align="right">{PRICE}</TableCell>
+        <TableCell align="center">{QUANTITY}</TableCell>
+        <TableCell align="center">{TOTAL}</TableCell>
+        <TableCell align="center">{CREATEDON}</TableCell>
         <TableCell align="center">
           {(() => {
-            const icon = STATUS === "true" ? "eva:checkmark-circle-2-fill" : "eva:checkmark-circle-2-fill";
-            return   <Iconify icon={icon} sx={{ color: 'primary.main' }} />
+            const color = (STATUS === "Processing" ? "info" : "success");
+            return <Label color={color} variant="filled">{STATUS}</Label>;
           })()}
         </TableCell>
-
+        <TableCell align="center">{N_A}</TableCell>
         <TableCell align="center" width={50}>
           <IconButton  onClick={() => {
             handleOpenConfirm();
+            // handleClosePopover();
           }}>
             <Iconify icon="eva:trash-2-fill" />
           </IconButton>

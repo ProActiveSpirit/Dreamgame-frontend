@@ -110,13 +110,13 @@ export default function BillingInformation({ variant }) {
           </button>
         </Stack>
         <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
-          <Label variant="filled" color="warning" size="large" startIcon={<Iconify icon="eva:email-fill" />}>
+          <Label variant="filled" color="warning" size="large" startIcon={<Iconify icon="eva:save-fill" />}>
             Save & Generate Auto-Calculated
           </Label>
-          <Label variant="filled" color="primary" startIcon={<Iconify icon="eva:email-fill" />}>
+          <Label variant="filled" color="primary" startIcon={<Iconify icon="eva:save-fill" />}>
             Save & Generate Empty
           </Label>
-          <Label variant="filled" color="error" startIcon={<Iconify icon="eva:email-fill" />}>
+          <Label variant="filled" color="error" startIcon={<Iconify icon="eva:save-fill" />}>
             Generate POs from the template
           </Label>
         </Stack>
