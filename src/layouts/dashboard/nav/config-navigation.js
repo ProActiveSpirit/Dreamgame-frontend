@@ -60,12 +60,13 @@ export const useNavConfig = () => {
             ],
           },
           {
-            title: 'SALESORDERS',
+            title: 'ORDERS',
             path: PATH_DASHBOARD.blog.root,
             icon: ICONS.booking,
             children: [
               { title: 'SalesOrders', path: PATH_DASHBOARD.salesorder.list },
-              { title: 'Add', path: PATH_DASHBOARD.salesorder.add },
+              { title: 'PurchaseOrders', path: PATH_DASHBOARD.purchaseorder.list },
+              // { title: 'Add', path: PATH_DASHBOARD.salesorder.add },
             ],
           },
           {
