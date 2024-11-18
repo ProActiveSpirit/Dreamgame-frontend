@@ -61,11 +61,11 @@ export const useNavConfig = () => {
           },
           {
             title: 'ORDERS',
-            path: PATH_DASHBOARD.order.root,
+            path: PATH_DASHBOARD.salesorder.root,
             icon: ICONS.booking,
             children: [
-              { title: 'SalesOrders', path: PATH_DASHBOARD.order.salesorder },
-              { title: 'PurchaseOrders', path: PATH_DASHBOARD.order.purchaseorder },
+              { title: 'SalesOrders', path: PATH_DASHBOARD.salesorder.list },
+              { title: 'PurchaseOrders', path: PATH_DASHBOARD.purchaseorder.list },
               // { title: 'Add', path: PATH_DASHBOARD.salesorder.add },
             ],
           },
