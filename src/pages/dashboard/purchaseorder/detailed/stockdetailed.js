@@ -4,13 +4,15 @@ import PropTypes from 'prop-types';
 import { TextField, Stack, Container, Button ,Autocomplete} from '@mui/material';
 import { Masonry } from '@mui/lab';
 import { DateTimePicker } from '@mui/x-date-pickers';
-import Label from '../../../../components/label';
 import Iconify from '../../../../components/iconify';
+import ConfirmDialog from '../../../../components/confirm-dialog';
 
 export default function StockDetailed({ variant = 'outlined' }) {
   const [startDate, setStartDate] = useState(new Date());
   const [createdOn, setCreatedOn] = useState(new Date());
   const [isClient, setIsClient] = useState(false);
+  const [action , setAction] = useState();
+  const [openConfirm, setOpenConfirm] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -20,8 +22,31 @@ export default function StockDetailed({ variant = 'outlined' }) {
     return null; // or a loading spinner
   }
 
+  const onSave = () => {
+    setOpenConfirm(true)
+    setAction("save");
+  }
+
+  const onGenerate = () => {
+    setOpenConfirm(true)
+    setAction("generate");
+  }
+
+  const handleCloseConfirm = () => {
+    setOpenConfirm(false)
+  }
+
+  const onReturn = () => {
+    setOpenConfirm(true)
+    setAction("return");
+  }
+
+  const onAction = () => {
+    setOpenConfirm(false)
+  }
+
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="lg">
       <Masonry columns={{ xs: 1 }} spacing={4}>
         <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
           <TextField
@@ -52,17 +77,18 @@ export default function StockDetailed({ variant = 'outlined' }) {
             variant="contained"
             color="success"
             startIcon={<Iconify icon="eva:save-fill" />}
+            onClick={() => onSave()}
           >
             Save
           </Button>
           <Autocomplete
-            style={{width:"180px"}}
+            style={{width:"320px"}}
             options={deleteOrders}
             getOptionLabel={(option) => option.title}
             renderInput={(params) => <TextField {...params} label="Delete Orders" margin="none" />}
           />
           <Autocomplete
-            style={{width:"200px"}}
+            style={{width:"350px"}}
             options={bulkActions}
             getOptionLabel={(option) => option.title}
             renderInput={(params) => <TextField {...params} label="Bulk Actions" margin="none" />}
@@ -71,6 +97,7 @@ export default function StockDetailed({ variant = 'outlined' }) {
             variant="contained"
             color="error"
             startIcon={<Iconify icon="eos-icons:arrow-rotate" />}
+            onClick={() => onGenerate()}
           >
             Generate Orders
           </Button>
@@ -88,11 +115,23 @@ export default function StockDetailed({ variant = 'outlined' }) {
             variant="contained"
             color="error"
             startIcon={<Iconify icon="gg:corner-double-up-left" />}
+            onClick={() => onReturn()}
           >
             Return Keys
           </Button>
         </Stack>
       </Masonry>
+      <ConfirmDialog
+          open={openConfirm}
+          onClose={handleCloseConfirm}
+          title={action}
+          content={`Are you sure you want to ${action}?`}
+          action={
+            <Button variant="contained" color="error" onClick={() => onAction()}>
+              {action}
+            </Button>
+          }
+        />
     </Container>
   );
 }
