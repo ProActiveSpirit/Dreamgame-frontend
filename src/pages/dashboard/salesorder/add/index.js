@@ -164,7 +164,7 @@ export default function SalesOrderAddPage() {
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'SalesOrder',
-              href: PATH_DASHBOARD.salesorder.list,
+              href: PATH_DASHBOARD.order.salesorder,
             },
             { name: 'add' },
           ]}

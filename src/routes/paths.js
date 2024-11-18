@@ -98,18 +98,15 @@ export const PATH_DASHBOARD = {
     view: (title) => path(ROOTS_DASHBOARD, `/blog/post/${title}`),
     demoView: path(ROOTS_DASHBOARD, '/blog/post/apply-these-7-secret-techniques-to-improve-event'),
   },
-  salesorder: {
-    list: path(ROOTS_DASHBOARD, '/salesorder/list'),
-    add: path(ROOTS_DASHBOARD, '/salesorder/add'),
-    view: (name) => path(ROOTS_DASHBOARD, `/salesorder/${name}/edit`)
-  },
-  purchaseorder: {
-    list: path(ROOTS_DASHBOARD, '/purchaseorder/list'),
-    add: path(ROOTS_DASHBOARD, '/purchaseorder/add'),
-    view: (name) => path(ROOTS_DASHBOARD, `/purchaseorder/${name}/edit`)
+  order: {
+    root: path(ROOTS_DASHBOARD, '/salesorder'),
+    salesorder: path(ROOTS_DASHBOARD, '/salesorder/list'),
+    salesAdd: path(ROOTS_DASHBOARD, '/salesorder/add'),
+    purchaseorder: path(ROOTS_DASHBOARD, '/purchaseorder/list'),
+    purchaseAdd: path(ROOTS_DASHBOARD, '/purchaseorder/add')
   },
   report: {
-    root: path(ROOTS_DASHBOARD, '/report/general'),
+    root: path(ROOTS_DASHBOARD, '/report'),
     bestseller: path(ROOTS_DASHBOARD, '/report/bestseller'),
     sales: path(ROOTS_DASHBOARD, '/report/salesreport'),
     purchase: path(ROOTS_DASHBOARD, '/report/purchase'),

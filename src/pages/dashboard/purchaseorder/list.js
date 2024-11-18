@@ -215,14 +215,14 @@ export default function PurchaseListPage() {
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'PurchaseOrder',
-              href: PATH_DASHBOARD.salesorder.list,
+              href: PATH_DASHBOARD.order.purchaseorder
             },
             { name: 'List' },
           ]}
           action={
             <Button
               component={NextLink}
-              href={PATH_DASHBOARD.purchaseorder.add}
+              href={PATH_DASHBOARD.order.purchaseAdd}
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
             >
