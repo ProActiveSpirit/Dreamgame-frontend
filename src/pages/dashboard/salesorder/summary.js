@@ -212,7 +212,7 @@ export default function SalesOrderListPage() {
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'SalesOrder',
-              href: PATH_DASHBOARD.salesorder.list,
+              href: PATH_DASHBOARD.report.bestseller,
             },
             { name: 'List' },
           ]}

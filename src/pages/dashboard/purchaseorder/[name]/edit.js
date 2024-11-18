@@ -64,7 +64,7 @@ export default function SalesOrderEditPage() {
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'Purchase Order',
-              href: PATH_DASHBOARD.purchaseorder.list,
+              href: PATH_DASHBOARD.order.purchaseorder,
             },
             { name: currentProduct?.NUMBER },
           ]}
