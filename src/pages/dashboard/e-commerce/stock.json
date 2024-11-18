@@ -1,7 +1,7 @@
 
 [
     {
-        "NAME":"13000 CALL OF DUTY POINTS (MW III, MWII, Warzone)", 
+        "name":"13000 CALL OF DUTY POINTS (MW III, MWII, Warzone)", 
         "STOCK":"1" , 
         "COST":"66,2862 EUR", 
         "PROVIDER": "", 
@@ -10,7 +10,7 @@
         "STATUS":"true"
     },
     {
-        "NAME":"2400 CALL OF DUTY POINTS (MW III, MWII, Warzone)", 
+        "name":"2400 CALL OF DUTY POINTS (MW III, MWII, Warzone)", 
         "STOCK":"1" , 
         "COST":"13,3329 EUR", 
         "PROVIDER": "", 
@@ -19,7 +19,7 @@
         "STATUS":"true"
     },
     {
-        "NAME":"AEW: Fight Forever", 
+        "name":"AEW: Fight Forever", 
         "STOCK":"4" , 
         "COST":"130.8 EUR", 
         "PROVIDER": "", 
@@ -28,7 +28,7 @@
         "STATUS":"true"
     },
     {
-        "NAME":"Agatha Christie - Hercule Poirot - The London Case", 
+        "name":"Agatha Christie - Hercule Poirot - The London Case", 
         "STOCK":"1" , 
         "COST":"9,9455 EUR", 
         "PROVIDER": "", 
@@ -37,7 +37,7 @@
         "STATUS":"true"
     },
     {
-        "NAME":"Age of Empires: Definitive Edition", 
+        "name":"Age of Empires: Definitive Edition", 
         "STOCK":"1" , 
         "COST":"12.76 EUR", 
         "PROVIDER": "", 
@@ -46,7 +46,7 @@
         "STATUS":"true"
     },
     {
-        "NAME":"Aliens: Fireteam Elite - Pathogen Expansion", 
+        "name":"Aliens: Fireteam Elite - Pathogen Expansion", 
         "STOCK":"2" , 
         "COST":"21.84 EUR", 
         "PROVIDER": "", 
@@ -55,7 +55,7 @@
         "STATUS":"true"
     },
     {
-        "NAME":"Arkanoid - Eternal Battle", 
+        "name":"Arkanoid - Eternal Battle", 
         "STOCK":"1" , 
         "COST":"41,0989 EUR", 
         "PROVIDER": "", 
@@ -64,7 +64,7 @@
         "STATUS":"true"
     },
     {
-        "NAME":"Ash Of Cods: The Way", 
+        "name":"Ash Of Cods: The Way", 
         "STOCK":"2" , 
         "COST":"12,4542 EUR", 
         "PROVIDER": "", 
@@ -73,7 +73,7 @@
         "STATUS":"true"
     },
     {
-        "NAME":"Assassin's Creed Mirage Deluxe Edition", 
+        "name":"Assassin's Creed Mirage Deluxe Edition", 
         "STOCK":"2" , 
         "COST":"72,5851 EUR", 
         "PROVIDER": "", 

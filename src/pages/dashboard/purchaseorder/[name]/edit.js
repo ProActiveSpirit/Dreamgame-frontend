@@ -16,11 +16,7 @@ import { useSettingsContext } from '../../../../components/settings';
 import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
 // sections
 import OrderInformation from '../detailed/orderInformation';
-import BillingInformation from '../detailed/billingInformation';
-import PurchaseOrder from '../detailed/purchaseOrder';
-import RelatedOrder from '../detailed/relatedOrder';
-import ActivationKeys from '../detailed/ActivationKeys';
-import Packages from '../detailed/packages';
+import StockDetailed from '../detailed/stockdetailed';
 
 import SaleOrders from '../order.json';
 // ----------------------------------------------------------------------
@@ -32,10 +28,9 @@ SalesOrderEditPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayou
 export default function SalesOrderEditPage() {
   const { themeStretch } = useSettingsContext();
 
-  const [currentTab, setCurrentTab] = useState('Order Information');
+  const [currentTab, setCurrentTab] = useState('Stock Detailed');
 
   // const dispatch = useDispatch();
-
 
   const {
     query: { name },
@@ -47,56 +42,29 @@ export default function SalesOrderEditPage() {
   //   dispatch(getProducts());
   // }, [dispatch]);
   const TABS = [
+
+    {
+        value: 'Stock Detailed',
+        label: 'Stock Detailed',
+        component: <StockDetailed variant = 'outlined'/>,
+    },
     {
       value: 'Order Information',
       label: 'Order Information',
       component: <OrderInformation variant = 'outlined'/>,
     },
-    {
-      value: 'Billing Information',
-      label: 'Billing Information',
-      component: <BillingInformation />,
-    },
-    {
-      value: 'PO Templates',
-      label: 'PO Templates',
-      component: (
-        <PurchaseOrder />
-      ),
-    },
-    {
-      value: 'Related Purchase Orders',
-      label: 'Related Purchase Orders',
-      component: (
-        <RelatedOrder />
-      ),
-    },
-    {
-      value: 'Activation Keys',
-      label: 'Activation Keys',
-      component: (
-        <ActivationKeys />
-      ),
-    },
-    {
-      value: 'Packages',
-      label: 'Packages',
-      component: (
-        <Packages />
-      ),
-    }
   ];
 
   return (
     <>
       <Container maxWidth={themeStretch ? 'lg' : false}>
         <CustomBreadcrumbs
-          heading="Edit Sales Order"
+          heading="Edit Purchase Order"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'Sales Order',
-              href: PATH_DASHBOARD.salesorder.list,
+              name: 'Purchase Order',
+              href: PATH_DASHBOARD.purchaseorder.list,
             },
             { name: currentProduct?.NUMBER },
           ]}

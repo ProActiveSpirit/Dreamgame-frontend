@@ -185,7 +185,7 @@ export default function SalesOrderAddPage() {
                   />
                 </Block>
 
-                <Block label="RHFSelect">
+                <Block >
                   <RHFSelect name="singleSelect" label="Customer">
                     <MenuItem value="">None</MenuItem>
                     <Divider sx={{ borderStyle: 'dashed' }} />
@@ -196,7 +196,7 @@ export default function SalesOrderAddPage() {
                     ))}
                   </RHFSelect>
                 </Block>
-                <Block label="RHFSelect">
+                <Block >
                   <RHFSelect name="singleSelect" label="Product">
                     <MenuItem value="">None</MenuItem>
                     <Divider sx={{ borderStyle: 'dashed' }} />
@@ -247,7 +247,7 @@ export default function SalesOrderAddPage() {
                   </Block>
                 </Stack>
                 <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
-                  <Block label="RHFAutocomplete">
+                  <Block >
                     <Autocomplete
                       fullWidth
                       value="EUR"
@@ -270,7 +270,7 @@ export default function SalesOrderAddPage() {
                   </Block>
                 </Stack>
                 <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
-                  <Block label="RHFAutocomplete">
+                  <Block >
                     <Autocomplete
                       fullWidth
                       value="EUR"
@@ -358,7 +358,7 @@ Block.propTypes = {
   sx: PropTypes.object,
 };
 
-function Block({ label = 'RHFTextField', sx, children }) {
+function Block({ label = '', sx, children }) {
   return (
     <Stack spacing={1} sx={{ width: 1, ...sx }}>
       <Typography
