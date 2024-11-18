@@ -19,9 +19,6 @@ import {
   FormControlLabel
 } from '@mui/material';
 
-import { width } from '@mui/system';
-
-// import { getProducts } from '../../../redux/slices/product';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // layouts
@@ -47,12 +44,12 @@ import orderData from './order.json';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // sections
-import { SalesOrderTableRow, SalesOrderTableToolbar } from '../../../sections/@dashboard/salesorder/list';
+import {PurchaseTableRow, PurchaseTableToolbar} from '../../../sections/@dashboard/purchaseorder/list';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'NUMBER', label: 'SALES ORDER NUMBER', align: 'center'},
+  { id: 'NUMBER', label: 'PURCHASE ORDER NUMBER', align: 'center'},
   { id: 'CUSTOMER', label: 'CUSTOMER', align: 'center' },
   { id: 'PRODUCT', label: 'PRODUCT', align: 'center' , width: 300 },
   { id: 'PRICE', label: 'PRODUCT PRICE', align: 'center' },
@@ -71,11 +68,11 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-SalesOrderListPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+PurchaseListPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 // ----------------------------------------------------------------------
 
-export default function SalesOrderListPage() {
+export default function PurchaseListPage() {
   const {
     dense,
     page,
@@ -197,7 +194,7 @@ export default function SalesOrderListPage() {
   };
 
   const handleViewRow = (id) => {
-    push(PATH_DASHBOARD.salesorder.view(paramCase(id)));
+    push(PATH_DASHBOARD.purchaseorder.view(paramCase(id)));
   };
 
   const handleResetFilter = () => {
@@ -213,11 +210,11 @@ export default function SalesOrderListPage() {
 
       <Container maxWidth={themeStretch ? false : 'mg'}>
         <CustomBreadcrumbs
-          heading="SalesOrder List"
+          heading="PurchaseOrder List"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'SalesOrder',
+              name: 'PurchaseOrder',
               href: PATH_DASHBOARD.salesorder.list,
             },
             { name: 'List' },
@@ -225,15 +222,15 @@ export default function SalesOrderListPage() {
           action={
             <Button
               component={NextLink}
-              href={PATH_DASHBOARD.salesorder.add}
+              href={PATH_DASHBOARD.purchaseorder.add}
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
             >
-              Add Sales Order
+              Add Purchase Order
             </Button>
           }
         />
-        <Stack direction="row" alignItems="center" sx="xl">
+        <Stack direction="row" alignItems="center">
           <FormControlLabel label="All(98265)" control={<Checkbox  />} />
           <FormControlLabel label="Pending(113)" control={<Checkbox />} />
           <FormControlLabel label="Processing(168)" control={<Checkbox />} />
@@ -243,7 +240,7 @@ export default function SalesOrderListPage() {
           <FormControlLabel label="Completed-E(1462)" control={<Checkbox />} />
         </Stack>
         <Card>
-          <SalesOrderTableToolbar
+          <PurchaseTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
@@ -294,7 +291,7 @@ export default function SalesOrderListPage() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <SalesOrderTableRow
+                        <PurchaseTableRow
                           key={row.NUMBER}
                           row={row}
                           selected={selected.includes(row.NUMBER)}
