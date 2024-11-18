@@ -13,6 +13,7 @@ export default function ProductInformation() { // Correctly destructure the vari
   return (
     <>
       <Container maxWidth='md'>
+        
         <Masonry columns={{ xs: 1 }} spacing={4}>
           <TextField
             variant="outlined"
