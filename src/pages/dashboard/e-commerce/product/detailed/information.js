@@ -1,8 +1,9 @@
 // @mui
-import { Box, Radio, TextField, Tooltip, RadioGroup, FormControlLabel, Container } from '@mui/material';
+import { Box, Radio, TextField, Tooltip, RadioGroup, FormControlLabel, Container,Button } from '@mui/material';
 import { Masonry } from '@mui/lab'; // Ensure this import is correct based on the version you're using
 
 import Label from '../../../../../components/label';
+import Iconify from '../../../../../components/iconify';
 import ExtendPrice from './extprice';
 
 export default function ProductInformation() { // Correctly destructure the variant prop
@@ -12,10 +13,25 @@ export default function ProductInformation() { // Correctly destructure the vari
 
   return (
     <>
+      <Button
+        variant="contained"
+        color="info"
+        startIcon={<Iconify icon="eva:edit-fill" />}
+      >
+        Edit Product
+      </Button>
+      <Button
+        variant="contained"
+        color="error"
+        startIcon={<Iconify icon="eos-icons:arrow-rotate" />}
+      >
+        Get Processing Orders
+      </Button>
       <Container maxWidth='md'>
-        
+
         <Masonry columns={{ xs: 1 }} spacing={4}>
-          <TextField
+
+          <TextField  
             variant="outlined"
             required
             label="Name"
@@ -86,7 +102,7 @@ export default function ProductInformation() { // Correctly destructure the vari
               <FormControlLabel value="g" control={<Radio />} label="Yes" />
               <FormControlLabel value="p" control={<Radio size="small" />} label="No" />
             </RadioGroup>
-          </Box>
+          </Box>   
         </Masonry>
       </Container>
       <ExtendPrice />

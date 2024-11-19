@@ -33,7 +33,7 @@ export default function GeneralReportPage() {
     },
     {
       field: 'SKU',
-      headerName: 'SKU',
+      headerName: 'SKU', 
       width: 360,
       editable: true,
     },
