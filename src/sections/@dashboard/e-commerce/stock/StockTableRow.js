@@ -12,6 +12,7 @@ import {
   Button
 } from '@mui/material';
 // components
+
 import Iconify from '../../../../components/iconify';
 import Label from '../../../../components/label';
 import ConfirmDialog from '../../../../components/confirm-dialog';
@@ -72,28 +73,31 @@ export default function StockTableRow({
         </TableCell>
         <TableCell align="center">{COST}</TableCell>
         <TableCell align="center">{PROVIDER}</TableCell>
+        <TableCell align="center">{PROVIDER}</TableCell>
         <TableCell align="center">{REGION}</TableCell>
         <TableCell align="center">{SKU}</TableCell>
         <TableCell align="center">
-          {(() => {
-            const icon = STATUS === "true" ? "eva:checkmark-circle-2-fill" : "eva:checkmark-circle-2-fill";
-            return   <Iconify icon={icon} sx={{ color: 'primary.main' }} />
-          })()}
+          <IconButton >
+            <Iconify icon="eva:search-fill" />
+          </IconButton>
         </TableCell>
-
+        <TableCell align="center">
+          <Iconify icon="icon-park-solid:success" style={{color: "green"}}></Iconify>
+        </TableCell>
+      {/*
         <TableCell align="center" width={50}>
           <IconButton  onClick={() => {
             handleOpenConfirm();
           }}>
             <Iconify icon="eva:trash-2-fill" />
           </IconButton>
-        </TableCell>
+        </TableCell> */}
       </TableRow>
 
       <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
-        title="Delete"
+        title="Delete"  
         content="Are you sure want to delete?"
         action={
           <Button variant="contained" color="error" onClick={onDeleteRow}>
