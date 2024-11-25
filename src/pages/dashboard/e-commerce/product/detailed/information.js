@@ -28,10 +28,8 @@ export default function ProductInformation() { // Correctly destructure the vari
         Get Processing Orders
       </Button>
       <Container maxWidth='md'>
-
         <Masonry columns={{ xs: 1 }} spacing={4}>
-
-          <TextField  
+          <TextField     
             variant="outlined"
             required
             label="Name"
@@ -44,7 +42,7 @@ export default function ProductInformation() { // Correctly destructure the vari
               display: 'flex',
               flexWrap: 'wrap',
               alignItems: 'left',
-              justifyContent: 'left',
+              justicfyContent: 'left',
               '& > *': { mx: 0.5 },
             }}
           >
@@ -76,7 +74,7 @@ export default function ProductInformation() { // Correctly destructure the vari
             variant="outlined"
             required
             fullWidth
-            label="Publisher"
+            label="Publisher"   
             size="small"
             defaultValue="Activision"
           />

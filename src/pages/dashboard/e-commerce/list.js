@@ -216,7 +216,7 @@ export default function EcommerceProductListPage() {
           //     variant="contained"
           //     startIcon={<Iconify icon="eva:plus-fill" />}
           //   >
-          //     New Product
+          //     New Product`
           //   </Button>
           // }
         />
@@ -288,7 +288,7 @@ export default function EcommerceProductListPage() {
                       )
                     )}
 
-                  <TableEmptyRows
+                  <TableEmptyRows   
                     height={denseHeight}
                     emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
                   />

@@ -11,7 +11,7 @@ PurchaseTableToolbar.propTypes = {
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
   onResetFilter: PropTypes.func,
-  filterStatus: PropTypes.array,
+  filterStatus: PropTypes.array,  
   onFilterStatus: PropTypes.func,
   statusOptions: PropTypes.array,
 };

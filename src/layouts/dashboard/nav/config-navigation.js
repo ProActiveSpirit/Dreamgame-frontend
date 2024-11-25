@@ -67,7 +67,7 @@ export const useNavConfig = () => {
               { title: 'SalesOrders', path: PATH_DASHBOARD.salesorder.list },
               { title: 'PurchaseOrders', path: PATH_DASHBOARD.purchaseorder.list },
               // { title: 'Add', path: PATH_DASHBOARD.salesorder.add },
-            ],
+            ],  
           },
           {
             title: 'INVOICE',
@@ -81,7 +81,7 @@ export const useNavConfig = () => {
             ],
           },
           {
-            title: 'REPORTS',
+            title: 'REPORTS',   
             path: PATH_DASHBOARD.report.root,
             icon: ICONS.analytics,
             children: [

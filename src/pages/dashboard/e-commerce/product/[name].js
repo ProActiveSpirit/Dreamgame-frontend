@@ -149,7 +149,7 @@ export default function EcommerceProductDetailsPage() {
                     alignItems="center"
                     justifyContent="center"
                     sx={{
-                      width: 64,
+                      width: 64, 
                       height: 64,
                       mx: 'auto',
                       borderRadius: '50%',

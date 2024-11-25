@@ -278,7 +278,7 @@ export default function ProductPurchaseOrder() {
                     )}
 
                   <TableEmptyRows
-                    height={denseHeight}
+                    height={denseHeight}  
                     emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
                   />
 
