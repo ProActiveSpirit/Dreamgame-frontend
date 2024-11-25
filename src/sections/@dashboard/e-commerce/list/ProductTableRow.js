@@ -81,9 +81,9 @@ export default function ProductTableRow({
         </TableCell>
       </TableRow>
 
-      {openDialog && (
+      {openDialog && ( 
         <PriceDialog row={row} onCloseDialog={handleCloseDialog} />
       )}
-    </>
+    </>                 
   );
 }
