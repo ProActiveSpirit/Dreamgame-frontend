@@ -1,15 +1,48 @@
+import { useEffect } from 'react';
+import { paramCase } from 'change-case';
 // @mui
-import { Box, Radio, TextField, Tooltip, RadioGroup, FormControlLabel, Container,Button } from '@mui/material';
+import { Box, Radio, TextField, Tooltip, RadioGroup, FormControlLabel, Container, Button } from '@mui/material';
 import { Masonry } from '@mui/lab'; // Ensure this import is correct based on the version you're using
-
+// next
+import { useRouter } from 'next/router';
+//component
 import Label from '../../../../../components/label';
 import Iconify from '../../../../../components/iconify';
 import ExtendPrice from './extprice';
+// redux
+import { useSelector } from '../../../../../redux/store';
 
-export default function ProductInformation() { // Correctly destructure the variant prop
+export default function ProductInformation() {
   const COLORS = ['primary', 'warning', 'info', 'secondary'];
   const Stock = ['1', '0', '0', '1'];
   const Status = ['generated keys', 'pending keys to generate', 'sold keys', 'sold keys pending generations'];
+
+  const {
+    query: { name },
+  } = useRouter();
+
+  const products = useSelector((state) => state.product.products);
+
+  // Ensure `name` and `products` are available before proceeding
+  if (!name) {
+    console.log('Waiting for name to load...');
+    return <p>Loading product details...</p>; // Show a loading state while name is undefined
+  }
+
+  if (!products || products.length === 0) {
+    console.log('Products are still loading...');
+    return <p>Loading products...</p>; // Show a loading state while products are being fetched
+  }
+
+  // Find the current product
+  const currentProduct = products.find((product) => paramCase(product.region_sku) === name);
+
+  if (!currentProduct) {
+    console.log('Product not found in the list of products:', products);
+    return <p>Product not found.</p>; // Handle the case when the product is not found
+  }
+
+  console.log('Current Product:', currentProduct);
 
   return (
     <>
@@ -27,14 +60,14 @@ export default function ProductInformation() { // Correctly destructure the vari
       >
         Get Processing Orders
       </Button>
-      <Container maxWidth='md'>
+      <Container maxWidth="md">
         <Masonry columns={{ xs: 1 }} spacing={4}>
-          <TextField     
+          <TextField
             variant="outlined"
             required
             label="Name"
             size="small"
-            defaultValue="13000 CALL OF DUTY POINTS (MV IIII, MIW II, Warzone) - [XBOX Series X|S /XBOX One]"
+            defaultValue={currentProduct?.name}
           />
           <Box
             sx={{
@@ -42,7 +75,7 @@ export default function ProductInformation() { // Correctly destructure the vari
               display: 'flex',
               flexWrap: 'wrap',
               alignItems: 'left',
-              justicfyContent: 'left',
+              justifyContent: 'left',
               '& > *': { mx: 0.5 },
             }}
           >
@@ -60,7 +93,7 @@ export default function ProductInformation() { // Correctly destructure the vari
             fullWidth
             label="Provider"
             size="small"
-            defaultValue=""
+            defaultValue={currentProduct?.provider}
           />
           <TextField
             variant="outlined"
@@ -68,23 +101,15 @@ export default function ProductInformation() { // Correctly destructure the vari
             fullWidth
             label="Sku"
             size="small"
-            defaultValue="8806188752425"
+            defaultValue={currentProduct?.sku}
           />
           <TextField
             variant="outlined"
             required
             fullWidth
-            label="Publisher"   
+            label="Publisher"
             size="small"
-            defaultValue="Activision"
-          />
-          <TextField
-            variant="outlined"
-            required
-            fullWidth
-            label="Provider Status"
-            size="small"
-            defaultValue=""
+            defaultValue={currentProduct?.publisher}
           />
           <Box
             sx={{
@@ -100,10 +125,11 @@ export default function ProductInformation() { // Correctly destructure the vari
               <FormControlLabel value="g" control={<Radio />} label="Yes" />
               <FormControlLabel value="p" control={<Radio size="small" />} label="No" />
             </RadioGroup>
-          </Box>   
+          </Box>
         </Masonry>
       </Container>
       <ExtendPrice />
+      {/* {currentProduct?.provider == "Nexway" && <ExtendPrice />} */}
     </>
   );
 }
