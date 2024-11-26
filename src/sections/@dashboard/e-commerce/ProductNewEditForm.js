@@ -7,21 +7,15 @@ import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, InputAdornment } from '@mui/material';
+import { Masonry } from '@mui/lab'; // Ensure this import is correct based on the version you're using
+import { Box, Radio, TextField, Stack, RadioGroup, FormControlLabel, Container,Button } from '@mui/material';
+
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
+import Label from '../../../components/label';
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, {
-  RHFSwitch,
-  RHFSelect,
-  RHFEditor,
-  RHFUpload,
-  RHFTextField,
-  RHFRadioGroup,
-  RHFAutocomplete,
-} from '../../../components/hook-form';
+import FormProvider from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -62,8 +56,11 @@ ProductNewEditForm.propTypes = {
 
 export default function ProductNewEditForm({ isEdit, currentProduct }) {
   const { push } = useRouter();
-
   const { enqueueSnackbar } = useSnackbar();
+
+  const COLORS = ['primary', 'warning', 'info', 'secondary'];
+  const Stock = ['0', '0', '0', '0'];
+  const Status = ['Generated keys', 'Pending keys to generate', 'Sold keys', 'Sold keys pending generate'];
 
   const NewProductSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -155,132 +152,67 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={8}>
-          <Card sx={{ p: 3 }}>
-            <Stack spacing={3}>
-              <RHFTextField name="name" label="Product Name" />
-
-              <Stack spacing={1}>
-                <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                  Description
-                </Typography>
-
-                <RHFEditor simple name="description" />
-              </Stack>
-
-              <Stack spacing={1}>
-                <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                  Images
-                </Typography>
-
-                <RHFUpload
-                  multiple
-                  thumbnail
-                  name="images"
-                  maxSize={3145728}
-                  onDrop={handleDrop}
-                  onRemove={handleRemoveFile}
-                  onRemoveAll={handleRemoveAllFiles}
-                  onUpload={() => console.log('ON UPLOAD')}
-                />
-              </Stack>
-            </Stack>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} md={4}>
-          <Stack spacing={3}>
-            <Card sx={{ p: 3 }}>
-              <RHFSwitch name="inStock" label="In stock" />
-
-              <Stack spacing={3} mt={2}>
-                <RHFTextField name="code" label="Product Code" />
-
-                <RHFTextField name="sku" label="Product SKU" />
-
-                <Stack spacing={1}>
-                  <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                    Gender
-                  </Typography>
-
-                  <RHFRadioGroup row spacing={4} name="gender" options={GENDER_OPTION} />
-                </Stack>
-
-                <RHFSelect native name="category" label="Category">
-                  <option value="" />
-                  {CATEGORY_OPTION.map((category) => (
-                    <optgroup key={category.group} label={category.group}>
-                      {category.classify.map((classify) => (
-                        <option key={classify} value={classify}>
-                          {classify}
-                        </option>
-                      ))}
-                    </optgroup>
-                  ))}
-                </RHFSelect>
-
-                <RHFAutocomplete
-                  name="tags"
-                  label="Tags"
-                  multiple
-                  freeSolo
-                  options={TAGS_OPTION.map((option) => option)}
-                  ChipProps={{ size: 'small' }}
-                />
-              </Stack>
-            </Card>
-
-            <Card sx={{ p: 3 }}>
-              <Stack spacing={3} mb={2}>
-                <RHFTextField
-                  name="price"
-                  label="Regular Price"
-                  placeholder="0.00"
-                  onChange={(event) =>
-                    setValue('price', Number(event.target.value), { shouldValidate: true })
-                  }
-                  InputLabelProps={{ shrink: true }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Box component="span" sx={{ color: 'text.disabled' }}>
-                          $
-                        </Box>
-                      </InputAdornment>
-                    ),
-                    type: 'number',
-                  }}
-                />
-
-                <RHFTextField
-                  name="priceSale"
-                  label="Sale Price"
-                  placeholder="0.00"
-                  onChange={(event) => setValue('priceSale', Number(event.target.value))}
-                  InputLabelProps={{ shrink: true }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Box component="span" sx={{ color: 'text.disabled' }}>
-                          $
-                        </Box>
-                      </InputAdornment>
-                    ),
-                    type: 'number',
-                  }}
-                />
-              </Stack>
-
-              <RHFSwitch name="taxes" label="Price includes taxes" />
-            </Card>
-
-            <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-              {!isEdit ? 'Create Product' : 'Save Changes'}
-            </LoadingButton>
+      <Container maxWidth='md'>
+        <Masonry columns={{ xs: 1 }} spacing={4}>
+          <TextField     
+            variant="outlined"
+            required
+            label="Name"
+            size="small"
+            // defaultValue="13000 CALL OF DUTY POINTS (MV IIII, MIW II, Warzone) - [XBOX Series X|S /XBOX One]"
+          />
+          <Stack spacing={1} direction="row" alignItems="center" sx="xl">
+            {Status.map((State) => (
+               <TextField     
+                variant="outlined"
+                required
+                label={State}
+                size="small"
+                defaultValue="0"
+             />
+            ))}
           </Stack>
-        </Grid>
-      </Grid>
+          <TextField
+            variant="outlined"
+            required
+            fullWidth
+            label="Provider"
+            size="small"
+            defaultValue=""
+          />
+          <TextField
+            variant="outlined"
+            required
+            fullWidth
+            label="Sku"
+            size="small"
+            defaultValue="8806188752425"
+          />
+          <TextField
+            variant="outlined"
+            required
+            fullWidth
+            label="Publisher"   
+            size="small"
+            defaultValue="Activision"
+          />
+          <Box
+            sx={{
+              p: 1,
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'left',
+              justifyContent: 'left',
+              '& > *': { mx: 2 },
+            }}
+          >
+            <RadioGroup row defaultValue="g">
+              <FormControlLabel value="g" control={<Radio />} label="Yes" />
+              <FormControlLabel value="p" control={<Radio size="small" />} label="No" />
+            </RadioGroup>
+          </Box>   
+        </Masonry>
+      </Container>
     </FormProvider>
   );
 }

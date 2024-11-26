@@ -33,13 +33,12 @@ export default function EcommerceProductEditPage() {
 
   const dispatch = useDispatch();
 
-
   const {
     query: { name },
   } = useRouter();
 
   const currentProduct = useSelector((state) =>
-    state.product.products.find((product) => paramCase(product.name) === name)
+    state.product.products.find((product) => paramCase(product.region_sku) === name)
   );
 
   useEffect(() => {

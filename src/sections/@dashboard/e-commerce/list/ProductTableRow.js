@@ -69,7 +69,7 @@ export default function ProductTableRow({
         <TableCell align="center">
           <IconButton onClick={onShowPrice}>
             <Iconify icon="eva:search-fill" />
-          </IconButton>
+          </IconButton>                                                      
         </TableCell>
         <TableCell align="center">{publisher}</TableCell>
         <TableCell align="center">{status}</TableCell>
