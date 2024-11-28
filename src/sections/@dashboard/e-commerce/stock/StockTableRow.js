@@ -15,7 +15,8 @@ import {
 
 import Iconify from '../../../../components/iconify';
 import Label from '../../../../components/label';
-import ConfirmDialog from '../../../../components/confirm-dialog';
+// import ConfirmDialog from '../../../../components/confirm-dialog';
+import PriceDialog from '../list/PriceDialog';
 // ----------------------------------------------------------------------
 
 StockTableRow.propTypes = {
@@ -35,9 +36,19 @@ export default function StockTableRow({
   onDeleteRow,
   onViewRow,
 }) {
-  const { name, STOCK, COST, PROVIDER, REGION, SKU, STATUS } = row;
+  const { name, STOCK, provider, region, sku, STATUS, price } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
+
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const onShowPrice = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -68,15 +79,15 @@ export default function StockTableRow({
           </Stack>
         </TableCell>
         <TableCell align="center">
-          <Label color="primary" variant="filled">{STOCK}</Label>
+          <Label color="primary" variant="filled">{1}</Label>
         </TableCell>
-        <TableCell align="center">{COST}</TableCell>
-        <TableCell align="center">{PROVIDER}</TableCell>
-        <TableCell align="center">{PROVIDER}</TableCell>
-        <TableCell align="center">{REGION}</TableCell>
-        <TableCell align="center">{SKU}</TableCell>
+        <TableCell align="center">{price}</TableCell>
+        <TableCell align="center">{price}</TableCell>
+        <TableCell align="center">{provider}</TableCell>
+        <TableCell align="center">{region}</TableCell>
+        <TableCell align="center">{sku}</TableCell>
         <TableCell align="center">
-          <IconButton >
+          <IconButton onClick={onShowPrice} >
             <Iconify icon="eva:search-fill" />
           </IconButton>
         </TableCell>
@@ -92,7 +103,7 @@ export default function StockTableRow({
           </IconButton>
         </TableCell> */}
       </TableRow>
-
+      {/* 
       <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
@@ -103,7 +114,10 @@ export default function StockTableRow({
             Delete
           </Button>
         }
-      />
+      /> */}
+       {openDialog && ( 
+        <PriceDialog row={row} onCloseDialog={handleCloseDialog} />
+      )}
     </>
   );
 }
