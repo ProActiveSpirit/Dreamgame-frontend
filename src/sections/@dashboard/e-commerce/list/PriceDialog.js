@@ -72,21 +72,23 @@ export default function PriceDialog({row , onCloseDialog}) {
     }
   ];
 
-  const regions = ["NO","BE","DE","ES","FR","NL","PT","PL","GB"]
+  const regions = ["NO","BE","DE","ES","FR","NL","PT","PL","GB"];
+  const exchange = []
+
 
   const _dataGrid = [...Array(9)].map((_, index) => ({
     id: _mock.id(index),
     Region: regions[index],
-    CostEUR: `${price+index}EUR`,
+    CostEUR: `${price}EUR`,
   }));
 
   const _dataGridNexway = [...Array(9)].map((_, index) => ({
     id: _mock.id(index),
     Region: regions[index],
-    CostEUR: `${price+index}EUR`,
-    CostExcVat: `${((price+index)/2).toFixed(2)}EUR`,
-    SalesExcVat: `${((price+index)*3).toFixed(2)}EUR`,
-    SRPIncVat: `${((price+index)*1.5).toFixed(2)}EUR`,
+    CostEUR: `${price}EUR`,
+    CostExcVat: `${((price)/2).toFixed(2)}EUR`,
+    SalesExcVat: `${((price)*3).toFixed(2)}EUR`,
+    SRPIncVat: `${((price)*1.5).toFixed(2)}EUR`,
   }));
 
   const handleClose = () => {

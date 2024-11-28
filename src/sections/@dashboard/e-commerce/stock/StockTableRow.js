@@ -67,7 +67,6 @@ export default function StockTableRow({
             </Link>
           </Stack>
         </TableCell>
-
         <TableCell align="center">
           <Label color="primary" variant="filled">{STOCK}</Label>
         </TableCell>

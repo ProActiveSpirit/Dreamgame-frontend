@@ -198,10 +198,10 @@ export function getProducts() {
       const Nintendo = await axios.get('/api/nintendo/products');
       const Epay = await axios.get('/api/epay/products');
       const Nexway = await axios.get('/api/nexway/products');
-      console.log('Nintendo : ', Nexway);
+      console.log('Nintendo : ', Nintendo.data.products);
       // console.log('Epay : ', Epay.data.products);
 
-      const response = [...Nexway.data.products, ...Nintendo.data.products, ...Epay.data.products ];
+      const response = [ ...Nexway.data.products,...Nintendo.data.products, ...Epay.data.products ];
       dispatch(slice.actions.getProductsSuccess(response));
     } catch (error) {
       console.log("error: " , error);

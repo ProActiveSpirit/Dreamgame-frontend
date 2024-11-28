@@ -85,7 +85,7 @@ export default function EcommerceProductListPage() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'region_sku',
+    defaultOrderBy: 'name',
   });
 
   const { themeStretch } = useSettingsContext();
@@ -151,7 +151,7 @@ export default function EcommerceProductListPage() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.region_sku !== id);
+    const deleteRow = tableData.filter((row) => row.sku !== id);
     setSelected([]);
     setTableData(deleteRow);
 
@@ -163,7 +163,7 @@ export default function EcommerceProductListPage() {
   };
 
   const handleDeleteRows = (selectedRows) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row.region_sku));
+    const deleteRows = tableData.filter((row) => !selectedRows.includes(row.sku));
     setSelected([]);
     setTableData(deleteRows);
 
@@ -240,7 +240,7 @@ export default function EcommerceProductListPage() {
               onSelectAllRows={(checked) =>
                 onSelectAllRows(
                   checked,
-                  tableData.map((row) => row.region_sku)
+                  tableData.map((row) => row.sku)
                 )
               }
               action={
@@ -264,7 +264,7 @@ export default function EcommerceProductListPage() {
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.region_sku)
+                      tableData.map((row) => row.sku)
                     )
                   }
                 />
@@ -275,13 +275,13 @@ export default function EcommerceProductListPage() {
                     .map((row, index) =>
                       row ? (
                         <ProductTableRow
-                          key={row.region_sku}
+                          key={row.sku}
                           row={row}
-                          selected={selected.includes(row.region_sku)}
-                          onSelectRow={() => onSelectRow(row.region_sku)}
-                          onDeleteRow={() => handleDeleteRow(row.region_sku)}
-                          onEditRow={() => handleEditRow(row.region_sku)}
-                          onViewRow={() => handleViewRow(row.region_sku)}
+                          selected={selected.includes(row.sku)}
+                          onSelectRow={() => onSelectRow(row.sku)}
+                          onDeleteRow={() => handleDeleteRow(row.sku)}
+                          onEditRow={() => handleEditRow(row.sku)}
+                          onViewRow={() => handleViewRow(row.sku)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
