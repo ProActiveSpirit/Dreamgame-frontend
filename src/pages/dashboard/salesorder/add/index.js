@@ -186,28 +186,19 @@ export default function SalesOrderAddPage() {
                 </Block>
 
                 <Block >
-                  <RHFSelect name="singleSelect" label="Customer">
-                    <MenuItem value="">None</MenuItem>
-                    <Divider sx={{ borderStyle: 'dashed' }} />
-                    {OPTIONS.map((option) => (
-                      <MenuItem key={option.value} value={option.label}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </RHFSelect>
+                  <Autocomplete
+                    fullWidth
+                    options={top100Films}
+                    getOptionLabel={(option) => option.title}
+                    renderInput={(params) => <TextField {...params} label="Customer" margin="none" />}
+                  />
+                  <Autocomplete
+                    fullWidth
+                    options={top100Films}
+                    getOptionLabel={(option) => option.title}
+                    renderInput={(params) => <TextField {...params} label="Product" margin="none" />}
+                  />
                 </Block>
-                <Block >
-                  <RHFSelect name="singleSelect" label="Product">
-                    <MenuItem value="">None</MenuItem>
-                    <Divider sx={{ borderStyle: 'dashed' }} />
-                    {OPTIONS.map((option) => (
-                      <MenuItem key={option.value} value={option.label}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </RHFSelect>
-                </Block>
-
                 <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
                   <Block title="Basic">
                     <DateTimePicker

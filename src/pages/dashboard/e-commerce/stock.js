@@ -97,9 +97,9 @@ export default function EcommerceProductStockPage() {
 
   const dispatch = useDispatch();
 
-  // const { products, isLoading } = useSelector((state) => state.product);
+  const { products, isLoading } = useSelector((state) => state.product);
 
-  const [isLoading, setIsLoding] = useState(false);
+  // const [isLoading, setIsLoding] = useState(false);
 
   const [tableData, setTableData] = useState([]);
 
@@ -109,19 +109,19 @@ export default function EcommerceProductStockPage() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  // useEffect(() => {
-  //   dispatch(getProducts());
-  // }, [dispatch]);
-
-  // useEffect(() => {
-  //   if (products.length) {
-  //     setTableData(products);
-  //   }
-  // }, [products]);
+  useEffect(() => {
+    dispatch(getProducts());
+  }, [dispatch]);
 
   useEffect(() => {
-    setTableData(stockData);
-  },[dispatch])
+    if (products.length) {
+      setTableData(products);
+    }
+  }, [products]);
+
+  // useEffect(() => {
+  //   setTableData(stockData);
+  // },[dispatch])
 
   const dataFiltered = applyFilter({
     inputData: tableData,
