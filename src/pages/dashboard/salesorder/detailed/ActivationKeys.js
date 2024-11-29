@@ -79,7 +79,7 @@ const columns = [
 
 export default function ProductInformation({ variant }) {
   const COLORS = ['primary', 'warning', 'info', 'secondary'];
-  const Stock = ['1', '0', '0', '1'];
+  const Stock = ['1', '0', '0', '0'];
   const Status = ['generated keys', 'pending keys to generate', 'sold keys', 'sold keys pending generations'];
 
   return (

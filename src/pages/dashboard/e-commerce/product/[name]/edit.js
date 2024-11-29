@@ -38,7 +38,7 @@ export default function EcommerceProductEditPage() {
   } = useRouter();
 
   const currentProduct = useSelector((state) =>
-    state.product.products.find((product) => paramCase(product.region_sku) === name)
+    state.product.products.find((product) => paramCase(product.sku) === name)
   );
 
   useEffect(() => {
@@ -106,7 +106,7 @@ export default function EcommerceProductEditPage() {
             {TABS.map((tab) => (
               <Tab key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
             ))}
-          </Tabs>
+          </Tabs> 
         </Card>
 
         {TABS.map(

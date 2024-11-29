@@ -14,7 +14,7 @@ import { useSelector } from '../../../../../redux/store';
 
 export default function ProductInformation() {
   const COLORS = ['primary', 'warning', 'info', 'secondary'];
-  const Stock = ['1', '0', '0', '1'];
+  const Stock = ['1', '0', '0', '0'];
   const Status = ['generated keys', 'pending keys to generate', 'sold keys', 'sold keys pending generations'];
 
   const {
@@ -35,7 +35,7 @@ export default function ProductInformation() {
   }
 
   // Find the current product
-  const currentProduct = products.find((product) => paramCase(product.region_sku) === name);
+  const currentProduct = products.find((product) => paramCase(product.sku) === name);
 
   if (!currentProduct) {
     console.log('Product not found in the list of products:', products);
