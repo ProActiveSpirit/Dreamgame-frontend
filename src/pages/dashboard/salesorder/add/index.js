@@ -1,81 +1,47 @@
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
 // @mui
 import {
   Grid,
   Stack,
-  Divider,
   Container,
-  MenuItem,
   TextField,
-  Typography,
   Autocomplete,
   InputAdornment,
-  Button,
 } from '@mui/material';
-// validation schema
+// Validation schema
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
-import PropTypes from 'prop-types';
+import * as Yup from 'yup';
 
 import { LoadingButton } from '@mui/lab';
 import { DateTimePicker } from '@mui/x-date-pickers';
-// redux
-import { useDispatch } from '../../../../redux/store';
-// components
-import { useSettingsContext } from '../../../../components/settings';
-import {
-  useTable,
-  getComparator,
-} from '../../../../components/table';
-import ConfirmDialog from '../../../../components/confirm-dialog';
-import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
-import FormProvider, {
-  RHFSelect,
-  RHFTextField,
-} from '../../../../components/hook-form';
-// routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
-// layouts
-import DashboardLayout from '../../../../layouts/dashboard';
+// Redux
+import { useDispatch, useSelector } from '../../../../redux/store';
+import { getProducts } from '../../../../redux/slices/product';
 
-// custom components
-import { FormSchema } from '../../../../sections/_examples/extra/form/schema';
-import orderData from './order.json';
+// Components
+import { useSettingsContext } from '../../../../components/settings';
+import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
+import FormProvider, { RHFTextField } from '../../../../components/hook-form';
+// Routes
+import { PATH_DASHBOARD } from '../../../../routes/paths';
+// Layouts
+import DashboardLayout from '../../../../layouts/dashboard';
 
 // ----------------------------------------------------------------------
 
-const OPTIONS = [
-  { value: 'option 1', label: 'Option 1' },
-  { value: 'option 2', label: 'Option 2' },
-  { value: 'option 3', label: 'Option 3' },
-  { value: 'option 4', label: 'Option 4' },
-  { value: 'option 5', label: 'Option 5' },
-  { value: 'option 6', label: 'Option 6' },
-  { value: 'option 7', label: 'Option 7' },
-  { value: 'option 8', label: 'Option 8' },
-];
-
+// Default values for the form
 export const defaultValues = {
-  age: 0,
-  email: '',
-  fullName: '',
-  editor: '',
-  switch: false,
-  radioGroup: '',
-  autocomplete: null,
-  password: '',
-  confirmPassword: '',
+  orderDate: new Date(),
+  Customer: '',
+  Product: '',
   startDate: new Date(),
   endDate: null,
-  singleUpload: null,
-  multiUpload: [],
-  singleSelect: '',
-  multiSelect: [],
-  checkbox: false,
-  multiCheckbox: [],
-  slider: 8,
-  sliderRange: [15, 80],
+  Quantity: '',
+  salesCurrency: 'EUR',
+  salesExtVat: '',
+  salesVat: '',
+  salesIncVat: '',
 };
 
 // ----------------------------------------------------------------------
@@ -84,27 +50,46 @@ SalesOrderAddPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout
 
 // ----------------------------------------------------------------------
 
-export default function SalesOrderAddPage() {
-  const {
-    page,
-    order,
-    orderBy,
-    rowsPerPage,
-    setPage,
-    selected,
-    setSelected,
-  } = useTable({
-    defaultOrderBy: 'name',
-  });
+// Validation schema using Yup
+const FormSchema = Yup.object().shape({
+  Customer: Yup.string().required('Customer is required'),
+  Product: Yup.string().required('Product is required'),
+  startDate: Yup.date().required('Start Date is required').typeError('Invalid date'),
+  orderDate: Yup.date().required('Order Date is required').typeError('Invalid date'),
+  endDate: Yup.date()
+    .required('End Date is required')
+    .typeError('Invalid date')
+    .min(Yup.ref('startDate'), 'End Date must be later than Start Date')
+    .typeError('End Date must be later than Start Date'), // Custom validation
+  Quantity: Yup.number()
+    .required('Quantity is required')
+    .min(1, 'Quantity must be at least 1')
+    .typeError('Quantity must be a number'),
+  salesCurrency: Yup.string()
+    .required('Sales Currency is required')
+    .oneOf(['EUR', 'Dollar'], 'Invalid Currency'),
+  salesExtVat: Yup.number()
+    .required('Sales Ext Vat is required')
+    .min(0, 'Sales Ext Vat must be at least 0')
+    .typeError('Sales Ext Vat must be a number'),
+  salesVat: Yup.number()
+    .required('Sales Vat is required')
+    .min(0, 'Sales Vat must be at least 0')
+    .max(100, 'Sales Vat cannot exceed 100')
+    .typeError('Sales Vat must be a number'),
+  salesIncVat: Yup.number()
+    .required('Sales Inc Vat is required')
+    .min(0, 'Sales Inc Vat must be at least 0')
+    .typeError('Sales Inc Vat must be a number'),
+});
 
+export default function SalesOrderAddPage() {
   const { themeStretch } = useSettingsContext();
+
+  const { products } = useSelector((state) => state.product); // Fetch products from Redux
 
   const dispatch = useDispatch();
 
-  const [tableData, setTableData] = useState([]);
-
-  const [openConfirm, setOpenConfirm] = useState(false);
-  
   const methods = useForm({
     resolver: yupResolver(FormSchema),
     defaultValues,
@@ -114,175 +99,174 @@ export default function SalesOrderAddPage() {
     reset,
     setValue,
     handleSubmit,
-    formState: { isSubmitting },
+    watch,
+    formState: { isSubmitting, errors },
   } = methods;
 
   const onSubmit = async (data) => {
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-    console.log('DATA', data);
-    reset();
+    console.log('DATA', data); // Debug the form data
+    await new Promise((resolve) => setTimeout(resolve, 3000)); // Simulate API call
+    reset(defaultValues); // Reset the form explicitly, including Autocomplete fields
   };
 
   useEffect(() => {
-    setTableData(orderData);
+    dispatch(getProducts()); // Fetch products when the component mounts
   }, [dispatch]);
-
-  const dataFiltered = applyFilter({
-    inputData: tableData,
-    comparator: getComparator(order, orderBy),
-  });
-
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
-
-  const handleDeleteRows = (selectedRows) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row.name));
-    setSelected([]);
-    setTableData(deleteRows);
-
-    if (page > 0) {
-      if (selectedRows.length === dataInPage.length) {
-        setPage(page - 1);
-      } else if (selectedRows.length === dataFiltered.length) {
-        setPage(0);
-      } else if (selectedRows.length > dataInPage.length) {
-        const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-        setPage(newPage);
-      }
-    }
-  };
 
   return (
     <>
-      <Container maxWidth={themeStretch ? false : 'mg'}>
+      <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="SalesOrder Add"
+          heading="Sales Order Add"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'SalesOrder',
+              name: 'Sales Order',
               href: PATH_DASHBOARD.salesorder.list,
             },
-            { name: 'add' },
+            { name: 'Add' },
           ]}
         />
 
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <Grid
-            container
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Grid item xs={5} md={6}>
-              <Stack spacing={2}>
-                <Block title="Basic">
-                  <DateTimePicker
-                    renderInput={(props) => <TextField {...props} fullWidth />}
-                    label="Order Date"
-                  />
-                </Block>
+          <Grid container justifyContent="center" alignItems="center">
+            <Grid item xs={12} md={8}>
+              <Stack spacing={3}>
+                {/* Order Date */}
+                <DateTimePicker
+                  renderInput={(props) => <TextField {...props} fullWidth />}
+                  label="Order Date"
+                  value={watch('orderDate')}
+                  onChange={(newValue) => setValue('orderDate', newValue)}
+                />
+                {/* Customer Field */}
+                <Autocomplete
+                  fullWidth
+                  options={top100Films} // Mock data for customers
+                  getOptionLabel={(option) => option?.title || ''} // Ensure getOptionLabel returns a string
+                  value={top100Films.find((film) => film.title === watch('Customer')) || null} // Match value properly
+                  isOptionEqualToValue={(option, value) => option.title === value?.title} // Compare by title
+                  onChange={(event, newValue) => setValue('Customer', newValue?.title || '')} // Update form state
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Customer"
+                      error={!!errors.Customer}
+                      helperText={errors.Customer?.message}
+                    />
+                  )}
+                />
 
-                <Block >
+                {/* Product Field */}
+                <Autocomplete
+                  fullWidth
+                  options={products} // Products fetched from Redux
+                  getOptionLabel={(option) => `${option?.name || ''} (${option?.sku || ''})`} // Ensure label is valid
+                  value={products.find((product) => product.name === watch('Product')) || null} // Match value properly
+                  isOptionEqualToValue={(option, value) => option.name === value?.name} // Compare by name
+                  onChange={(event, newValue) => setValue('Product', newValue?.name || '')} // Update form state
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Product"
+                      error={!!errors.Product}
+                      helperText={errors.Product?.message}
+                    />
+                  )}
+                />
+              <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
+                {/* Start Date */}
+                <DateTimePicker
+                  renderInput={(props) => (
+                    <TextField
+                      {...props}
+                      fullWidth
+                      error={!!errors.startDate}
+                      helperText={errors.startDate?.message}
+                    />
+                  )}
+                  label="Start Date"
+                  value={watch('startDate')}
+                  onChange={(newValue) => setValue('startDate', newValue, { shouldValidate: true })}
+                />
+
+                {/* End Date */}
+                <DateTimePicker
+                  renderInput={(props) => (
+                    <TextField
+                      {...props}
+                      fullWidth
+                      error={!!errors.endDate} // Show error state when validation fails
+                      helperText={errors.endDate?.message} // Display the validation error message
+                    />
+                  )}
+                  label="End Date"
+                  value={watch('endDate')}
+                  onChange={(newValue) => setValue('endDate', newValue, { shouldValidate: true })}
+                />
+              </Stack>
+              <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
+                {/* Quantity */}
+                <RHFTextField
+                  name="Quantity"
+                  label="Quantity"
+                  InputProps={{ type: 'number' }}
+                  error={!!errors.Quantity}
+                  helperText={errors.Quantity?.message}
+                />
+
+                 {/* Sales Currency */}
                   <Autocomplete
                     fullWidth
-                    options={top100Films}
-                    getOptionLabel={(option) => option.title}
-                    renderInput={(params) => <TextField {...params} label="Customer" margin="none" />}
+                    disableClearable
+                    value={watch('salesCurrency')}
+                    options={['EUR', 'Dollar']}
+                    onChange={(event, newValue) => setValue('salesCurrency', newValue)}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Sales Currency"
+                        error={!!errors.salesCurrency}
+                        helperText={errors.salesCurrency?.message}
+                      />
+                    )}
                   />
-                  <Autocomplete
-                    fullWidth
-                    options={top100Films}
-                    getOptionLabel={(option) => option.title}
-                    renderInput={(params) => <TextField {...params} label="Product" margin="none" />}
-                  />
-                </Block>
+                </Stack>
+                {/* Sales Ext Vat, Sales Vat, Sales Inc Vat */}
                 <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
-                  <Block title="Basic">
-                    <DateTimePicker
-                      renderInput={(props) => <TextField {...props} fullWidth />}
-                      label="Start Date"
-                    />
-                  </Block>
+                  <RHFTextField
+                    name="salesExtVat"
+                    label="Sales Ext Vat"
+                    InputProps={{
+                      type: 'number',
+                      endAdornment: <InputAdornment position="end">EUR</InputAdornment>,
+                    }}
+                    error={!!errors.salesExtVat}
+                    helperText={errors.salesExtVat?.message}
+                  />
+                  <RHFTextField
+                    name="salesVat"
+                    label="Sales Vat"
+                    InputProps={{
+                      type: 'number',
+                      endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                    }}
+                    error={!!errors.salesVat}
+                    helperText={errors.salesVat?.message}
+                  />
+                  <RHFTextField
+                    name="salesIncVat"
+                    label="Sales Inc Vat"
+                    InputProps={{
+                      type: 'number',
+                      endAdornment: <InputAdornment position="end">EUR</InputAdornment>,
+                    }}
+                    error={!!errors.salesIncVat}
+                    helperText={errors.salesIncVat?.message}
+                  />
+                </Stack>
 
-                  <Block title="Basic">
-                    <DateTimePicker
-                      renderInput={(props) => <TextField {...props} fullWidth />}
-                      label="End Date"
-                    />
-                  </Block>
-                </Stack>
-                <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
-                  <Block>
-                    <RHFTextField
-                      name="age"
-                      label="Quantity"
-                      onChange={(event) =>
-                        setValue('age', Number(event.target.value), { shouldValidate: true })
-                      }
-                      InputProps={{
-                        type: 'number',
-                      }}
-                    />
-                  </Block>
-                  <Block>
-                    <TextField
-                      variant="outlined"
-                      fullWidth
-                      InputProps={{
-                        endAdornment: <InputAdornment position="end">Kg</InputAdornment>,
-                      }}
-                    />
-                  </Block>
-                </Stack>
-                <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
-                  <Block >
-                    <Autocomplete
-                      fullWidth
-                      value="EUR"
-                      options={["EUR", "Dollar"]}
-                      onChange={(event, newValue) => {
-                        setValue(newValue);
-                      }}
-                      renderInput={(params) => <TextField {...params} label="Sales Currency" />}
-                    />
-                  </Block>
-                  <Block>
-                    <TextField
-                      variant="outlined"
-                      fullWidth
-                      label="Sales Ext Vat"
-                      InputProps={{
-                        endAdornment: <InputAdornment position="end">EUR</InputAdornment>,
-                      }}
-                    />
-                  </Block>
-                </Stack>
-                <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
-                  <Block >
-                    <Autocomplete
-                      fullWidth
-                      value="EUR"
-                      options={["EUR", "Dollar"]}
-                      onChange={(event, newValue) => {
-                        setValue(newValue);
-                      }}
-                      renderInput={(params) => <TextField {...params} label="Sales Vat" />}
-                    />
-                  </Block>
-                  <Block>
-                    <TextField
-                      variant="outlined"
-                      fullWidth
-                      label="Sales Inc Vat"
-                      InputProps={{
-                        endAdornment: <InputAdornment position="end">EUR</InputAdornment>,
-                      }}
-                    />
-                  </Block>
-                </Stack>
+                {/* Submit Button */}
                 <LoadingButton
                   fullWidth
                   color="info"
@@ -291,90 +275,27 @@ export default function SalesOrderAddPage() {
                   variant="contained"
                   loading={isSubmitting}
                 >
-                  Submit to add
+                  Submit to Add
                 </LoadingButton>
               </Stack>
             </Grid>
           </Grid>
         </FormProvider>
       </Container>
-
-      <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title="Delete"
-        content={
-          <>
-            Are you sure you want to delete <strong>{selected.length}</strong> items?
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteRows(selected);
-              handleCloseConfirm();
-            }}
-          >
-            Delete
-          </Button>
-        }
-      />
     </>
   );
 }
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator }) {
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
-
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  inputData = stabilizedThis.map((el) => el[0]);
-
-  return inputData;
-}
-
-// ----------------------------------------------------------------------
-
-Block.propTypes = {
-  label: PropTypes.string,
-  children: PropTypes.node,
-  sx: PropTypes.object,
-};
-
-function Block({ label = '', sx, children }) {
-  return (
-    <Stack spacing={1} sx={{ width: 1, ...sx }}>
-      <Typography
-        variant="caption"
-        sx={{
-          textAlign: 'right',
-          fontStyle: 'italic',
-          color: 'text.disabled',
-        }}
-      >
-        {label}
-      </Typography>
-      {children}
-    </Stack>
-  );
-}
-
-
+// Mock Data for Autocomplete (Customer Field)
 export const top100Films = [
-  { title: 'BE', year: 1994 },
+  { title: 'DreamGame', year: 1994 },
   { title: 'DE', year: 1972 },
   { title: 'ES', year: 1974 },
   { title: 'FR', year: 2008 },
   { title: 'NL', year: 1957 },
-  { title: "PT", year: 1993 },
+  { title: 'PT', year: 1993 },
   { title: 'PL', year: 1994 },
   { title: 'NO', year: 2003 },
   { title: 'GB', year: 1966 },

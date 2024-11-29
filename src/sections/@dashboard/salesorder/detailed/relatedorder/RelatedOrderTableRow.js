@@ -55,15 +55,15 @@ export default function RelatedOrderTableRow({
         </TableCell>
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Link
+            {/* <Link
               noWrap
               color="inherit"
               variant="subtitle2"
               // onClick={onViewRow}
               sx={{ cursor: 'pointer' }}
-            >
+            > */}
               <p>{PRODUCT}</p>
-            </Link>
+            {/* </Link> */}
           </Stack>
         </TableCell>
         <TableCell align="right">{PROVIDER}</TableCell>
