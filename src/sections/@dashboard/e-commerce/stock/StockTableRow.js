@@ -92,7 +92,7 @@ export default function StockTableRow({
           </IconButton>
         </TableCell>
         <TableCell align="center">
-          <Iconify icon="icon-park-solid:success" style={{color: "green"}} />
+          <Iconify                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             icon="icon-park-solid:success" style={{color: "green"}} />
         </TableCell>
       {/*
         <TableCell align="center" width={50}>
