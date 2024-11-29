@@ -219,16 +219,16 @@ export default function PurchaseListPage() {
             },
             { name: 'List' },
           ]}
-          action={
-            <Button
-              component={NextLink}
-              href={PATH_DASHBOARD.purchaseorder.add}
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-            >
-              Add Purchase Order
-            </Button>
-          }
+          // action={
+          //   <Button
+          //     component={NextLink}
+          //     href={PATH_DASHBOARD.purchaseorder.add}
+          //     variant="contained"
+          //     startIcon={<Iconify icon="eva:plus-fill" />}
+          //   >
+          //     Add Purchase Order
+          //   </Button>
+          // }
         />
         <Stack direction="row" alignItems="center">
           <FormControlLabel label="All(98265)" control={<Checkbox  />} />

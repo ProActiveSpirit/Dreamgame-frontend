@@ -65,19 +65,12 @@ export default function SalesOrderTableRow({
             </Link>
           </Stack>
         </TableCell>
-        <TableCell align="center">{CUSTOMER}</TableCell>
+        <TableCell align="center">{"Dreamgame"}</TableCell>
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Link
-              noWrap
-              color="inherit"
-              variant="subtitle2"
-              // onClick={onViewRow}
-              sx={{ cursor: 'pointer' }}
-            >
+
               <p>{PRODUCT}</p>
-            </Link>
           </Stack>
         </TableCell>
 

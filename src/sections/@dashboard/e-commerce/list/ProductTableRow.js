@@ -1,13 +1,17 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import {
+  Box,
   Stack,
+  Tooltip,
   TableRow,
   Checkbox,
   TableCell,
   IconButton,
   Link,
 } from '@mui/material';
+
+import Label from '../../../../components/label';
 import Iconify from '../../../../components/iconify';
 import PriceDialog from './PriceDialog';
 
@@ -29,7 +33,11 @@ export default function ProductTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, stock, provider, region, sku, publisher, status } = row;
+  const { name, stock, provider, region, sku, publisher, price } = row;
+  const COLORS = ['primary', 'warning', 'info', 'secondary'];
+  const Status = ['generated keys', 'pending keys to generate', 'sold keys', 'sold keys pending generations'];
+  const Stock = ['1', '0', '0', '0'];
+
 
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -62,7 +70,26 @@ export default function ProductTableRow({
           </Stack>
         </TableCell>
 
-        <TableCell align="center">{stock}</TableCell>
+        <TableCell align="center">
+          <Box
+            sx={{
+              p: 1,
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              justifyContent: 'center',
+              '& > *': { mx: 0.5 },
+            }}
+          >
+            {COLORS.map((color, index) => (
+              <Tooltip key={color} title={Status[index]}>
+                <Label color={color} variant="filled">
+                  {Stock[index]}
+                </Label>
+              </Tooltip>
+            ))}
+          </Box>
+        </TableCell>
         <TableCell align="center">{provider}</TableCell>
         <TableCell align="center">{region}</TableCell>
         <TableCell align="center">{sku}</TableCell>
@@ -72,7 +99,10 @@ export default function ProductTableRow({
           </IconButton>                                                      
         </TableCell>
         <TableCell align="center">{publisher}</TableCell>
-        <TableCell align="center">{status}</TableCell>
+        <TableCell align="center">{
+          price != 0 ? <Iconify icon="icon-park-solid:success" style={{color: "green"}} /> 
+          : <Iconify icon="ix:namur-failure-filled" style={{color: "red"}} /> }
+        </TableCell>
 
         <TableCell align="center" width={50}>
           <IconButton onClick={() => onEditRow()}>

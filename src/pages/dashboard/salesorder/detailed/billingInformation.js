@@ -13,6 +13,7 @@ export default function BillingInformation() {
           variant="outlined"
           required
           fullWidth
+          size='small'
           label="Customer"
           defaultValue="Dreamgame"
         />
@@ -21,6 +22,7 @@ export default function BillingInformation() {
           variant="outlined"
           required
           fullWidth
+          size='small'
           type="email"
           label="Email"
           defaultValue="adam@dreamgame.com"
@@ -30,6 +32,7 @@ export default function BillingInformation() {
           variant="outlined"
           required
           fullWidth
+          size='small'
           label="Address"
           defaultValue=""
         />
@@ -38,6 +41,7 @@ export default function BillingInformation() {
           variant="outlined"
           required
           fullWidth
+          size='small'
           label="ZipCode"
           defaultValue=""
         />
@@ -46,6 +50,7 @@ export default function BillingInformation() {
           variant="outlined"
           required
           fullWidth
+          size='small'
           label="City"
           defaultValue=""
         />
@@ -54,6 +59,7 @@ export default function BillingInformation() {
           variant="outlined"
           required
           fullWidth
+          size='small'
           label="State"
           defaultValue=""
         />
@@ -62,6 +68,7 @@ export default function BillingInformation() {
           variant="outlined"
           required
           fullWidth
+          size='small'
           label="Country Code"
           defaultValue="NL"
         />
@@ -70,6 +77,7 @@ export default function BillingInformation() {
           variant="outlined"
           required
           fullWidth
+          size='small'
           label="Region"
           defaultValue="EU"
         />
@@ -78,6 +86,7 @@ export default function BillingInformation() {
           variant="outlined"
           required
           fullWidth
+          size='small'
           label="Default Currency"
           defaultValue="EUR"
         />

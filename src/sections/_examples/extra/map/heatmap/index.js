@@ -19,7 +19,7 @@ function MapHeatmap({ ...other }) {
     fetch('https://docs.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson')
       .then((resp) => resp.json())
       .then((json) => {
-        const { features } = json;
+        const { features }  = json;
 
         const endTime = features[0].properties.time;
 

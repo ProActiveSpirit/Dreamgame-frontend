@@ -233,7 +233,7 @@ export default function SalesOrderListPage() {
             </Button>
           }
         />
-        <Stack direction="row" alignItems="center" sx="xl">
+        <Stack direction="row" alignItems="center">
           <FormControlLabel label="All(98265)" control={<Checkbox  />} />
           <FormControlLabel label="Pending(113)" control={<Checkbox />} />
           <FormControlLabel label="Processing(168)" control={<Checkbox />} />
