@@ -100,7 +100,7 @@ export default function ProductTableRow({
         </TableCell>
         <TableCell align="center">{publisher}</TableCell>
         <TableCell align="center">{
-          price != 0 ? <Iconify icon="icon-park-solid:success" style={{color: "green"}} /> 
+          price !== 0 ? <Iconify icon="icon-park-solid:success" style={{color: "green"}} /> 
           : <Iconify icon="ix:namur-failure-filled" style={{color: "red"}} /> }
         </TableCell>
 

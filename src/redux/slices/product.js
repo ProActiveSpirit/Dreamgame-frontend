@@ -85,7 +85,7 @@ const slice = createSlice({
           }
 
           return product;
-        });
+        });  
       }
       state.checkout.cart = uniqBy([...state.checkout.cart, newProduct], 'id');
       state.checkout.totalItems = sum(state.checkout.cart.map((product) => product.quantity));

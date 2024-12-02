@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 // @mui
 import {
   Grid,
@@ -18,6 +19,7 @@ import { DateTimePicker } from '@mui/x-date-pickers';
 // Redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 import { getProducts } from '../../../../redux/slices/product';
+import { createSalesOrder } from '../../../../redux/slices/salesorder';
 
 // Components
 import { useSettingsContext } from '../../../../components/settings';
@@ -95,6 +97,7 @@ export default function SalesOrderAddPage() {
     defaultValues,
   });
 
+  
   const {
     reset,
     setValue,
@@ -103,8 +106,22 @@ export default function SalesOrderAddPage() {
     formState: { isSubmitting, errors },
   } = methods;
 
+  // Watch fields for dynamic updates
+  const salesExtVat = watch('salesExtVat');
+  const salesVat = watch('salesVat');
+
+  // Update salesIncVat dynamically
+  useEffect(() => {
+    if (salesExtVat && salesVat) {
+      const vatAmount = (salesExtVat * salesVat) / 100;
+      const salesIncVat = parseFloat(salesExtVat) + parseFloat(vatAmount);
+      setValue('salesIncVat', salesIncVat.toFixed(2)); // Keep 2 decimal places
+    }
+  }, [salesExtVat, salesVat, setValue]);
+
   const onSubmit = async (data) => {
     console.log('DATA', data); // Debug the form data
+    dispatch(createSalesOrder(data));
     await new Promise((resolve) => setTimeout(resolve, 3000)); // Simulate API call
     reset(defaultValues); // Reset the form explicitly, including Autocomplete fields
   };
@@ -168,7 +185,7 @@ export default function SalesOrderAddPage() {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Product"
+                      label="Product" 
                       error={!!errors.Product}
                       helperText={errors.Product?.message}
                     />
