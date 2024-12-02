@@ -65,12 +65,11 @@ export default function SalesOrderTableRow({
             </Link>
           </Stack>
         </TableCell>
-        <TableCell align="center">{"Dreamgame"}</TableCell>
+        <TableCell align="center">Dreamgame</TableCell>
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-
-              <p>{PRODUCT}</p>
+            <p>{PRODUCT}</p>
           </Stack>
         </TableCell>
 
@@ -78,7 +77,7 @@ export default function SalesOrderTableRow({
         <TableCell align="center">{QUANTITY}</TableCell>
         <TableCell align="center">{TOTAL}</TableCell>
         <TableCell align="center">{CREATEDON}</TableCell>
-        <TableCell align="center">
+        <TableCell align="center">                
           {(() => {
             const color = (STATUS === "Processing" ? "info" : "success");
             return <Label color={color} variant="filled">{STATUS}</Label>;

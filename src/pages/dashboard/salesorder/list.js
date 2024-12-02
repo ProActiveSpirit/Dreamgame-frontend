@@ -19,9 +19,9 @@ import {
   FormControlLabel
 } from '@mui/material';
 
-import { width } from '@mui/system';
+// import { width } from '@mui/system';
 
-// import { getProducts } from '../../../redux/slices/product';
+import { getSalesOrders } from '../../../redux/slices/salesorder';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // layouts
@@ -43,7 +43,7 @@ import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
-import orderData from './order.json';
+// import orderData from './order.json';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // sections
@@ -103,7 +103,7 @@ export default function SalesOrderListPage() {
 
   const dispatch = useDispatch();
 
-  const { products, isLoading } = useSelector((state) => state.product);
+  const { allOrders, isLoading } = useSelector((state) => state.salesorder);
 
   const [tableData, setTableData] = useState([]);
 
@@ -113,19 +113,19 @@ export default function SalesOrderListPage() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-//   useEffect(() => {
-//     dispatch(getProducts());
-//   }, [dispatch]);
-
-//   useEffect(() => {
-//     if (products.length) {
-//       setTableData(products);
-//     }
-//   }, [products]);
+  useEffect(() => {
+    dispatch(getSalesOrders());
+  }, [dispatch]);
 
   useEffect(() => {
-    setTableData(orderData);
-  },[dispatch])
+    if (allOrders.length) {
+      setTableData(allOrders);
+    }
+  }, [allOrders]);
+
+  // useEffect(() => {
+  //   setTableData(orderData);
+  // },[dispatch])
 
   const dataFiltered = applyFilter({
     inputData: tableData,
