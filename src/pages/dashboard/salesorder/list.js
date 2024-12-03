@@ -233,7 +233,7 @@ export default function SalesOrderListPage() {
             </Button>
           }
         />
-        <Stack direction="row" alignItems="center">
+        {/* <Stack direction="row" alignItems="center">
           <FormControlLabel label="All(98265)" control={<Checkbox  />} />
           <FormControlLabel label="Pending(113)" control={<Checkbox />} />
           <FormControlLabel label="Processing(168)" control={<Checkbox />} />
@@ -241,7 +241,7 @@ export default function SalesOrderListPage() {
           <FormControlLabel label="processing-E(0)" control={<Checkbox />} />
           <FormControlLabel label="Completed(96522)" control={<Checkbox />} />
           <FormControlLabel label="Completed-E(1462)" control={<Checkbox />} />
-        </Stack>
+        </Stack> */}
         <Card>
           <SalesOrderTableToolbar
             filterName={filterName}
