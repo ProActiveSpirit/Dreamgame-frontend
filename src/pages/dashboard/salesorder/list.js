@@ -19,9 +19,9 @@ import {
   FormControlLabel
 } from '@mui/material';
 
-import { width } from '@mui/system';
+// import { width } from '@mui/system';
 
-// import { getProducts } from '../../../redux/slices/product';
+import { getSalesOrders } from '../../../redux/slices/salesorder';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // layouts
@@ -43,7 +43,7 @@ import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
-import orderData from './order.json';
+// import orderData from './order.json';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // sections
@@ -52,7 +52,7 @@ import { SalesOrderTableRow, SalesOrderTableToolbar } from '../../../sections/@d
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'NUMBER', label: 'SALES ORDER NUMBER', align: 'center'},
+  { id: 'id', label: 'SALES ORDER NUMBER', align: 'center'},
   { id: 'CUSTOMER', label: 'CUSTOMER', align: 'center' },
   { id: 'PRODUCT', label: 'PRODUCT', align: 'center' , width: 300 },
   { id: 'PRICE', label: 'PRODUCT PRICE', align: 'center' },
@@ -103,7 +103,7 @@ export default function SalesOrderListPage() {
 
   const dispatch = useDispatch();
 
-  const { products, isLoading } = useSelector((state) => state.product);
+  const { allOrders, isLoading } = useSelector((state) => state.salesorder);
 
   const [tableData, setTableData] = useState([]);
 
@@ -113,19 +113,19 @@ export default function SalesOrderListPage() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-//   useEffect(() => {
-//     dispatch(getProducts());
-//   }, [dispatch]);
-
-//   useEffect(() => {
-//     if (products.length) {
-//       setTableData(products);
-//     }
-//   }, [products]);
+  useEffect(() => {
+    dispatch(getSalesOrders());
+  }, [dispatch]);
 
   useEffect(() => {
-    setTableData(orderData);
-  },[dispatch])
+    if (allOrders.length) {
+      setTableData(allOrders);
+    }
+  }, [allOrders]);
+
+  // useEffect(() => {
+  //   setTableData(orderData);
+  // },[dispatch])
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -164,7 +164,7 @@ export default function SalesOrderListPage() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.NUMBER !== id);
+    const deleteRow = tableData.filter((row) => row.id !== id);
     setSelected([]);
     setTableData(deleteRow);
 
@@ -176,7 +176,7 @@ export default function SalesOrderListPage() {
   };
 
   const handleDeleteRows = (selectedRows) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row.NUMBER));
+    const deleteRows = tableData.filter((row) => !selectedRows.includes(row.id));
     setSelected([]);
     setTableData(deleteRows);
 
@@ -260,7 +260,7 @@ export default function SalesOrderListPage() {
               onSelectAllRows={(checked) =>
                 onSelectAllRows(
                   checked,
-                  tableData.map((row) => row.NUMBER)
+                  tableData.map((row) => row.id)
                 )
               }
               action={
@@ -284,7 +284,7 @@ export default function SalesOrderListPage() {
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.NUMBER)
+                      tableData.map((row) => row.id)
                     )
                   }
                 />
@@ -295,13 +295,13 @@ export default function SalesOrderListPage() {
                     .map((row, index) =>
                       row ? (
                         <SalesOrderTableRow
-                          key={row.NUMBER}
+                          key={row.id}
                           row={row}
-                          selected={selected.includes(row.NUMBER)}
-                          onSelectRow={() => onSelectRow(row.NUMBER)}
-                          onDeleteRow={() => handleDeleteRow(row.NUMBER)}
-                          onEditRow={() => handleEditRow(row.NUMBER)}
-                          onViewRow={() => handleViewRow(row.NUMBER)}
+                          selected={selected.includes(row.id)}
+                          onSelectRow={() => onSelectRow(row.id)}
+                          onDeleteRow={() => handleDeleteRow(row.id)}
+                          onEditRow={() => handleEditRow(row.id)}
+                          onViewRow={() => handleViewRow(row.id)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
