@@ -185,7 +185,7 @@ export default function SalesOrderAddPage() {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Product" 
+                      label="Product"
                       error={!!errors.Product}
                       helperText={errors.Product?.message}
                     />

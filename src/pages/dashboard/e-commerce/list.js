@@ -85,7 +85,7 @@ export default function EcommerceProductListPage() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'name',
+    defaultOrderBy: 'sku',
   });
 
   const { themeStretch } = useSettingsContext();
