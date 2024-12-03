@@ -88,7 +88,7 @@ export default function EcommerceProductStockPage() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'name',
+    defaultOrderBy: 'sku',
   });
 
   const { themeStretch } = useSettingsContext();
@@ -284,13 +284,13 @@ export default function EcommerceProductStockPage() {
                     .map((row, index) =>
                       row ? (
                         <StockTableRow
-                          key={row.name}
+                          key={row.sku}
                           row={row}
-                          selected={selected.includes(row.name)}
-                          onSelectRow={() => onSelectRow(row.name)}
-                          onDeleteRow={() => handleDeleteRow(row.name)}
-                          onEditRow={() => handleEditRow(row.name)}
-                          onViewRow={() => handleViewRow(row.name)}
+                          selected={selected.includes(row.sku)}
+                          onSelectRow={() => onSelectRow(row.sku)}
+                          onDeleteRow={() => handleDeleteRow(row.sku)}
+                          onEditRow={() => handleEditRow(row.sku)}
+                          onViewRow={() => handleViewRow(row.sku)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

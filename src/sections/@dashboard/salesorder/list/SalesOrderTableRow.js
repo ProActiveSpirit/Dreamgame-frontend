@@ -34,7 +34,7 @@ export default function SalesOrderTableRow({
   onDeleteRow,
   onViewRow,
 }) {
-  const { NUMBER, CUSTOMER, PRODUCT, DETAILED, PRICE, QUANTITY,TOTAL, CREATEDON, STATUS, N_A } = row;
+  const { id, customer, product, processQuantity, totalQuantity,totalPrice, createdOn, status, N_A } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -61,27 +61,24 @@ export default function SalesOrderTableRow({
               onClick={onViewRow}
               sx={{ cursor: 'pointer' }}
             >
-              {NUMBER}
+              {id}
             </Link>
           </Stack>
         </TableCell>
-        <TableCell align="center">Dreamgame</TableCell>
+        <TableCell align="center">{customer.name}</TableCell>
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-            <p>{PRODUCT}</p>
+            <p>{product.name}</p>
           </Stack>
         </TableCell>
 
-        <TableCell align="right">{PRICE}</TableCell>
-        <TableCell align="center">{QUANTITY}</TableCell>
-        <TableCell align="center">{TOTAL}</TableCell>
-        <TableCell align="center">{CREATEDON}</TableCell>
+        <TableCell align="center">{product.price}</TableCell>
+        <TableCell align="center"><Label color="info">{processQuantity} / {totalQuantity}</Label></TableCell>
+        <TableCell align="center">{totalPrice}</TableCell>
+        <TableCell align="center">{createdOn}</TableCell>
         <TableCell align="center">                
-          {(() => {
-            const color = (STATUS === "Processing" ? "info" : "success");
-            return <Label color={color} variant="filled">{STATUS}</Label>;
-          })()}
+          <Label color="primary">{status}</Label>
         </TableCell>
         <TableCell align="center">{N_A}</TableCell>
         <TableCell align="center" width={50}>
