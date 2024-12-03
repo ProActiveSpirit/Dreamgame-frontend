@@ -82,7 +82,7 @@ export function getSalesOrders() {
     dispatch(slice.actions.startLoading());
     try {
       const allOrders = await axios.get('/api/order/getSalesAll');
-      dispatch(slice.actions.getSalesOrdersSuccess(allOrders));
+      dispatch(slice.actions.getSalesOrdersSuccess(allOrders.data.salesOrders));
     } catch (error) {
       console.error("Error fetching sales orders: ", error);
       dispatch(slice.actions.hasError(error));
@@ -110,7 +110,8 @@ export function createSalesOrder(newOrder) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.post('/api/order/addSales', newOrder);
-      dispatch(slice.actions.createSalesOrderSuccess(response.data));
+      console.log("response" , response.data.data);
+      dispatch(slice.actions.createSalesOrderSuccess(response.data.data));
     } catch (error) {
       console.error("Error creating sales order: ", error);
       dispatch(slice.actions.hasError(error));

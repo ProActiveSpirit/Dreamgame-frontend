@@ -19,6 +19,7 @@ import { DateTimePicker } from '@mui/x-date-pickers';
 // Redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 import { getProducts } from '../../../../redux/slices/product';
+import { getCustomers } from '../../../../redux/slices/user';
 import { createSalesOrder } from '../../../../redux/slices/salesorder';
 
 // Components
@@ -89,6 +90,7 @@ export default function SalesOrderAddPage() {
   const { themeStretch } = useSettingsContext();
 
   const { products } = useSelector((state) => state.product); // Fetch products from Redux
+  const { customers } = useSelector((state) => state.user); // Fetch products from Redux
 
   const dispatch = useDispatch();
 
@@ -109,12 +111,14 @@ export default function SalesOrderAddPage() {
   // Watch fields for dynamic updates
   const salesExtVat = watch('salesExtVat');
   const salesVat = watch('salesVat');
+  // const Quantity = watch('Quantity');
+
 
   // Update salesIncVat dynamically
   useEffect(() => {
     if (salesExtVat && salesVat) {
       const vatAmount = (salesExtVat * salesVat) / 100;
-      const salesIncVat = parseFloat(salesExtVat) + parseFloat(vatAmount);
+      const salesIncVat = (parseFloat(salesExtVat) + parseFloat(vatAmount));
       setValue('salesIncVat', salesIncVat.toFixed(2)); // Keep 2 decimal places
     }
   }, [salesExtVat, salesVat, setValue]);
@@ -127,6 +131,7 @@ export default function SalesOrderAddPage() {
   };
 
   useEffect(() => {
+    dispatch(getCustomers()); // Fetch Customers when the component mounts
     dispatch(getProducts()); // Fetch products when the component mounts
   }, [dispatch]);
 
@@ -159,29 +164,30 @@ export default function SalesOrderAddPage() {
                 {/* Customer Field */}
                 <Autocomplete
                   fullWidth
-                  options={top100Films} // Mock data for customers
-                  getOptionLabel={(option) => option?.title || ''} // Ensure getOptionLabel returns a string
-                  value={top100Films.find((film) => film.title === watch('Customer')) || null} // Match value properly
-                  isOptionEqualToValue={(option, value) => option.title === value?.title} // Compare by title
-                  onChange={(event, newValue) => setValue('Customer', newValue?.title || '')} // Update form state
+                  options={customers || []} // Ensure options is always an array
+                  getOptionLabel={(option) => (option?.name ? option.name : '')} // Safely access name
+                  value={
+                    customers?.find((customer) => customer.name === watch('Customer')) || null
+                  } // Match selected value properly
+                  isOptionEqualToValue={(option, value) => option?.id === value?.id} // Compare by unique ID
+                  onChange={(event, newValue) => setValue('Customer', newValue?.id || '')} // Update the form state
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       label="Customer"
-                      error={!!errors.Customer}
-                      helperText={errors.Customer?.message}
+                      error={!!errors?.Customer} // Display error if it exists
+                      helperText={errors?.Customer?.message} // Show error message if available
                     />
                   )}
                 />
-
                 {/* Product Field */}
                 <Autocomplete
                   fullWidth
                   options={products} // Products fetched from Redux
                   getOptionLabel={(option) => `${option?.name || ''} (${option?.sku || ''})`} // Ensure label is valid
-                  value={products.find((product) => product.name === watch('Product')) || null} // Match value properly
+                  value={products.find((product) => product.id === watch('Product')) || null} // Match value properly
                   isOptionEqualToValue={(option, value) => option.name === value?.name} // Compare by name
-                  onChange={(event, newValue) => setValue('Product', newValue?.name || '')} // Update form state
+                  onChange={(event, newValue) => setValue('Product', newValue?.id || '')} // Update form state
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -227,12 +233,13 @@ export default function SalesOrderAddPage() {
                 <RHFTextField
                   name="Quantity"
                   label="Quantity"
+                  // value={watch('Quantity')}
                   InputProps={{ type: 'number' }}
                   error={!!errors.Quantity}
                   helperText={errors.Quantity?.message}
                 />
 
-                 {/* Sales Currency */}
+                {/* Sales Currency */}
                   <Autocomplete
                     fullWidth
                     disableClearable

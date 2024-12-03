@@ -58,6 +58,7 @@ const TABLE_HEAD = [
   { id: 'CREATEDON', label: 'CREATED ON', align: 'center' },
   { id: 'STATUS', label: 'STATUS', align: 'center' },
   { id: 'N_A', label: 'N/A', align: 'center' },
+  // { id: 'Action', label: 'ACTION', align: 'center' },
 ];
 
 // const STATUS_OPTIONS = [

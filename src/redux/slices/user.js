@@ -6,6 +6,7 @@ const initialState = {
   error: null,
   users: [],
   user: null,
+  customers:[],
 };
 
 const userSlice = createSlice({
@@ -33,11 +34,16 @@ const userSlice = createSlice({
       if (index >= 0) {
         state.users[index] = action.payload;
       }
+    },
+    getCustomerSuccess(state, action) {
+      state.isLoading = false;
+      state.customers = action.payload.customer;
+      console.log("action.payload.customer" , action.payload.customer);
     }
   },
 });
 
-export const { startLoading, hasError, getUsersSuccess, getUserSuccess, updateUser } = userSlice.actions;
+export const { startLoading, hasError, getUsersSuccess, getUserSuccess, updateUser, getCustomerSuccess } = userSlice.actions;
 
 export default userSlice.reducer;
 
@@ -75,6 +81,19 @@ export function updateAdminVerified(userId, adminVerified) {
     try {
       const response = await axios.patch(`/api/users/${userId}`, { adminVerified });
       dispatch(updateUser(response.data));
+    } catch (error) {
+      dispatch(hasError(error));
+    }
+  };
+}
+
+// Thunk to get Customers information status
+export function getCustomers() {
+  return async (dispatch) => {
+    dispatch(startLoading());
+    try {
+      const response = await axios.post("/api/users/getCustomer");
+      dispatch(getCustomerSuccess(response.data));
     } catch (error) {
       dispatch(hasError(error));
     }
