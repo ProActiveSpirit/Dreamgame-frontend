@@ -8,6 +8,7 @@ import {
   Checkbox,
   TableCell,
   IconButton,
+  MenuItem,
   Link,
   Button
 } from '@mui/material';
@@ -15,13 +16,14 @@ import {
 import Iconify from '../../../../components/iconify';
 import ConfirmDialog from '../../../../components/confirm-dialog';
 import Label from '../../../../components/label';
+import MenuPopover from '../../../../components/menu-popover';
+
 // ----------------------------------------------------------------------
 
 SalesOrderTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
-  onViewRow: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
 };
@@ -38,12 +40,22 @@ export default function SalesOrderTableRow({
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
+  const [openPopover, setOpenPopover] = useState(null);
+
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
   };
 
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
+  };
+
+  const handleOpenPopover = (event) => {
+    setOpenPopover(event.currentTarget);
+  };
+
+  const handleClosePopover = () => {
+    setOpenPopover(null);
   };
 
   return (
@@ -65,11 +77,11 @@ export default function SalesOrderTableRow({
             </Link>
           </Stack>
         </TableCell>
-        <TableCell align="center">{customer.name}</TableCell>
+        <TableCell align="center">{customer}</TableCell>
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-            <p>{product.name}</p>
+            <p>{product}</p>
           </Stack>
         </TableCell>
 
@@ -81,15 +93,41 @@ export default function SalesOrderTableRow({
           <Label color="primary">{status}</Label>
         </TableCell>
         <TableCell align="center">{N_A}</TableCell>
-        <TableCell align="center" width={50}>
-          <IconButton  onClick={() => {
-            handleOpenConfirm();
-            // handleClosePopover();
-          }}>
-            <Iconify icon="eva:trash-2-fill" />
+        <TableCell align="right">
+          <IconButton color={openPopover ? 'inherit' : 'default'} onClick={handleOpenPopover}>
+            <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
         </TableCell>
       </TableRow>
+
+      <MenuPopover
+        open={openPopover}
+        onClose={handleClosePopover}
+        arrow="right-top"
+        sx={{ width: 160 }}
+      >
+
+        <MenuItem
+          onClick={() => {
+            onEditRow();
+            handleClosePopover();
+          }}
+        >
+          <Iconify icon="eva:edit-fill" />
+          Edit
+        </MenuItem>
+
+        <MenuItem
+          onClick={() => {
+            handleOpenConfirm();
+            handleClosePopover();
+          }}
+          sx={{ color: 'error.main' }}
+        >
+          <Iconify icon="eva:trash-2-outline" />
+          Delete
+        </MenuItem>
+      </MenuPopover>
 
       <ConfirmDialog
         open={openConfirm}

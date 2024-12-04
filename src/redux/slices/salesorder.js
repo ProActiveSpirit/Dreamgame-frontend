@@ -136,7 +136,7 @@ export function deleteSalesOrder(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      await axios.delete(`/api/order/SalesOrder/${id}`);
+      await axios.delete(`/api/order/deleteSale/${id}`);
       dispatch(slice.actions.deleteSalesOrderSuccess(id));
     } catch (error) {
       console.error("Error deleting sales order: ", error);

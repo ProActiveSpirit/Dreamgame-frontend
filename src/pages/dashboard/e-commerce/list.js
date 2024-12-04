@@ -232,7 +232,7 @@ export default function EcommerceProductListPage() {
             onResetFilter={handleResetFilter}
           />
 
-          <TableContainer sx={{ position: 'relative', overflow: 'unse t' }}>
+          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
               dense={dense}
               numSelected={selected.length}
