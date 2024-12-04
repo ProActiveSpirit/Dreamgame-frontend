@@ -105,40 +105,34 @@ export default function PriceDialog({ row, onCloseDialog }) {
   ];
 
   // Calculate DataGrid rows with exchange rates
-  const calculateRows = () => {
-    if (loading || !exchangeRates) return [];
+  const calculateRows = () =>
+    loading || !exchangeRates
+      ? []
+      : regions.map((region, index) => ({
+          id: _mock.id(index),
+          Region: region,
+          CostEUR: `${(price * (exchangeRates[currencies[region]] || 1)).toFixed(
+            2
+          )} ${currencies[region]}`,
+        }));
 
-    return regions.map((region, index) => {
-      const localCurrency = currencies[region];
-      const exchangeRate = exchangeRates[localCurrency] || 1; // Default to 1 if no conversion needed
-      const localPrice = (price * exchangeRate).toFixed(2);
+  const calculateRowsNexway = () =>
+    loading || !exchangeRates
+      ? []
+      : regions.map((region, index) => {
+          const localCurrency = currencies[region];
+          const exchangeRate = exchangeRates[localCurrency] || 1; // Default to 1 if no conversion needed
+          const localPrice = (price * exchangeRate).toFixed(2);
 
-      return {
-        id: _mock.id(index),
-        Region: region,
-        CostEUR: `${localPrice} ${localCurrency}`,
-      };
-    });
-  };
-
-  const calculateRowsNexway = () => {
-    if (loading || !exchangeRates) return [];
-
-    return regions.map((region, index) => {
-      const localCurrency = currencies[region];
-      const exchangeRate = exchangeRates[localCurrency] || 1; // Default to 1 if no conversion needed
-      const localPrice = (price * exchangeRate).toFixed(2);
-
-      return {
-        id: _mock.id(index),
-        Region: region,
-        CostEUR: `${(localPrice* 1.2).toFixed(2)} ${localCurrency}`,
-        CostExcVat: `${localPrice} ${localCurrency}`,
-        SalesExcVat: `${(localPrice * 1.5).toFixed(2)} ${localCurrency}`,
-        SRPIncVat: `${(localPrice * 1.8).toFixed(2)} ${localCurrency}`,
-      };
-    });
-  };
+          return {
+            id: _mock.id(index),
+            Region: region,
+            CostEUR: `${(localPrice * 1.2).toFixed(2)} ${localCurrency}`,
+            CostExcVat: `${localPrice} ${localCurrency}`,
+            SalesExcVat: `${(localPrice * 1.5).toFixed(2)} ${localCurrency}`,
+            SRPIncVat: `${(localPrice * 1.8).toFixed(2)} ${localCurrency}`,
+          };
+        });
 
   const handleClose = () => {
     setOpen(false);
@@ -151,12 +145,21 @@ export default function PriceDialog({ row, onCloseDialog }) {
         <DialogTitle>{name}</DialogTitle>
         <DialogContent>
           <DialogContentText>Product Price</DialogContentText>
-          {loading ? (
-            <p>Loading exchange rates...</p>
-          ) : provider === 'Nexway' ? (
-            <DataGrid columns={columnsNexway} rows={calculateRowsNexway()} style={{ height: 600 }} />
-          ) : (
-            <DataGrid columns={columns} rows={calculateRows()} style={{ height: 600 }} />
+          {loading && <p>Loading exchange rates...</p>}
+          {!loading && (
+            provider === 'Nexway' ? (
+              <DataGrid
+                columns={columnsNexway}
+                rows={calculateRowsNexway()}
+                style={{ height: 600 }}
+              />
+            ) : (
+              <DataGrid
+                columns={columns}
+                rows={calculateRows()}
+                style={{ height: 600 }}
+              />
+            )
           )}
         </DialogContent>
         <DialogActions>

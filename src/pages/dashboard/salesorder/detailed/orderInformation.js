@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import React from 'react';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 // next
 import { useRouter } from 'next/router';
@@ -20,9 +19,9 @@ export default function OrderInformation( {variant = 'outlined' }) {
     query: { name },
   } = useRouter();
 
-  const currentOrder = useSelector((state) => {
-    return state.salesorder.allOrders.find((order) => order.id === name);
-  });
+  const currentOrder = useSelector((state) =>
+    state.salesorder.allOrders.find((order) => order.id === name)
+  );
 
   useEffect(() => {
     dispatch(getSalesOrders());

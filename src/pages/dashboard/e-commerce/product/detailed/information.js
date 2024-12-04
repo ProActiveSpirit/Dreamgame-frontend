@@ -14,7 +14,6 @@ import { useSelector } from '../../../../../redux/store';
 
 export default function ProductInformation() {
   const COLORS = ['primary', 'warning', 'info', 'secondary'];
-  const Stock = ['1', '0', '0', '0'];
   const Status = ['generated keys', 'pending keys to generate', 'sold keys', 'sold keys pending generations'];
 
   const {
@@ -82,7 +81,7 @@ export default function ProductInformation() {
             {COLORS.map((color, index) => (
               <Tooltip key={color} title={Status[index]}>
                 <Label color={color} variant="filled">
-                  {Stock[index]}
+                  {currentProduct.stock[index]}
                 </Label>
               </Tooltip>
             ))}
