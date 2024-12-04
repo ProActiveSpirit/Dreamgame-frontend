@@ -97,7 +97,7 @@ export default function GeneralReportPage() {
   return (
     <>
       <Container maxWidth={themeStretch ? false : 'xl'}>
-        <DataGrid columns={columns} rows={_dataGrid} checkboxSelection disableSelectionOnClick style={{height: 900}} />
+        <DataGrid columns={columns} rows={_dataGrid} disableSelectionOnClick style={{height: 700}} />
       </Container>
     </>
   );
