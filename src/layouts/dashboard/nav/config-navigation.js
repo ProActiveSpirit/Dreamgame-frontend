@@ -51,6 +51,15 @@ export const useNavConfig = () => {
             ],
           }] : []),
           {
+            title: 'CUSTOMERS',
+            path: PATH_DASHBOARD.customer.root,
+            icon: ICONS.menuItem,
+            children: [
+              { title: 'List', path: PATH_DASHBOARD.customer.list },
+              { title: 'Add', path: PATH_DASHBOARD.customer.add },
+            ],
+          },
+          {
             title: 'CATALOG',
             path: PATH_DASHBOARD.eCommerce.root,
             icon: ICONS.menuItem,

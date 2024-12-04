@@ -51,6 +51,11 @@ export const PATH_DASHBOARD = {
     booking: path(ROOTS_DASHBOARD, '/booking'),
     file: path(ROOTS_DASHBOARD, '/file'),
   },
+  customer: {
+    root: path(ROOTS_DASHBOARD, '/customer'),
+    list: path(ROOTS_DASHBOARD, '/customer/list'),
+    add: path(ROOTS_DASHBOARD, '/customer/add'),
+  },
   mail: {
     root: path(ROOTS_DASHBOARD, '/mail'),
     all: path(ROOTS_DASHBOARD, '/mail/all'),

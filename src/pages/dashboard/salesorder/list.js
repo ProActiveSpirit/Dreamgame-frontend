@@ -7,21 +7,17 @@ import { useRouter } from 'next/router';
 // @mui
 import {
   Card,
-  Stack,
   Table,
   Button,
   Tooltip,
-  Checkbox,
   TableBody,
   Container,
   IconButton,
   TableContainer,
-  FormControlLabel
 } from '@mui/material';
 
 // import { width } from '@mui/system';
 
-import { getSalesOrders } from '../../../redux/slices/salesorder';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // layouts
@@ -46,6 +42,8 @@ import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 // import orderData from './order.json';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
+import { getSalesOrders, deleteSalesOrder } from '../../../redux/slices/salesorder';
+
 // sections
 import { SalesOrderTableRow, SalesOrderTableToolbar } from '../../../sections/@dashboard/salesorder/list';
 
@@ -61,13 +59,8 @@ const TABLE_HEAD = [
   { id: 'CREATEDON', label: 'CREATED ON', align: 'center' },
   { id: 'STATUS', label: 'STATUS', align: 'center' },
   { id: 'N_A', label: 'N/A', align: 'center' },
+  { id: 'Action', label: 'ACTION', align: 'center' },
 ];
-
-// const STATUS_OPTIONS = [
-//   { value: 'in_stock', label: 'In stock' },
-//   { value: 'low_stock', label: 'Low stock' },
-//   { value: 'out_of_stock', label: 'Out of stock' },
-// ];
 
 // ----------------------------------------------------------------------
 
@@ -94,7 +87,7 @@ export default function SalesOrderListPage() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'name',
+    defaultOrderBy: 'customer',
   });
 
   const { themeStretch } = useSettingsContext();
@@ -119,13 +112,21 @@ export default function SalesOrderListPage() {
 
   useEffect(() => {
     if (allOrders.length) {
-      setTableData(allOrders);
+      const extractedData = allOrders.map((order) => ({
+        id:order.id,
+        salesIncVat:order.salesIncVat,
+        processQuantity:order.processQuantity,
+        totalQuantity:order.totalQuantity,
+        totalPrice:order.totalPrice,
+        createdOn:order.createdOn,
+        status:order.status,
+        N_A:order.N_A,
+        customer: order.customer?.name || "Unknown Customer",
+        product: order.product?.name || "Unknown Product",
+      }));
+      setTableData(extractedData);
     }
   }, [allOrders]);
-
-  // useEffect(() => {
-  //   setTableData(orderData);
-  // },[dispatch])
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -167,7 +168,7 @@ export default function SalesOrderListPage() {
     const deleteRow = tableData.filter((row) => row.id !== id);
     setSelected([]);
     setTableData(deleteRow);
-
+    dispatch(deleteSalesOrder(id));
     if (page > 0) {
       if (dataInPage.length < 2) {
         setPage(page - 1);
@@ -193,7 +194,7 @@ export default function SalesOrderListPage() {
   };
 
   const handleEditRow = (id) => {
-    push(PATH_DASHBOARD.eCommerce.edit(paramCase(id)));
+    push(PATH_DASHBOARD.salesorder.view(paramCase(id)));
   };
 
   const handleViewRow = (id) => {
@@ -208,7 +209,7 @@ export default function SalesOrderListPage() {
   return (
     <>
       <Head>
-        <title> Ecommerce: Product List | Minimal UI</title>
+        <title> ORDERS: SalesOrder List</title>
       </Head>
 
       <Container maxWidth={themeStretch ? false : 'mg'}>
@@ -371,15 +372,35 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
 
   inputData = stabilizedThis.map((el) => el[0]);
 
-  if (filterName) {
-    inputData = inputData.filter(
-      (product) => product.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+  // Helper function to flatten an object
+  function flattenObject(obj, prefix = "") {
+    return Object.keys(obj).reduce((acc, key) => {
+      const value = obj[key];
+      const newKey = prefix ? `${prefix}.${key}` : key;
+
+      if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+        // Recursively flatten nested objects
+        Object.assign(acc, flattenObject(value, newKey));
+      } else if (Array.isArray(value)) {
+        // Convert arrays to strings for searching
+        acc[newKey] = value.join(", ");
+      } else {
+        // Add primitive values (strings, numbers, etc.)
+        acc[newKey] = value;
+      }
+
+      return acc;
+    }, {});
+  }
+
+  // Filter the input data
+  return inputData.filter((item) => {
+    // Flatten the object
+    const flatItem = flattenObject(item);
+
+    // Check if any field in the flattened object contains the filterName (case-insensitive)
+    return Object.values(flatItem).some((value) =>
+      String(value).toLowerCase().includes(filterName.toLowerCase())
     );
-  }
-
-  if (filterStatus.length) {
-    inputData = inputData.filter((product) => filterStatus.includes(product.inventoryType));
-  }
-
-  return inputData;
+  });
 }

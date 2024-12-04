@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useEffect } from 'react';
 // @mui
 import {
   Grid,
@@ -17,19 +16,19 @@ import * as Yup from 'yup';
 import { LoadingButton } from '@mui/lab';
 import { DateTimePicker } from '@mui/x-date-pickers';
 // Redux
-import { useDispatch, useSelector } from '../../../../redux/store';
-import { getProducts } from '../../../../redux/slices/product';
-import { getCustomers } from '../../../../redux/slices/user';
-import { createSalesOrder } from '../../../../redux/slices/salesorder';
+import { useDispatch, useSelector } from '../../../redux/store';
+import { getProducts } from '../../../redux/slices/product';
+import { getCustomers } from '../../../redux/slices/user';
+import { createSalesOrder } from '../../../redux/slices/salesorder';
 
 // Components
-import { useSettingsContext } from '../../../../components/settings';
-import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
-import FormProvider, { RHFTextField } from '../../../../components/hook-form';
+import { useSettingsContext } from '../../../components/settings';
+import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
+import FormProvider, { RHFTextField } from '../../../components/hook-form';
 // Routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { PATH_DASHBOARD } from '../../../routes/paths';
 // Layouts
-import DashboardLayout from '../../../../layouts/dashboard';
+import DashboardLayout from '../../../layouts/dashboard';
 
 // ----------------------------------------------------------------------
 
