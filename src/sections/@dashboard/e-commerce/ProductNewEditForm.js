@@ -7,13 +7,20 @@ import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Masonry } from '@mui/lab'; // Ensure this import is correct based on the version you're using
-import { Box, Radio, TextField, Stack, RadioGroup, FormControlLabel, Container,Button } from '@mui/material';
+import { Masonry, LoadingButton } from '@mui/lab'; // Combined single import from @mui/lab
+import {
+  Box,
+  Radio,
+  TextField,
+  Stack,
+  RadioGroup,
+  FormControlLabel,
+  Container,
+} from '@mui/material';
 
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
-import { LoadingButton } from '@mui/lab';
 import Label from '../../../components/label';
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider from '../../../components/hook-form';
@@ -116,7 +123,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
 
   const onSubmit = async (data) => {
     try {
-    console.log('DATA', data); // Debug the form data
+      console.log('DATA', data); // Debug the form data
 
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
@@ -154,35 +161,36 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Container maxWidth='md'>
+      <Container maxWidth="md">
         <Masonry columns={{ xs: 1 }} spacing={4}>
-          <TextField     
+          <TextField
             variant="outlined"
             required
             label="Name"
             size="small"
-            // defaultValue="13000 CALL OF DUTY POINTS (MV IIII, MIW II, Warzone) - [XBOX Series X|S /XBOX One]"
           />
-          <Stack spacing={1} direction="row" alignItems="center" sx="xl">
+          <Stack spacing={1} direction="row" alignItems="center">
             {Status.map((State) => (
-               <TextField     
+              <TextField
+                key={State} // Added key to avoid React warning
                 variant="outlined"
                 required
                 label={State}
                 size="small"
                 defaultValue="0"
-             />
+              />
             ))}
           </Stack>
-          <Stack spacing={1} direction="row" alignItems="center" sx="xl">
+          <Stack spacing={1} direction="row" alignItems="center">
             {VatPrice.map((Price) => (
-               <TextField     
+              <TextField
+                key={Price} // Added key to avoid React warning
                 variant="outlined"
                 required
                 label={Price}
                 size="small"
                 defaultValue="0"
-             />
+              />
             ))}
           </Stack>
           <TextField
@@ -205,7 +213,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
             variant="outlined"
             required
             fullWidth
-            label="Publisher"   
+            label="Publisher"
             size="small"
             defaultValue="Activision"
           />
@@ -219,11 +227,11 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
               '& > *': { mx: 2 },
             }}
           >
-            <RadioGroup row defaultValue="g" label="Status" >
+            <RadioGroup row defaultValue="g" label="Status">
               <FormControlLabel value="g" control={<Radio />} label="Yes" />
               <FormControlLabel value="p" control={<Radio size="small" />} label="No" />
             </RadioGroup>
-          </Box>   
+          </Box>
 
           <LoadingButton
             fullWidth
