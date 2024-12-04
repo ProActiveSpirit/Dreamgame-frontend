@@ -39,9 +39,9 @@ export default function SalesOrderEditPage() {
     query: { name },
   } = useRouter();
 
-  const currentOrder = useSelector((state) => {
-    return state.salesorder.allOrders.find((order) => order.id === name);
-  });
+  const currentOrder = useSelector((state) =>
+    state.salesorder.allOrders.find((order) => order.id === name)
+  );
 
   useEffect(() => {
     dispatch(getSalesOrders());

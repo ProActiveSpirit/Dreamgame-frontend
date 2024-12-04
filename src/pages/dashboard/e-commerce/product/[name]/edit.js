@@ -73,7 +73,7 @@ export default function EcommerceProductEditPage() {
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'E-Commerce',
+              name: 'Products',
               href: PATH_DASHBOARD.eCommerce.root,
             },
             { name: currentProduct?.name },

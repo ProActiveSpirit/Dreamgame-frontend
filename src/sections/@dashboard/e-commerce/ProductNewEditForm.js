@@ -13,6 +13,7 @@ import { Box, Radio, TextField, Stack, RadioGroup, FormControlLabel, Container,B
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
+import { LoadingButton } from '@mui/lab';
 import Label from '../../../components/label';
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider from '../../../components/hook-form';
@@ -58,9 +59,8 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
   const { push } = useRouter();
   const { enqueueSnackbar } = useSnackbar();
 
-  const COLORS = ['primary', 'warning', 'info', 'secondary'];
-  const Stock = ['0', '0', '0', '0'];
   const Status = ['Generated keys', 'Pending keys to generate', 'Sold keys', 'Sold keys pending generate'];
+  const VatPrice = ['Cost-EUR', 'Cost Vat', 'Sales Exc Vat', 'Sales Exc Vat'];
 
   const NewProductSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -116,6 +116,8 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
 
   const onSubmit = async (data) => {
     try {
+    console.log('DATA', data); // Debug the form data
+
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
       enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
@@ -172,6 +174,17 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
              />
             ))}
           </Stack>
+          <Stack spacing={1} direction="row" alignItems="center" sx="xl">
+            {VatPrice.map((Price) => (
+               <TextField     
+                variant="outlined"
+                required
+                label={Price}
+                size="small"
+                defaultValue="0"
+             />
+            ))}
+          </Stack>
           <TextField
             variant="outlined"
             required
@@ -206,11 +219,22 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
               '& > *': { mx: 2 },
             }}
           >
-            <RadioGroup row defaultValue="g">
+            <RadioGroup row defaultValue="g" label="Status" >
               <FormControlLabel value="g" control={<Radio />} label="Yes" />
               <FormControlLabel value="p" control={<Radio size="small" />} label="No" />
             </RadioGroup>
           </Box>   
+
+          <LoadingButton
+            fullWidth
+            color="info"
+            size="large"
+            type="submit"
+            variant="contained"
+            loading={isSubmitting}
+          >
+            Submit to Add
+          </LoadingButton>
         </Masonry>
       </Container>
     </FormProvider>
