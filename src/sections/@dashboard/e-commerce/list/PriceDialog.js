@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // @mui
 import {
   Button,
@@ -16,15 +16,47 @@ import _mock from '../../../../_mock';
 
 // ----------------------------------------------------------------------
 
-export default function PriceDialog({row , onCloseDialog}) {
-
-  const { name, price , provider } = row;
+export default function PriceDialog({ row, onCloseDialog }) {
+  const { name, price, provider } = row;
 
   const [open, setOpen] = useState(true);
-
   const [fullWidth, setFullWidth] = useState(true);
+  const [maxWidth, setMaxWidth] = useState(provider === 'Nexway' ? 'md' : 'xs');
 
-  const [maxWidth, setMaxWidth] = useState( provider === "Nexway" ? 'md' : 'xs');
+  const [exchangeRates, setExchangeRates] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  const regions = ['NO', 'BE', 'DE', 'ES', 'FR', 'NL', 'PT', 'PL', 'GB'];
+  const currencies = {
+    NO: 'NOK',
+    BE: 'EUR', // No conversion needed
+    DE: 'EUR', // No conversion needed
+    ES: 'EUR', // No conversion needed
+    FR: 'EUR', // No conversion needed
+    NL: 'EUR', // No conversion needed
+    PT: 'EUR', // No conversion needed
+    PL: 'PLN',
+    GB: 'GBP',
+  };
+
+  // Fetch exchange rates
+  useEffect(() => {
+    const fetchExchangeRates = async () => {
+      try {
+        const response = await fetch(
+          'https://api.exchangerate-api.com/v4/latest/EUR'
+        );
+        const data = await response.json();
+        setExchangeRates(data.rates);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching exchange rates:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchExchangeRates();
+  }, []);
 
   const columnsNexway = [
     {
@@ -33,14 +65,14 @@ export default function PriceDialog({row , onCloseDialog}) {
       width: 150,
     },
     {
-      field: 'CostEUR',
-      headerName: 'Cost-EUR',
+      field: 'CostExcVat',
+      headerName: 'Cost Exc Vat',
       width: 150,
       editable: true,
     },
     {
-      field: 'CostExcVat',
-      headerName: 'Cost Exc Vat',
+      field: 'CostEUR',
+      headerName: 'Cost-EUR',
       width: 150,
       editable: true,
     },
@@ -55,7 +87,7 @@ export default function PriceDialog({row , onCloseDialog}) {
       headerName: 'SRP Inc Vat',
       width: 150,
       editable: true,
-    }
+    },
   ];
 
   const columns = [
@@ -69,31 +101,48 @@ export default function PriceDialog({row , onCloseDialog}) {
       headerName: 'Cost-EUR',
       width: 150,
       editable: true,
-    }
+    },
   ];
 
-  const regions = ["NO","BE","DE","ES","FR","NL","PT","PL","GB"];
-  const exchange = []
+  // Calculate DataGrid rows with exchange rates
+  const calculateRows = () => {
+    if (loading || !exchangeRates) return [];
 
+    return regions.map((region, index) => {
+      const localCurrency = currencies[region];
+      const exchangeRate = exchangeRates[localCurrency] || 1; // Default to 1 if no conversion needed
+      const localPrice = (price * exchangeRate).toFixed(2);
 
-  const _dataGrid = [...Array(9)].map((_, index) => ({
-    id: _mock.id(index),
-    Region: regions[index],
-    CostEUR: `${price}EUR`,
-  }));
+      return {
+        id: _mock.id(index),
+        Region: region,
+        CostEUR: `${localPrice} ${localCurrency}`,
+      };
+    });
+  };
 
-  const _dataGridNexway = [...Array(9)].map((_, index) => ({
-    id: _mock.id(index),
-    Region: regions[index],
-    CostEUR: `${price}EUR`,
-    CostExcVat: `${((price)/2).toFixed(2)}EUR`,
-    SalesExcVat: `${((price)*3).toFixed(2)}EUR`,
-    SRPIncVat: `${((price)*1.5).toFixed(2)}EUR`,
-  }));
+  const calculateRowsNexway = () => {
+    if (loading || !exchangeRates) return [];
+
+    return regions.map((region, index) => {
+      const localCurrency = currencies[region];
+      const exchangeRate = exchangeRates[localCurrency] || 1; // Default to 1 if no conversion needed
+      const localPrice = (price * exchangeRate).toFixed(2);
+
+      return {
+        id: _mock.id(index),
+        Region: region,
+        CostEUR: `${(localPrice* 1.2).toFixed(2)} ${localCurrency}`,
+        CostExcVat: `${localPrice} ${localCurrency}`,
+        SalesExcVat: `${(localPrice * 1.5).toFixed(2)} ${localCurrency}`,
+        SRPIncVat: `${(localPrice * 1.8).toFixed(2)} ${localCurrency}`,
+      };
+    });
+  };
 
   const handleClose = () => {
     setOpen(false);
-    onCloseDialog()
+    onCloseDialog();
   };
 
   return (
@@ -101,12 +150,14 @@ export default function PriceDialog({row , onCloseDialog}) {
       <Dialog open={open} maxWidth={maxWidth} onClose={handleClose} fullWidth={fullWidth}>
         <DialogTitle>{name}</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            Product Price
-          </DialogContentText>
-          { provider === "Nexway" ? <DataGrid columns={columnsNexway} rows={_dataGridNexway} style={{height: 600}} />
-            : <DataGrid columns={columns} rows={_dataGrid} style={{height: 600}} />
-          }
+          <DialogContentText>Product Price</DialogContentText>
+          {loading ? (
+            <p>Loading exchange rates...</p>
+          ) : provider === 'Nexway' ? (
+            <DataGrid columns={columnsNexway} rows={calculateRowsNexway()} style={{ height: 600 }} />
+          ) : (
+            <DataGrid columns={columns} rows={calculateRows()} style={{ height: 600 }} />
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} variant="contained">
