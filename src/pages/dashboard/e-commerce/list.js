@@ -196,7 +196,7 @@ export default function EcommerceProductListPage() {
   return (
     <>
       <Head>
-        <title> Ecommerce: Product List | Minimal UI</title>
+        <title> Ecommerce: Product List</title>
       </Head>
 
       <Container maxWidth={themeStretch ? false : 'mg'}>
@@ -232,7 +232,7 @@ export default function EcommerceProductListPage() {
             onResetFilter={handleResetFilter}
           />
 
-          <TableContainer sx={{ position: 'relative', overflow: 'unse t' }}>
+          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
               dense={dense}
               numSelected={selected.length}

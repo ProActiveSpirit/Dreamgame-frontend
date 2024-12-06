@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 // component
 import Label from '../../../../../components/label';
 import Iconify from '../../../../../components/iconify';
-import ExtendPrice from './extprice';
+import RegionPrice from './regionPrice';
 // redux
 import { useSelector } from '../../../../../redux/store';
 
@@ -127,7 +127,7 @@ export default function ProductInformation() {
           </Box>
         </Masonry>
       </Container>
-      <ExtendPrice />
+      <RegionPrice price={currentProduct.price} SalesVat={0} />
       {/* {currentProduct?.provider == "Nexway" && <ExtendPrice />} */}
     </>
   );

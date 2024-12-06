@@ -8,7 +8,7 @@ const initialState = {
   isLoading: false,
   error: null,
   allOrders: [], // Stores all SalesOrders
-  order: null,   // Stores a single selected SalesOrder
+  newOrder: null, // Ne
 };
 
 const slice = createSlice({
@@ -42,6 +42,7 @@ const slice = createSlice({
     createSalesOrderSuccess(state, action) {
       state.isLoading = false;
       state.allOrders.push(action.payload);
+      state.newOrder = action.payload;
     },
 
     // UPDATE: Update an Existing Sales Order
@@ -112,9 +113,13 @@ export function createSalesOrder(newOrder) {
       const response = await axios.post('/api/order/addSales', newOrder);
       console.log("response" , response.data.data);
       dispatch(slice.actions.createSalesOrderSuccess(response.data.data));
+      return {success: true, data: response.data.data}
+
     } catch (error) {
       console.error("Error creating sales order: ", error);
       dispatch(slice.actions.hasError(error));
+      return { success: false, error }; 
+
     }
   };
 }
@@ -125,9 +130,12 @@ export function updateSalesOrder(id, updatedOrder) {
     try {
       const response = await axios.put(`/api/order/editSales/${id}`, updatedOrder);
       dispatch(slice.actions.updateSalesOrderSuccess(response.data));
+      return {success: true, data: response.data.data}
+
     } catch (error) {
       console.error("Error updating sales order: ", error);
       dispatch(slice.actions.hasError(error));
+      return { success: false, error }; 
     }
   };
 }
@@ -136,11 +144,28 @@ export function deleteSalesOrder(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      await axios.delete(`/api/order/SalesOrder/${id}`);
+      await axios.delete(`/api/order/deleteSale/${id}`);
       dispatch(slice.actions.deleteSalesOrderSuccess(id));
     } catch (error) {
       console.error("Error deleting sales order: ", error);
       dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function saveRelatedPurchaseOrder(data) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.post("/api/order/saveRelatedPurchase", data);
+      // Dispatch or handle the success response if needed
+      // dispatch(slice.actions.saveRelatedPurchase(data));
+      return { success: true, data: response.data.data };
+    } catch (error) {
+      console.error("Error saving related purchase order: ", error);
+      dispatch(slice.actions.hasError(error));
+      // Ensure a return value in the catch block
+      return { success: false, error };
     }
   };
 }

@@ -38,7 +38,6 @@ const userSlice = createSlice({
     getCustomerSuccess(state, action) {
       state.isLoading = false;
       state.customers = action.payload.customer;
-      console.log("action.payload.customer" , action.payload.customer);
     }
   },
 });

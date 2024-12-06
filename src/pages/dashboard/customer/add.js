@@ -1,9 +1,6 @@
 import { useEffect } from 'react';
-// next
-import { useRouter } from 'next/router';
 // @mui
 import {
-  Box,
   Grid,
   Stack,
   Container,
@@ -11,27 +8,27 @@ import {
   Autocomplete,
   InputAdornment,
 } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
-import { DateTimePicker } from '@mui/x-date-pickers';
 // Validation schema
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
+
+import { LoadingButton } from '@mui/lab';
+import { DateTimePicker } from '@mui/x-date-pickers';
 // Redux
-import { useDispatch, useSelector } from '../../../../redux/store';
-import { getProducts } from '../../../../redux/slices/product';
-import { getCustomers } from '../../../../redux/slices/user';
-import { createSalesOrder } from '../../../../redux/slices/salesorder';
+import { useDispatch, useSelector } from '../../../redux/store';
+import { getProducts } from '../../../redux/slices/product';
+import { getCustomers } from '../../../redux/slices/user';
+import { createSalesOrder } from '../../../redux/slices/salesorder';
+
 // Components
-import { useSettingsContext } from '../../../../components/settings';
-import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
-import FormProvider, { RHFTextField } from '../../../../components/hook-form';
+import { useSettingsContext } from '../../../components/settings';
+import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
+import FormProvider, { RHFTextField } from '../../../components/hook-form';
 // Routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { PATH_DASHBOARD } from '../../../routes/paths';
 // Layouts
-import DashboardLayout from '../../../../layouts/dashboard';
-// Custom imports
-import RegionPrice from '../../e-commerce/product/detailed/regionPrice';
+import DashboardLayout from '../../../layouts/dashboard';
 
 // ----------------------------------------------------------------------
 
@@ -41,7 +38,7 @@ export const defaultValues = {
   Customer: '',
   Product: '',
   startDate: new Date(),
-  endDate: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
+  endDate: null,
   Quantity: '1',
   salesCurrency: 'EUR',
   salesExtVat: '1',
@@ -95,12 +92,12 @@ export default function SalesOrderAddPage() {
   const { customers } = useSelector((state) => state.user); // Fetch products from Redux
 
   const dispatch = useDispatch();
-  const router = useRouter();
 
   const methods = useForm({
     resolver: yupResolver(FormSchema),
     defaultValues,
   });
+
   
   const {
     reset,
@@ -127,15 +124,9 @@ export default function SalesOrderAddPage() {
 
   const onSubmit = async (data) => {
     console.log('DATA', data); // Debug the form data
-    const result = await dispatch(createSalesOrder(data));
-    console.log("result" . result);
-    if (result.success) {
-      router.push(PATH_DASHBOARD.salesorder.view(result.data.id));
-    }
-    else{
-      await new Promise((resolve) => setTimeout(resolve, 3000)); // Simulate API call
-      reset(defaultValues); // Reset the form explicitly, including Autocomplete fields
-    }
+    dispatch(createSalesOrder(data));
+    await new Promise((resolve) => setTimeout(resolve, 3000)); // Simulate API call
+    reset(defaultValues); // Reset the form explicitly, including Autocomplete fields
   };
 
   useEffect(() => {
@@ -154,13 +145,13 @@ export default function SalesOrderAddPage() {
               name: 'Sales Order',
               href: PATH_DASHBOARD.salesorder.list,
             },
-            { name: 'New Sales Order' },
+            { name: 'Add' },
           ]}
         />
 
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <Grid container justifyContent="left" alignItems="left">
-            <Grid item xs={12} md={11}>
+          <Grid container justifyContent="center" alignItems="center">
+            <Grid item xs={12} md={8}>
               <Stack spacing={3}>
                 {/* Order Date */}
                 <DateTimePicker
@@ -205,9 +196,6 @@ export default function SalesOrderAddPage() {
                     />
                   )}
                 />
-                {watch('Product') ? 
-                <RegionPrice price={products.find((product) => product.id === watch('Product')).price} SalesVat={0}/>: <></>}
-
               <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
                 {/* Start Date */}
                 <DateTimePicker
