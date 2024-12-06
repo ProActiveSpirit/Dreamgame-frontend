@@ -32,11 +32,13 @@ import {
   TablePaginationCustom,
 } from '../../../components/table';
 import { CustomerTableRow } from '../../../sections/@dashboard/customer/list';
-import { fetchUsers } from '../../../redux/slices/user'; // Import fetchUsers action
+import { fetchcustomers } from '../../../redux/slices/user'; // Import fetchcustomers action
+import { getCustomers } from '../../../redux/slices/user';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'center' },
   { id: 'email', label: 'Email', align: 'center' },
+  { id: 'website', label: 'Website', align: 'center' },
   { id: 'ip', label: 'IP Address', align: 'center' },
   { id: 'region', label: 'Region', align: 'center' },
 ];
@@ -65,19 +67,19 @@ export default function UserListPage() {
   const { push } = useRouter();
 
   const dispatch = useDispatch();
-  const { users, isLoading, error } = useSelector((state) => state.user); // Select user state from Redux
-
   const [openConfirm, setOpenConfirm] = useState(false);
   const [filterName] = useState('');
   const [filterRole] = useState('all');
   const [filterStatus] = useState('all');
 
+  const { customers } = useSelector((state) => state.user); // Fetch products from Redux
+
   useEffect(() => {
-    dispatch(fetchUsers()); // Fetch users when the component mounts
+    dispatch(getCustomers());
   }, [dispatch]);
 
   const dataFiltered = applyFilter({
-    inputData: users,
+    inputData: customers,
     comparator: getComparator(order, orderBy),
     filterName,
     filterRole,
@@ -100,13 +102,13 @@ export default function UserListPage() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = users.filter((row) => row.id !== id);
+    const deleteRow = customers.filter((row) => row.id !== id);
     setSelected([]);
     // Consider dispatching an action to update the user list in the store
   };
 
   const handleDeleteRows = (selectedRows) => {
-    const deleteRows = users.filter((row) => !selectedRows.includes(row.id));
+    const deleteRows = customers.filter((row) => !selectedRows.includes(row.id));
     setSelected([]);
     // Consider dispatching an action to update the user list in the store
   };
@@ -126,7 +128,7 @@ export default function UserListPage() {
           heading="Customer List"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Customer', href: PATH_DASHBOARD.user.root },
+            { name: 'Customer', href: PATH_DASHBOARD.customer.list },
             { name: 'List' },
           ]}
         />
@@ -136,11 +138,11 @@ export default function UserListPage() {
             <TableSelectedAction
               dense={dense}
               numSelected={selected.length}
-              rowCount={users.length}
+              rowCount={customers.length}
               onSelectAllRows={(checked) =>
                 onSelectAllRows(
                   checked,
-                  users.map((row) => row.id)
+                  customers.map((row) => row.id)
                 )
               }
               action={
@@ -158,13 +160,13 @@ export default function UserListPage() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={users.length}
+                  rowCount={customers.length}
                   numSelected={selected.length}
                   onSort={onSort}
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      users.map((row) => row.id)
+                      customers.map((row) => row.id)
                     )
                   }
                 />
@@ -185,7 +187,7 @@ export default function UserListPage() {
 
                   <TableEmptyRows
                     height={52}
-                    emptyRows={emptyRows(page, rowsPerPage, users.length)}
+                    emptyRows={emptyRows(page, rowsPerPage, customers.length)}
                   />
 
                   <TableNoData isNotFound={isNotFound} />

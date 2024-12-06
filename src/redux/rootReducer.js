@@ -6,7 +6,7 @@ import mailReducer from './slices/mail';
 import chatReducer from './slices/chat';
 import productReducer from './slices/product';
 import salesReducer from './slices/salesorder';
-import pruchaseReducer from './slices/purchaseorder';
+import purchaseReducer from './slices/purchaseorder';
 import calendarReducer from './slices/calendar';
 import kanbanReducer from './slices/kanban';
 import userReducer from './slices/user'; // Import the user slice
@@ -63,7 +63,7 @@ const rootReducer = combineReducers({
   kanban: kanbanReducer,
   product: persistReducer(productPersistConfig, productReducer),
   salesorder: persistReducer(salesPersistConfig, salesReducer),
-  pruchaseorder: persistReducer(purchasePersistConfig, pruchaseReducer),
+  purchaseorder: persistReducer(purchasePersistConfig, purchaseReducer),
   user: userReducer, // Add the user reducer
 });
 

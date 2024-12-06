@@ -7,18 +7,17 @@ import { useRouter } from 'next/router';
 // @mui
 import {
   Card,
-  Stack,
   Table,
   Button,
   Tooltip,
-  Checkbox,
   TableBody,
   Container,
   IconButton,
   TableContainer,
-  FormControlLabel
 } from '@mui/material';
-
+// redux
+import { useDispatch, useSelector } from '../../../redux/store';
+import { getPurchaseOrders, deletePurchaseOrder } from '../../../redux/slices/purchaseorder';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // layouts
@@ -40,40 +39,33 @@ import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
-import orderData from './order.json';
-// redux
-import { useDispatch, useSelector } from '../../../redux/store';
+
 // sections
-import {PurchaseTableRow, PurchaseTableToolbar} from '../../../sections/@dashboard/purchaseorder/list';
+import { PurchaseOrderTableRow, PurchaseOrderTableToolbar } from '../../../sections/@dashboard/purchaseorder/list';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'NUMBER', label: 'PURCHASE ORDER NUMBER', align: 'center'},
-  { id: 'CUSTOMER', label: 'CUSTOMER', align: 'center' },
-  { id: 'PRODUCT', label: 'PRODUCT', align: 'center' , width: 300 },
-  { id: 'PRICE', label: 'PRODUCT PRICE', align: 'center' },
-  { id: 'QUANTITY', label: 'QUANTITY', align: 'center' },
-  { id: 'ORDERTOTAL', label: 'ORDER TOTAL', align: 'center' },
-  { id: 'CREATEDON', label: 'CREATED ON', align: 'center' },
-  { id: 'STATUS', label: 'STATUS', align: 'center' },
-  { id: 'N_A', label: 'N/A', align: 'center' },
-  // { id: 'Action', label: 'ACTION', align: 'center' },
+  { id: 'id', label: 'PURCHASE ORDER NUMBER', align: 'center' },
+  { id: 'product', label: 'PRODUCT', align: 'center'},
+  { id: 'provider', label: 'PROVIDER', align: 'center' },
+  { id: 'Region', label: 'REGION', align: 'center' },
+  { id: 'CostIncVat', label: 'COST INC VAT', align: 'center' },
+  { id: 'Stocking', label: 'STOCKING', align: 'center' },
+  { id: 'TotalCostIncVat', label: 'Total COST INC VAT', align: 'center' },
+  { id: 'job', label: 'JOB', align: 'center' },
+  { id: 'status', label: 'STATUS', align: 'center' },
+  { id: 'start/end', label: 'START/END', align: 'center' },
+  { id: 'Action', label: 'ACTION', align: 'center' },
 ];
 
-// const STATUS_OPTIONS = [
-//   { value: 'in_stock', label: 'In stock' },
-//   { value: 'low_stock', label: 'Low stock' },
-//   { value: 'out_of_stock', label: 'Out of stock' },
-// ];
+// ----------------------------------------------------------------------
+
+PurchaseOrderListPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 // ----------------------------------------------------------------------
 
-PurchaseListPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
-
-// ----------------------------------------------------------------------
-
-export default function PurchaseListPage() {
+export default function PurchaseOrderListPage() {
   const {
     dense,
     page,
@@ -81,18 +73,16 @@ export default function PurchaseListPage() {
     orderBy,
     rowsPerPage,
     setPage,
-    //
     selected,
     setSelected,
     onSelectRow,
     onSelectAllRows,
-    //
     onSort,
     onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'name',
+    defaultOrderBy: 'customer',
   });
 
   const { themeStretch } = useSettingsContext();
@@ -101,7 +91,7 @@ export default function PurchaseListPage() {
 
   const dispatch = useDispatch();
 
-  const { products, isLoading } = useSelector((state) => state.product);
+  const { allOrders, isLoading } = useSelector((state) => state.purchaseorder);
 
   const [tableData, setTableData] = useState([]);
 
@@ -111,19 +101,31 @@ export default function PurchaseListPage() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-//   useEffect(() => {
-//     dispatch(getProducts());
-//   }, [dispatch]);
-
-//   useEffect(() => {
-//     if (products.length) {
-//       setTableData(products);
-//     }
-//   }, [products]);
+  useEffect(() => {
+    dispatch(getPurchaseOrders());
+  }, [dispatch]);
 
   useEffect(() => {
-    setTableData(orderData);
-  },[dispatch])
+    if (allOrders.length) {
+      const extractedData = allOrders.map((order) => ({
+        id: order.id,
+        costIncVat: order.costIncVat,
+        costExtVat: order.costExtVat,
+        totalQuantity: order.totalQuantity,
+        totalPrice: order.totalPrice,
+        createdOn: order.createdOn,
+        region: order.region,
+        status: order.status,
+        job: order.job,
+        startDate: order.startDate,
+        endDate:order.endDate, 
+        processQuantity: order.processQuantity,
+        product: order?.product?.name || 'Unknown Product',
+        provider: order?.product?.provider || 'Unknown Product',
+      }));
+      setTableData(extractedData);
+    }
+  }, [allOrders]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -140,6 +142,10 @@ export default function PurchaseListPage() {
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
+  const handleEditRow = (id) => {
+    push(PATH_DASHBOARD.purchaseorder.view(paramCase(id)));
+  };
+
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
   };
@@ -153,49 +159,25 @@ export default function PurchaseListPage() {
     setFilterName(event.target.value);
   };
 
-  const handleFilterStatus = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setPage(0);
-    setFilterStatus(typeof value === 'string' ? value.split(',') : value);
-  };
-
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.NUMBER !== id);
+    console.log("id:" , id);
+    const deleteRow = tableData.filter((row) => row.id !== id);
     setSelected([]);
     setTableData(deleteRow);
-
-    if (page > 0) {
-      if (dataInPage.length < 2) {
-        setPage(page - 1);
-      }
+    dispatch(deletePurchaseOrder(id));
+    if (page > 0 && dataInPage.length < 2) {
+      setPage(page - 1);
     }
   };
 
   const handleDeleteRows = (selectedRows) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row.NUMBER));
+    const deleteRows = tableData.filter((row) => !selectedRows.includes(row.id));
     setSelected([]);
     setTableData(deleteRows);
 
-    if (page > 0) {
-      if (selectedRows.length === dataInPage.length) {
-        setPage(page - 1);
-      } else if (selectedRows.length === dataFiltered.length) {
-        setPage(0);
-      } else if (selectedRows.length > dataInPage.length) {
-        const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-        setPage(newPage);
-      }
+    if (page > 0 && selectedRows.length === dataInPage.length) {
+      setPage(page - 1);
     }
-  };
-
-  const handleEditRow = (id) => {
-    push(PATH_DASHBOARD.eCommerce.edit(paramCase(id)));
-  };
-
-  const handleViewRow = (id) => {
-    push(PATH_DASHBOARD.purchaseorder.view(paramCase(id)));
   };
 
   const handleResetFilter = () => {
@@ -206,70 +188,41 @@ export default function PurchaseListPage() {
   return (
     <>
       <Head>
-        <title> Ecommerce: Product List | Minimal UI</title>
+        <title> ORDERS: Purchase Order List</title>
       </Head>
 
-      <Container maxWidth={themeStretch ? false : 'mg'}>
+      <Container maxWidth={themeStretch ? false : 'xl'}>
         <CustomBreadcrumbs
-          heading="PurchaseOrder List"
+          heading="Purchase Order List"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'PurchaseOrder',
-              href: PATH_DASHBOARD.purchaseorder.list
+              name: 'Purchase Orders',
+              href: PATH_DASHBOARD.purchaseorder.list,
             },
             { name: 'List' },
           ]}
-          // action={
-          //   <Button
-          //     component={NextLink}
-          //     href={PATH_DASHBOARD.purchaseorder.add}
-          //     variant="contained"
-          //     startIcon={<Iconify icon="eva:plus-fill" />}
-          //   >
-          //     Add Purchase Order
-          //   </Button>
-          // }
+          action={
+            <Button
+              component={NextLink}
+              href={PATH_DASHBOARD.purchaseorder.add}
+              variant="contained"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+            >
+              Add Purchase Order
+            </Button>
+          }
         />
-        <Stack direction="row" alignItems="center">
-          <FormControlLabel label="All(98265)" control={<Checkbox  />} />
-          <FormControlLabel label="Pending(113)" control={<Checkbox />} />
-          <FormControlLabel label="Processing(168)" control={<Checkbox />} />
-          <FormControlLabel label="processing-W(0)" control={<Checkbox />} />
-          <FormControlLabel label="processing-E(0)" control={<Checkbox />} />
-          <FormControlLabel label="Completed(96522)" control={<Checkbox />} />
-          <FormControlLabel label="Completed-E(1462)" control={<Checkbox />} />
-        </Stack>
+
         <Card>
-          <PurchaseTableToolbar
+          <PurchaseOrderTableToolbar
             filterName={filterName}
-            filterStatus={filterStatus}
             onFilterName={handleFilterName}
-            onFilterStatus={handleFilterStatus}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
 
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
-              dense={dense}
-              numSelected={selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row.NUMBER)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
-            />
-
+          <TableContainer>
             <Scrollbar>
               <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 1200 }}>
                 <TableHeadCustom
@@ -282,7 +235,7 @@ export default function PurchaseListPage() {
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.NUMBER)
+                      tableData.map((row) => row.id)
                     )
                   }
                 />
@@ -292,14 +245,13 @@ export default function PurchaseListPage() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <PurchaseTableRow
-                          key={row.NUMBER}
+                        <PurchaseOrderTableRow
+                          key={row.id}
                           row={row}
-                          selected={selected.includes(row.NUMBER)}
-                          onSelectRow={() => onSelectRow(row.NUMBER)}
-                          onDeleteRow={() => handleDeleteRow(row.NUMBER)}
-                          onEditRow={() => handleEditRow(row.NUMBER)}
-                          onViewRow={() => handleViewRow(row.NUMBER)}
+                          selected={selected.includes(row.id)}
+                          onSelectRow={() => onSelectRow(row.id)}
+                          onDeleteRow={() => handleDeleteRow(row.id)}
+                          onEditRow={() => handleEditRow(row.id)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -310,7 +262,6 @@ export default function PurchaseListPage() {
                     height={denseHeight}
                     emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
                   />
-
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
@@ -323,9 +274,6 @@ export default function PurchaseListPage() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            //
-            dense={dense}
-            onChangeDense={onChangeDense}
           />
         </Card>
       </Container>
@@ -336,7 +284,7 @@ export default function PurchaseListPage() {
         title="Delete"
         content={
           <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
+            Are you sure you want to delete <strong>{selected.length}</strong> items?
           </>
         }
         action={
@@ -358,7 +306,7 @@ export default function PurchaseListPage() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus }) {
+function applyFilter({ inputData, comparator, filterName }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
@@ -369,15 +317,9 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
 
   inputData = stabilizedThis.map((el) => el[0]);
 
-  if (filterName) {
-    inputData = inputData.filter(
-      (product) => product.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+  return inputData.filter((item) => {
+    return Object.values(item).some((value) =>
+      String(value).toLowerCase().includes(filterName.toLowerCase())
     );
-  }
-
-  if (filterStatus.length) {
-    inputData = inputData.filter((product) => filterStatus.includes(product.inventoryType));
-  }
-
-  return inputData;
+  });
 }

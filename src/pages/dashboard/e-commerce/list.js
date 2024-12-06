@@ -196,7 +196,7 @@ export default function EcommerceProductListPage() {
   return (
     <>
       <Head>
-        <title> Ecommerce: Product List | Minimal UI</title>
+        <title> Ecommerce: Product List</title>
       </Head>
 
       <Container maxWidth={themeStretch ? false : 'mg'}>
