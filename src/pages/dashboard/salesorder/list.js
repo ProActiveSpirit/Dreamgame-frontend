@@ -112,17 +112,17 @@ export default function SalesOrderListPage() {
 
   useEffect(() => {
     if (allOrders.length) {
-      const extractedData = allOrders.map((order) => ({
-        id:order.id,
-        salesIncVat:order.salesIncVat,
-        processQuantity:order.processQuantity,
-        totalQuantity:order.totalQuantity,
-        totalPrice:order.totalPrice,
-        createdOn:order.createdOn,
-        status:order.status,
-        N_A:order.N_A,
-        customer: order.customer?.name || "Unknown Customer",
-        product: order.product?.name || "Unknown Product",
+      const extractedData = allOrders.map((orderData) => ({
+        id:orderData.id,
+        salesIncVat:orderData.salesIncVat,
+        processQuantity:orderData.processQuantity,
+        totalQuantity:orderData.totalQuantity,
+        totalPrice:orderData.totalPrice,
+        createdOn:orderData.createdOn,
+        status:orderData.status,
+        N_A:orderData.N_A,
+        customer: orderData.customer?.name || "Unknown Customer",
+        product: orderData.product?.name || "Unknown Product",
       }));
       setTableData(extractedData);
     }

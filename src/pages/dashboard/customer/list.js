@@ -32,7 +32,6 @@ import {
   TablePaginationCustom,
 } from '../../../components/table';
 import { CustomerTableRow } from '../../../sections/@dashboard/customer/list';
-import { fetchcustomers } from '../../../redux/slices/user'; // Import fetchcustomers action
 import { getCustomers } from '../../../redux/slices/user';
 
 const TABLE_HEAD = [
