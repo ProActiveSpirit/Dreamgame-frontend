@@ -1,2 +1,2 @@
-export { default as PurchaseTableRow } from './PurchaseTableRow';
-export { default as PurchaseTableToolbar } from './PurchaseTableToolbar';
+export { default as PurchaseOrderTableRow } from './PurchaseTableRow';
+export { default as PurchaseOrderTableToolbar } from './PurchaseTableToolbar';

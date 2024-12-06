@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import {  useEffect } from 'react';
 // @mui
 import {
+  Box,
   Grid,
   Stack,
   Container,
@@ -26,10 +26,15 @@ import { createSalesOrder } from '../../../../redux/slices/salesorder';
 import { useSettingsContext } from '../../../../components/settings';
 import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
 import FormProvider, { RHFTextField } from '../../../../components/hook-form';
+import ExtendPrice from '../../purchaseorder/detailed/extprice';
 // Routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { useRouter } from 'next/router';
+
 // Layouts
 import DashboardLayout from '../../../../layouts/dashboard';
+
+import RegionPrice from '../../e-commerce/product/detailed/regionPrice';
 
 // ----------------------------------------------------------------------
 
@@ -39,7 +44,7 @@ export const defaultValues = {
   Customer: '',
   Product: '',
   startDate: new Date(),
-  endDate: null,
+  endDate: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
   Quantity: '1',
   salesCurrency: 'EUR',
   salesExtVat: '1',
@@ -93,12 +98,12 @@ export default function SalesOrderAddPage() {
   const { customers } = useSelector((state) => state.user); // Fetch products from Redux
 
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const methods = useForm({
     resolver: yupResolver(FormSchema),
     defaultValues,
   });
-
   
   const {
     reset,
@@ -125,9 +130,15 @@ export default function SalesOrderAddPage() {
 
   const onSubmit = async (data) => {
     console.log('DATA', data); // Debug the form data
-    dispatch(createSalesOrder(data));
-    await new Promise((resolve) => setTimeout(resolve, 3000)); // Simulate API call
-    reset(defaultValues); // Reset the form explicitly, including Autocomplete fields
+    const result = await dispatch(createSalesOrder(data));
+    console.log("result" . result);
+    if (result.success) {
+      router.push(PATH_DASHBOARD.salesorder.view(result.data.id));
+    }
+    else{
+      await new Promise((resolve) => setTimeout(resolve, 3000)); // Simulate API call
+      reset(defaultValues); // Reset the form explicitly, including Autocomplete fields
+    }
   };
 
   useEffect(() => {
@@ -146,13 +157,13 @@ export default function SalesOrderAddPage() {
               name: 'Sales Order',
               href: PATH_DASHBOARD.salesorder.list,
             },
-            { name: 'Add' },
+            { name: 'New Sales Order' },
           ]}
         />
 
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <Grid container justifyContent="center" alignItems="center">
-            <Grid item xs={12} md={8}>
+          <Grid container justifyContent="left" alignItems="left">
+            <Grid item xs={12} md={11}>
               <Stack spacing={3}>
                 {/* Order Date */}
                 <DateTimePicker
@@ -197,6 +208,9 @@ export default function SalesOrderAddPage() {
                     />
                   )}
                 />
+                {watch('Product') ? 
+                <RegionPrice price={products.find((product) => product.id === watch('Product')).price} SalesVat={0}/>: <></>}
+
               <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
                 {/* Start Date */}
                 <DateTimePicker

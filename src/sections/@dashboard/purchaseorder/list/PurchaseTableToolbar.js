@@ -6,7 +6,7 @@ import Iconify from '../../../../components/iconify';
 
 // ----------------------------------------------------------------------
 
-PurchaseTableToolbar.propTypes = {
+PurchaseOrderTableToolbar.propTypes = {
   isFiltered: PropTypes.bool,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
@@ -16,7 +16,7 @@ PurchaseTableToolbar.propTypes = {
   statusOptions: PropTypes.array,
 };
 
-export default function PurchaseTableToolbar({
+export default function PurchaseOrderTableToolbar({
   isFiltered,
   filterName,
   filterStatus,

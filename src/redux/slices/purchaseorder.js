@@ -81,10 +81,10 @@ export function getPurchaseOrders() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const allOrders = await axios.get('/api/order/PurchaseOrder');
-      dispatch(slice.actions.getPurchaseOrdersSuccess(allOrders));
+      const allOrders = await axios.get('/api/order/getPurchaseAll');
+      dispatch(slice.actions.getPurchaseOrdersSuccess(allOrders.data.purchaseOrders));
     } catch (error) {
-      console.error("Error fetching Purchase orders: ", error);
+      console.error("Error fetching purchase orders: ", error);
       dispatch(slice.actions.hasError(error));
     }
   };
@@ -94,12 +94,12 @@ export function getPurchaseOrder(name) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/order/product', {
+      const response = await axios.get('/api/order/getSale', {
         params: { name },
       });
       dispatch(slice.actions.getPurchaseOrderSuccess(response.data));
     } catch (error) {
-      console.error("Error fetching Purchase order: ", error);
+      console.error("Error fetching purchase order: ", error);
       dispatch(slice.actions.hasError(error));
     }
   };
@@ -109,10 +109,11 @@ export function createPurchaseOrder(newOrder) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post('/api/order', newOrder);
-      dispatch(slice.actions.createPurchaseOrderSuccess(response.data));
+      const response = await axios.post('/api/order/addPurchase', newOrder);
+      console.log("response" , response.data.data);
+      dispatch(slice.actions.createPurchaseOrderSuccess(response.data.data));
     } catch (error) {
-      console.error("Error creating Purchase order: ", error);
+      console.error("Error creating purchase order: ", error);
       dispatch(slice.actions.hasError(error));
     }
   };
@@ -122,10 +123,10 @@ export function updatePurchaseOrder(id, updatedOrder) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.put(`/api/order/${id}`, updatedOrder);
+      const response = await axios.put(`/api/order/editPurchase/${id}`, updatedOrder);
       dispatch(slice.actions.updatePurchaseOrderSuccess(response.data));
     } catch (error) {
-      console.error("Error updating Purchase order: ", error);
+      console.error("Error updating purchase order: ", error);
       dispatch(slice.actions.hasError(error));
     }
   };
@@ -135,10 +136,10 @@ export function deletePurchaseOrder(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      await axios.delete(`/api/order/${id}`);
+      await axios.delete(`/api/order/deletePurchase/${id}`);
       dispatch(slice.actions.deletePurchaseOrderSuccess(id));
     } catch (error) {
-      console.error("Error deleting Purchase order: ", error);
+      console.error("Error deleting purchase order: ", error);
       dispatch(slice.actions.hasError(error));
     }
   };

@@ -33,7 +33,7 @@ export default function SalesOrderEditPage() {
   const { themeStretch } = useSettingsContext();
   const dispatch = useDispatch();
 
-  const [currentTab, setCurrentTab] = useState('Order Information');
+  const [currentTab, setCurrentTab] = useState('PO Templates');
 
   const {
     query: { name },
