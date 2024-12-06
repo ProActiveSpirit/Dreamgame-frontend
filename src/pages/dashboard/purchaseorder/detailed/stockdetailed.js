@@ -7,12 +7,24 @@ import { DateTimePicker } from '@mui/x-date-pickers';
 import Iconify from '../../../../components/iconify';
 import ConfirmDialog from '../../../../components/confirm-dialog';
 
+// redux
+import { getPurchaseOrders, deletePurchaseOrder } from '../../../../redux/slices/purchaseorder';
+import { useDispatch, useSelector } from '../../../../redux/store';
+
 export default function StockDetailed({ variant = 'outlined' }) {
   const [startDate, setStartDate] = useState(new Date());
   const [createdOn, setCreatedOn] = useState(new Date());
   const [isClient, setIsClient] = useState(false);
   const [action , setAction] = useState();
   const [openConfirm, setOpenConfirm] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const { allOrders, isLoading } = useSelector((state) => state.purchaseorder);
+
+  useEffect(() => {
+    dispatch(getPurchaseOrders());
+  }, [dispatch]);
 
   useEffect(() => {
     setIsClient(true);

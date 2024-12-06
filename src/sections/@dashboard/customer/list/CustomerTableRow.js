@@ -14,7 +14,7 @@ import MenuPopover from '../../../../components/menu-popover';
 import ConfirmDialog from '../../../../components/confirm-dialog';
 import { updateAdminVerified } from '../../../../redux/slices/user'; // Import the thunk
 
-UserTableRow.propTypes = {
+CustomerTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
@@ -22,13 +22,11 @@ UserTableRow.propTypes = {
   onSelectRow: PropTypes.func,
 };
 
-export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
-  const { id, firstName, lastName, email, role } = row;
-  const dispatch = useDispatch(); // Initialize dispatch
+export default function CustomerTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
+  const { id, name, email, ip , website,region } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
-  const [checked , setChecked] = useState(role !== "");
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -46,11 +44,6 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
     setOpenPopover(null);
   };
 
-  const handleToggleVerified = () => {
-    setChecked(!role)
-    dispatch(updateAdminVerified(id, !role)); // Dispatch the thunk to update the status
-  };
-
   return (
     <>
       <TableRow hover selected={selected}>
@@ -58,18 +51,19 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>
 
-        <TableCell align="left">{`${firstName} ${lastName}`}</TableCell>
+        <TableCell align="center">{name}</TableCell>
 
-        <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+        <TableCell align="center" sx={{ textTransform: 'capitalize' }}>
           {email}
         </TableCell>
-
-        <TableCell align="center">
-          <Switch
-            color="success"
-            checked={checked}
-            onChange={handleToggleVerified} // Handle the change event
-          />
+        <TableCell align="center" sx={{ textTransform: 'capitalize' }}>
+          {website}
+        </TableCell>
+        <TableCell align="center" sx={{ textTransform: 'capitalize' }}>
+          {ip}
+        </TableCell>
+        <TableCell align="center" sx={{ textTransform: 'capitalize' }}>
+          {region}
         </TableCell>
       </TableRow>
 
