@@ -158,11 +158,14 @@ export function saveRelatedPurchaseOrder(data) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.post("/api/order/saveRelatedPurchase", data);
+      // Dispatch or handle the success response if needed
       // dispatch(slice.actions.saveRelatedPurchase(data));
-      return {success: true, data: response.data.data}
+      return { success: true, data: response.data.data };
     } catch (error) {
-      console.error("Error deleting sales order: ", error);
+      console.error("Error saving related purchase order: ", error);
       dispatch(slice.actions.hasError(error));
+      // Ensure a return value in the catch block
+      return { success: false, error };
     }
   };
 }

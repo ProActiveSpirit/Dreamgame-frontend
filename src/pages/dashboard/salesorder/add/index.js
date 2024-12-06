@@ -1,4 +1,6 @@
-import {  useEffect } from 'react';
+import { useEffect } from 'react';
+// next
+import { useRouter } from 'next/router';
 // @mui
 import {
   Box,
@@ -9,31 +11,26 @@ import {
   Autocomplete,
   InputAdornment,
 } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import { DateTimePicker } from '@mui/x-date-pickers';
 // Validation schema
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
-
-import { LoadingButton } from '@mui/lab';
-import { DateTimePicker } from '@mui/x-date-pickers';
 // Redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 import { getProducts } from '../../../../redux/slices/product';
 import { getCustomers } from '../../../../redux/slices/user';
 import { createSalesOrder } from '../../../../redux/slices/salesorder';
-
 // Components
 import { useSettingsContext } from '../../../../components/settings';
 import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
 import FormProvider, { RHFTextField } from '../../../../components/hook-form';
-import ExtendPrice from '../../purchaseorder/detailed/extprice';
 // Routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
-import { useRouter } from 'next/router';
-
 // Layouts
 import DashboardLayout from '../../../../layouts/dashboard';
-
+// Custom imports
 import RegionPrice from '../../e-commerce/product/detailed/regionPrice';
 
 // ----------------------------------------------------------------------

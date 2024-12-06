@@ -24,11 +24,9 @@ CustomerTableRow.propTypes = {
 
 export default function CustomerTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
   const { id, name, email, ip , website,region } = row;
-  const dispatch = useDispatch(); // Initialize dispatch
 
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
-//   const [checked , setChecked] = useState(role !== "");
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -44,11 +42,6 @@ export default function CustomerTableRow({ row, selected, onEditRow, onSelectRow
 
   const handleClosePopover = () => {
     setOpenPopover(null);
-  };
-
-  const handleToggleVerified = () => {
-    setChecked(!role)
-    dispatch(updateAdminVerified(id, !role)); // Dispatch the thunk to update the status
   };
 
   return (

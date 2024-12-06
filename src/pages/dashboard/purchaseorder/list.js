@@ -107,21 +107,21 @@ export default function PurchaseOrderListPage() {
 
   useEffect(() => {
     if (allOrders.length) {
-      const extractedData = allOrders.map((order) => ({
-        id: order.id,
-        costIncVat: order.costIncVat,
-        costExtVat: order.costExtVat,
-        totalQuantity: order.totalQuantity,
-        totalPrice: order.totalPrice,
-        createdOn: order.createdOn,
-        region: order.region,
-        status: order.status,
-        job: order.job,
-        startDate: order.startDate,
-        endDate:order.endDate, 
-        processQuantity: order.processQuantity,
-        product: order?.product?.name || 'Unknown Product',
-        provider: order?.product?.provider || 'Unknown Product',
+      const extractedData = allOrders.map((orderData) => ({
+        id: orderData.id,
+        costIncVat: orderData.costIncVat,
+        costExtVat: orderData.costExtVat,
+        totalQuantity: orderData.totalQuantity,
+        totalPrice: orderData.totalPrice,
+        createdOn: orderData.createdOn,
+        region: orderData.region,
+        status: orderData.status,
+        job: orderData.job,
+        startDate: orderData.startDate,
+        endDate:orderData.endDate, 
+        processQuantity: orderData.processQuantity,
+        product: orderData?.product?.name || 'Unknown Product',
+        provider: orderData?.product?.provider || 'Unknown Product',
       }));
       setTableData(extractedData);
     }
@@ -317,9 +317,9 @@ function applyFilter({ inputData, comparator, filterName }) {
 
   inputData = stabilizedThis.map((el) => el[0]);
 
-  return inputData.filter((item) => {
-    return Object.values(item).some((value) =>
+  return inputData.filter((item) =>
+    Object.values(item).some((value) =>
       String(value).toLowerCase().includes(filterName.toLowerCase())
-    );
-  });
+    )
+  );
 }

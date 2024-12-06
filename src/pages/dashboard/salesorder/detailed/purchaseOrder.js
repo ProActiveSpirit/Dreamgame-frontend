@@ -3,18 +3,19 @@ import { DataGrid } from '@mui/x-data-grid';
 // next
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
+// form
+import { DateTimePicker } from '@mui/x-date-pickers';
 // @mui
 import { Button, Autocomplete, TextField, Stack, InputAdornment, Container, Typography, Divider } from '@mui/material';
 import { Masonry } from '@mui/lab';
 import ConfirmDialog from '../../../../components/confirm-dialog';
+import Iconify from '../../../../components/iconify';
 
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 import { saveRelatedPurchaseOrder } from '../../../../redux/slices/salesorder';
 
-// form
-import { DateTimePicker } from '@mui/x-date-pickers';
-import Iconify from '../../../../components/iconify';
+
 // _mock_
 import _mock from '../../../../_mock';
 
@@ -61,8 +62,8 @@ export default function BillingInformation({ variant }) {
         Product: currentOrder?.product?.name,
         ProductId: currentOrder?.product?.id,
         CostIncVat: parseFloat(
-          (currentOrder?.salesExtVat * (exchangeRates[currencies[region.title]] || 1)).toFixed(2)
-        ), // Numerical value
+          (currentOrder?.salesExtVat ?? 0 * (exchangeRates[currencies[region.title]] || 1)).toFixed(2)
+        ), // Use nullish coalescing to default to 0
         CostCurrency: currencies[region.title], // Keep currency separate for calculations
         Quantity: 0, // Start with 0 quantity
         TotalCostIncVat: 0, // Start with 0 total cost
@@ -92,16 +93,14 @@ export default function BillingInformation({ variant }) {
   // Handler to update Quantity and TotalCostIncVat
   const handleQuantityChange = (id, value) => {
     const newQuantity = parseFloat(value) || 0; // Convert input to number, default to 0 if invalid
-    console.log("currentOrder?.totalQuantity - totals.totalQuantity",currentOrder?.totalQuantity - totals.totalQuantity - newQuantity);
-    console.log("newQuantity",newQuantity);
     let updatedRows;
-    if (currentOrder?.totalQuantity - totals.totalQuantity - newQuantity < 0) {
+    if ((currentOrder?.totalQuantity ?? 0)- totals.totalQuantity - newQuantity < 0) {
       updatedRows = rows.map((row) =>
         row.id === id
           ? {
               ...row,
-              Quantity: currentOrder?.totalQuantity - totals.totalQuantity,
-              TotalCostIncVat: ((currentOrder?.totalQuantity - totals.totalQuantity) * row.CostIncVat).toFixed(2), // Recalculate total
+              Quantity: (currentOrder?.totalQuantity ?? 0)- totals.totalQuantity,
+              TotalCostIncVat: (((currentOrder?.totalQuantity ?? 0) - totals.totalQuantity) * row.CostIncVat).toFixed(2), // Recalculate total
             }
           : row
       );
@@ -297,7 +296,7 @@ export default function BillingInformation({ variant }) {
         rows={rows}
         disableSelectionOnClick
         autoHeight
-        hideFooter={true}
+        hideFooter
       />
 
       {/* Summary Section */}
@@ -305,7 +304,6 @@ export default function BillingInformation({ variant }) {
         <Stack direction="row" justifyContent="flex-end">
           <Typography>Average Cost :</Typography>
           <Typography sx={{ textAlign: "right", width: 120 }}>
-            {/* Assuming Average Cost is Total Cost / Total Quantity */}
             {totals.totalQuantity > 0
               ? (totals.totalCostIncVat / totals.totalQuantity).toFixed(2)
               : "-"}
@@ -316,7 +314,7 @@ export default function BillingInformation({ variant }) {
           <Typography>Quantity :</Typography>
           <Typography sx={{ textAlign: "right", width: 120 }}>
             {totals.totalQuantity !== currentOrder?.totalQuantity
-              ? `${currentOrder?.totalQuantity - totals.totalQuantity} / ${currentOrder?.totalQuantity} (-${totals.totalQuantity})`
+              ? `${(currentOrder?.totalQuantity  ?? 0 )- totals.totalQuantity} / ${currentOrder?.totalQuantity} (-${totals.totalQuantity})`
               : `${totals.totalQuantity} / ${totals.totalQuantity}`}
           </Typography>
         </Stack>
@@ -331,8 +329,8 @@ export default function BillingInformation({ variant }) {
       <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
-        title={"Confirm"}
-        content={"Are you sure to generate POs from the template?"}
+        title="Confirm"
+        content="Are you sure to generate POs from the template?"
         action={
           <Button variant="contained" color="error" onClick={() => onAction()}>
             Generate

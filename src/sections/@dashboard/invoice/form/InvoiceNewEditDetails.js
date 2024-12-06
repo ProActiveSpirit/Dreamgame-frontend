@@ -26,7 +26,7 @@ export default function InvoiceNewEditDetails() {
   const { control, setValue, watch, resetField } = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
-    stack,
+    stack: '123',
     name: 'items',
   });
 
