@@ -4,10 +4,13 @@ import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 // @mui
+import { Fab } from '@mui/material';
 import {
   Card,
+  Stack,
   Table,
   Button,
+  Tooltip,
   TableBody,
   Container,
   TableContainer,
@@ -33,6 +36,7 @@ import {
 import Scrollbar from '../../../../components/scrollbar';
 import ConfirmDialog from '../../../../components/confirm-dialog';
 import orderData from './relatedorder.json';
+import Iconify from '../../../../components/iconify';
 // sections
 import { RelatedOrderTableRow } from '../../../../sections/@dashboard/salesorder/detailed/relatedorder';
 
@@ -132,6 +136,10 @@ export default function RelatedOrderListPage() {
     setOpenConfirm(false);
   };
 
+  const handleOpenConfirm = () => {
+    setOpenConfirm(true);
+  };
+
   const handleDeleteRow = (id) => {
     const deleteRow = tableData.filter((row) => row.NUMBER !== id);
     setSelected([]);
@@ -169,6 +177,17 @@ export default function RelatedOrderListPage() {
     push(PATH_DASHBOARD.salesorder.view(paramCase(id)));
   };
 
+  const createPO = () => {
+
+  }
+
+  const startPO = () => {
+
+  }
+
+  const stopPO = () => {
+
+  }
 
   return (
     <>
@@ -177,34 +196,47 @@ export default function RelatedOrderListPage() {
       </Head>
 
       <Container maxWidth={themeStretch ? false : 'mg'}>
+        <Stack spacing={1} direction={{ xs: 'column', sm: 'row' }}>
+          <Tooltip title="Get Sync Orders" arrow placement="top">
+            <Fab variant="outlined" size="small">
+              <Iconify icon="prime:sync" width={20} height={20} />
+            </Fab>
+          </Tooltip>
+          <Button variant="contained" color="info" startIcon={<Iconify icon="foundation:plus" />} onClick={createPO} >
+            Create Purchase Order
+          </Button>
+          <Tooltip title="Start POs" arrow placement="top">
+            <Fab size="small" color="success">
+              <Iconify icon="codicon:debug-start" width={20} height={20} />
+            </Fab>
+          </Tooltip>
+          <Tooltip title="Stop POs" arrow placement="top">
+            <Fab size="small" color="success">
+              <Iconify icon="lets-icons:stop-fill" width={20} height={20} />
+            </Fab>
+          </Tooltip>
+          {/* <Button variant="contained" startIcon={<Iconify icon="codicon:debug-start" />} />
+          <Iconify icon="lets-icons:stop-fill" /> */}
+        </Stack>
         <Card>
-          {/* <SalesOrderTableToolbar
-            filterName={filterName}
-            filterStatus={filterStatus}
-            onFilterName={handleFilterName}
-            onFilterStatus={handleFilterStatus}
-            isFiltered={isFiltered}
-            onResetFilter={handleResetFilter}
-          /> */}
-
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {/* <TableSelectedAction
-              dense={dense}
-              numSelected={selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row.NUMBER)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
+              // dense={dense}
+              // numSelected={selected.length}
+              // rowCount={tableData.length}
+              // onSelectAllRows={(checked) =>
+              //   onSelectAllRows(
+              //     checked,
+              //     tableData.map((row) => row.id)
+              //   )
+              // }
+              // action={
+              //   <Tooltip title="Delete">
+              //     <IconButton color="primary" onClick={handleOpenConfirm}>
+              //       <Iconify icon="eva:trash-2-outline" />
+              //     </IconButton>
+              //   </Tooltip>
+              // }
             /> */}
 
             <Scrollbar>

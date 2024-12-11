@@ -19,7 +19,7 @@ import { saveRelatedPurchaseOrder } from '../../../../redux/slices/salesorder';
 // _mock_
 import _mock from '../../../../_mock';
 
-export default function BillingInformation({ variant }) {
+export default function BillingInformation({ changeTab, variant }) {
   const [selectedRegions, setSelectedRegions] = useState([top100Films[1]]);
   const [exchangeRates, setExchangeRates] = useState({});
   const [loading, setLoading] = useState(true);
@@ -54,7 +54,6 @@ export default function BillingInformation({ variant }) {
 
   // Calculate initial rows when component mounts or when dependencies change
   const generateEmpty = () => {
-    console.log("generateEmpty  generateEmpty");
     if (!loading && exchangeRates) {
       const initialRows = selectedRegions.map((region, index) => ({
         id: _mock.id(index),
@@ -186,6 +185,7 @@ export default function BillingInformation({ variant }) {
 
   const onAction = () => {
     setOpenConfirm(false)
+    changeTab("Related Purchase Orders");
   }
   
   return (
@@ -230,7 +230,7 @@ export default function BillingInformation({ variant }) {
             <DateTimePicker
               renderInput={(props) => <TextField {...props} fullWidth />}
               label="Start Date"
-              value={currentOrder?.statDate}
+              value={currentOrder?.startDate}
               // onChange={setValue}
             />
             <DateTimePicker
@@ -283,6 +283,7 @@ export default function BillingInformation({ variant }) {
           </Stack>
         </Masonry>
       </Container>
+
       <Typography variant="h6" gutterBottom>
         Purchase Order Template
       </Typography>

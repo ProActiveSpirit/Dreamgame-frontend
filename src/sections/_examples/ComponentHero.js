@@ -71,7 +71,6 @@ export default function ComponentHero() {
           </m.div>
         )}
       </Container>
-
       <StyledBg />
     </StyledRoot>
   );
