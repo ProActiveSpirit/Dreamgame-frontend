@@ -3,18 +3,22 @@ import {useState , useEffect } from 'react';
 import {
   Grid,
   Stack,
+  Box,
+  Divider,
+  Typography,
   Container,
   TextField,
   Autocomplete,
   InputAdornment,
 } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
+
 // Validation schema
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 
 import { LoadingButton } from '@mui/lab';
-import { DateTimePicker } from '@mui/x-date-pickers';
 // Redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 import { getProducts } from '../../../../redux/slices/product';
@@ -29,9 +33,6 @@ import { PATH_DASHBOARD } from '../../../../routes/paths';
 // Layouts
 import DashboardLayout from '../../../../layouts/dashboard';
 
-import RegionPrice from '../../e-commerce/product/detailed/regionPrice';
-
-// ----------------------------------------------------------------------
 
 // Default values for the form
 export const defaultValues = {
@@ -41,7 +42,7 @@ export const defaultValues = {
   startDate: new Date(),
   endDate: null,
   Quantity: '1',
-  purchaseCurrency: 'EUR',
+  costCurrency: 'EUR',
   costExtVat: '1',
   costVat: '0',
   costIncVat: '0',
@@ -59,19 +60,11 @@ const FormSchema = Yup.object().shape({
     .of(Yup.object().shape({ title: Yup.string().required() })) // Ensure each option has a title
     .required('Region is required')
     .min(1, 'At least one region must be selected'), // Require at least one region
-//   Product: Yup.string().required('Product is required'),
-  startDate: Yup.date().required('Start Date is required').typeError('Invalid date'),
-  orderDate: Yup.date().required('Order Date is required').typeError('Invalid date'),
-  endDate: Yup.date()
-    .required('End Date is required')
-    .typeError('Invalid date')
-    .min(Yup.ref('startDate'), 'End Date must be later than Start Date')
-    .typeError('End Date must be later than Start Date'), // Custom validation
   Quantity: Yup.number()
     .required('Quantity is required')
     .min(1, 'Quantity must be at least 1')
     .typeError('Quantity must be a number'),
-  purchaseCurrency: Yup.string()
+  costCurrency: Yup.string()
     .required('Purchase Currency is required')
     .oneOf(['EUR', 'Dollar'], 'Invalid Currency'),
   costExtVat: Yup.number()
@@ -89,11 +82,37 @@ const FormSchema = Yup.object().shape({
     .typeError('cost Inc Vat must be a number'),
 });
 
+  // Columns definition
+  const columns = [
+    { field: "Product", headerName: "Product", width: 350 },
+    { field: "Quantity", headerName: "Quantity", width: 150 },
+    {
+      field: "CostExtVat",
+      headerName: "Cost (Ext. VAT)",
+      width: 250,
+      valueGetter: (params) => `${params.row.CostExtVat} ${params.row.CostCurrency}`,
+    },
+    {
+      field: "CostVat",
+      headerName: "Cost VAT",
+      width: 200,
+      valueGetter: (params) => `${params.row.CostVat} %`,
+    },
+    {
+      field: "CostIncVat",
+      headerName: "Cost (Inc. VAT)",
+      width: 200,
+      valueGetter: (params) => `${params.row.CostIncVat} ${params.row.CostCurrency}`,
+    },
+  ];
+
 export default function PurchaseOrderAddPage() {
   const { themeStretch } = useSettingsContext();
 
+  const [rows, setRows] = useState([]);
+  const [totals, setTotals] = useState({ totalQuantity: 0, totalCostIncVat: 0 }); // State for totals
+
   const { products } = useSelector((state) => state.product); // Fetch products from Redux
-  const [selectedRegions, setSelectedRegions] = useState([top100Films[1]]);
 
   const dispatch = useDispatch();
 
@@ -139,7 +158,7 @@ export default function PurchaseOrderAddPage() {
 
   return (
     <>
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={themeStretch ? false : 'xl'}>
         <CustomBreadcrumbs
           heading="Purchase Order Add"
           links={[
@@ -153,176 +172,232 @@ export default function PurchaseOrderAddPage() {
         />
 
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            <Grid container justifyContent="center" alignItems="center">
-            <Grid item xs={12} md={8}>
-                <Stack spacing={3}>
-                {/* Order Date */}
-                <DateTimePicker
-                    renderInput={(props) => <TextField {...props} fullWidth />}
-                    label="Order Date"
-                    value={watch('orderDate')}
-                    onChange={(newValue) => setValue('orderDate', newValue)}
-                />
+        <Grid container justifyContent="left" alignItems="center" spacing={5}>
+      {/* Order Information */}
+      <Grid item xs={12} md={8}>
+        <Box sx={{ padding: 2, border: '1px solid #e0e0e0', borderRadius: 2, marginBottom: 3 }}>
+          <Typography variant="h7" gutterBottom>
+            Order Information
+          </Typography>
+          <Divider sx={{ mb: 2 }} />
+          <Stack spacing={3}>
+            <TextField variant="outlined" fullWidth label="Friendly Name" size="small" />
+            <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
+              <Autocomplete
+                fullWidth
+                options={products}
+                getOptionLabel={(option) => `${option?.name || ''} (${option?.sku || ''})`}
+                value={products.find((product) => product.id === watch('Product')) || null}
+                isOptionEqualToValue={(option, value) => option.name === value?.name}
+                onChange={(event, newValue) => setValue('Product', newValue?.id || '')}
+                renderInput={(params) => (
+                  <TextField {...params} label="Related Sales Order" error={!!errors.Product} helperText={errors.Product?.message} />
+                )}
+                size="small"
+              />
+              <Autocomplete
+                fullWidth
+                options={products}
+                getOptionLabel={(option) => `${option?.name || ''} (${option?.sku || ''})`}
+                value={products.find((product) => product.id === watch('Product')) || null}
+                isOptionEqualToValue={(option, value) => option.name === value?.name}
+                onChange={(event, newValue) => setValue('Product', newValue?.id || '')}
+                renderInput={(params) => (
+                  <TextField {...params} label="Product" error={!!errors.Product} helperText={errors.Product?.message} />
+                )}
+                size="small"
+              />
+            </Stack>
+            <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
+              <Autocomplete
+                fullWidth
+                options={products}
+                getOptionLabel={(option) => `${option?.name || ''} (${option?.sku || ''})`}
+                value={products.find((product) => product.id === watch('Product')) || null}
+                isOptionEqualToValue={(option, value) => option.name === value?.name}
+                onChange={(event, newValue) => setValue('Product', newValue?.id || '')}
+                renderInput={(params) => (
+                  <TextField {...params} label="Provider" error={!!errors.Product} helperText={errors.Product?.message} />
+                )}
+                size="small"
+              />
+              <Autocomplete
+                fullWidth
+                options={products}
+                getOptionLabel={(option) => `${option?.name || ''} (${option?.sku || ''})`}
+                value={products.find((product) => product.id === watch('Product')) || null}
+                isOptionEqualToValue={(option, value) => option.name === value?.name}
+                onChange={(event, newValue) => setValue('Product', newValue?.id || '')}
+                renderInput={(params) => (
+                  <TextField {...params} label="Vendor" error={!!errors.Product} helperText={errors.Product?.message} />
+                )}
+                size="small"
+              />
+            </Stack>
+          </Stack>
+        </Box>
+      </Grid>
 
-                <Autocomplete
-                  multiple
-                  fullWidth
-                  options={top100Films || []}
-                  getOptionLabel={(option) => option?.title || ''}
-                  value={watch('Region') || []}
-                  onChange={(event, newValue) => setValue('Region', newValue)}
-                  filterSelectedOptions
-                  filterOptions={(options, state) =>
-                    options.filter((option) =>
-                      !(watch('Region') || []).some((selected) => selected.title === option.title)
-                    )
-                  } // Custom filter logic to exclude already selected items
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Template Regions"
-                      placeholder="Country Code"
-                      error={!!errors.Region}
-                      helperText={errors.Region?.message}
-                    />
-                  )}
-                />
+      {/* Cost Information */}
+      <Grid key={4} container spacing={10}>
+        <Grid key={1} item xs={6} md={6}>
+          <Box sx={{ padding: 2, border: '1px solid #e0e0e0', borderRadius: 2, marginBottom: 3 }}>
+            <Typography variant="h7" gutterBottom>
+              Cost Information
+            </Typography>
+            <Divider sx={{ mb: 2 }} />
+          <Stack spacing={2}>
 
-                {/* Product Field */}
-                <Autocomplete
-                    fullWidth
-                    options={products}
-                    getOptionLabel={(option) => `${option?.name || ''} (${option?.sku || ''})`}
-                    value={products.find((product) => product.id === watch('Product')) || null}
-                    isOptionEqualToValue={(option, value) => option.name === value?.name}
-                    onChange={(event, newValue) => setValue('Product', newValue?.id || '')}
-                    renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        label="Product"
-                        error={!!errors.Product}
-                        helperText={errors.Product?.message}
-                    />
-                    )}
-                />
-                {/* Start Date and End Date */}
-                <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
-                    <DateTimePicker
-                    renderInput={(props) => (
-                        <TextField
-                        {...props}
-                        fullWidth
-                        error={!!errors.startDate}
-                        helperText={errors.startDate?.message}
-                        />
-                    )}
-                    label="Start Date"
-                    value={watch('startDate')}
-                    onChange={(newValue) => setValue('startDate', newValue, { shouldValidate: true })}
-                    />
-                    <DateTimePicker
-                    renderInput={(props) => (
-                        <TextField
-                        {...props}
-                        fullWidth
-                        error={!!errors.endDate}
-                        helperText={errors.endDate?.message}
-                        />
-                    )}
-                    label="End Date"
-                    value={watch('endDate')}
-                    onChange={(newValue) => setValue('endDate', newValue, { shouldValidate: true })}
-                    />
-                </Stack>
+            {/* Cost Currency */}
+            <Autocomplete
+              fullWidth
+              disableClearable
+              value={watch('costCurrency')}
+              options={['EUR', 'Dollar']}
+              onChange={(event, newValue) => setValue('costCurrency', newValue)}
+              size="small"
+              renderInput={(params) => (
+              <TextField
+                  {...params}
+                  label="Cost Currency"
+                  error={!!errors.costCurrency}
+                  helperText={errors.costCurrency?.message}
+              />
+              )}
+            />
+            <RHFTextField
+            name="costExtVat"
+            label="Cost Ext Vat"
+            InputProps={{
+                type: 'number',
+                endAdornment: <InputAdornment position="end">EUR</InputAdornment>,
+            }}
+            size="small"
+            error={!!errors.costExtVat}
+            helperText={errors.costExtVat?.message}
+            />
+            <RHFTextField
+            name="costVat"
+            label="Cost Vat"
+            InputProps={{
+                type: 'number',
+                endAdornment: <InputAdornment position="end">%</InputAdornment>,
+            }}
+            size="small"
+            error={!!errors.costVat}
+            helperText={errors.costVat?.message}
+            />
+            <RHFTextField
+            name="costIncVat"
+            label="Cost Inc Vat"
+            InputProps={{
+                type: 'number',
+                endAdornment: <InputAdornment position="end">EUR</InputAdornment>,
+            }}
+            size="small"
+            error={!!errors.costIncVat}
+            helperText={errors.costIncVat?.message}
+            />
+            {/* </Stack> */}
+          </Stack>
+          </Box>
+        </Grid>
+        <Grid key={2} item xs={6} md={6}>
+          <Box sx={{ padding: 2, border: '1px solid #e0e0e0', borderRadius: 2, marginBottom: 3 }}>
+          
+            <Typography variant="h7" gutterBottom>
+              Stock Order API Sales Information
+            </Typography>
+            <Divider  sx={{ mb: 2 }}  />
+            <Stack spacing={2}>
+            {/* Cost Currency */}
+            <Autocomplete
+              fullWidth
+              disableClearable
+              value={watch('costCurrency')}
+              options={['EUR', 'Dollar']}
+              onChange={(event, newValue) => setValue('costCurrency', newValue)}
+              size="small"
+              renderInput={(params) => (
+              <TextField
+                  {...params}
+                  label="Stock Sales Currency"
+                  error={!!errors.costCurrency}
+                  helperText={errors.costCurrency?.message}
+              />
+              )}
+            />
+            <RHFTextField
+            name="stockSalesIncVat"
+            label="Stock Sales Inc Vat"
+            InputProps={{
+                type: 'number',
+                endAdornment: <InputAdornment position="end">EUR</InputAdornment>,
+            }}
+            size="small"
+            error={!!errors.costExtVat}
+            helperText={errors.costExtVat?.message}
+            />
+            {/* </Stack> */}
+          </Stack>
+          </Box>
+        </Grid>
+      </Grid>
+      {/* Summary Information */}
+      <Grid key={5} item xs={6} md={10}>
+        <Box sx={{ padding: 2, border: '1px solid #e0e0e0', borderRadius: 2, marginBottom: 3 }}>
+          <Typography variant="h7" gutterBottom>
+            Purchase Order Summary Information
+          </Typography>
+          <Divider sx={{ mb: 2 }} />
+          <DataGrid
+            columns={columns}
+            rows={rows}
+            disableSelectionOnClick
+            autoHeight
+            hideFooter
+          />
 
-                {/* Quantity */}
-                <RHFTextField
-                    name="Quantity"
-                    label="Quantity"
-                    InputProps={{ type: 'number' }}
-                    error={!!errors.Quantity}
-                    helperText={errors.Quantity?.message}
-                />
+          {/* Summary Section */}
+          <Stack spacing={10} sx={{ mt: 3 }} direction={{ xs: "column", md: "row" }}>
+            <Stack direction="row" justifyContent="flex-end">
+              <Typography>Average Cost :</Typography>
+              {/* <Typography sx={{ textAlign: "right", width: 120 }}>
+                {totals.totalQuantity > 0
+                  ? (totals.totalCostIncVat / totals.totalQuantity).toFixed(2)
+                  : "-"}
+              </Typography> */}
+            </Stack>
 
-                {/* Purchase Currency */}
-                <Autocomplete
-                    fullWidth
-                    disableClearable
-                    value={watch('purchaseCurrency')}
-                    options={['EUR', 'Dollar']}
-                    onChange={(event, newValue) => setValue('purchaseCurrency', newValue)}
-                    renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        label="Purchase Currency"
-                        error={!!errors.purchaseCurrency}
-                        helperText={errors.purchaseCurrency?.message}
-                    />
-                    )}
-                />
+            <Stack direction="row" justifyContent="flex-end">
+              <Typography>Quantity :</Typography>
+              {/* <Typography sx={{ textAlign: "right", width: 120 }}>
+                {totals.totalQuantity !== currentOrder?.totalQuantity
+                  ? `${(currentOrder?.totalQuantity  ?? 0 )- totals.totalQuantity} / ${currentOrder?.totalQuantity} (-${totals.totalQuantity})`
+                  : `${totals.totalQuantity} / ${totals.totalQuantity}`}
+              </Typography> */}
+            </Stack>
 
-                {/* Cost Fields */}
-                <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
-                    <RHFTextField
-                    name="costExtVat"
-                    label="Cost Ext Vat"
-                    InputProps={{
-                        type: 'number',
-                        endAdornment: <InputAdornment position="end">EUR</InputAdornment>,
-                    }}
-                    error={!!errors.costExtVat}
-                    helperText={errors.costExtVat?.message}
-                    />
-                    <RHFTextField
-                    name="costVat"
-                    label="Cost Vat"
-                    InputProps={{
-                        type: 'number',
-                        endAdornment: <InputAdornment position="end">%</InputAdornment>,
-                    }}
-                    error={!!errors.costVat}
-                    helperText={errors.costVat?.message}
-                    />
-                    <RHFTextField
-                    name="costIncVat"
-                    label="Cost Inc Vat"
-                    InputProps={{
-                        type: 'number',
-                        endAdornment: <InputAdornment position="end">EUR</InputAdornment>,
-                    }}
-                    error={!!errors.costIncVat}
-                    helperText={errors.costIncVat?.message}
-                    />
-                </Stack>
-
-                {/* Submit Button */}
-                <LoadingButton
-                    fullWidth
-                    color="info"
-                    size="large"
-                    type="submit"
-                    variant="contained"
-                    loading={isSubmitting}
-                >
-                    Submit to Add
-                </LoadingButton>
-                </Stack>
-            </Grid>
-            </Grid>
+            <Stack direction="row" justifyContent="flex-end">
+              <Typography variant="h6">Total Cost Inc Vat :</Typography>
+              <Typography variant="h6" sx={{ textAlign: "right", width: 120 }}>
+                {totals.totalCostIncVat.toFixed(2)} {/* Display total cost */}
+              </Typography>
+            </Stack>
+          </Stack>
+          </Box>
+      </Grid>
+      {/* Submit Information */}
+      <Grid item xs={12}>
+        <Box sx={{ textAlign: 'center', marginTop: 3 }}>
+          <LoadingButton fullWidth color="info" size="large" type="submit" variant="contained" loading={isSubmitting}>
+            Submit to Add
+          </LoadingButton>
+        </Box>
+      </Grid>
+    </Grid>
         </FormProvider>
       </Container>
     </>
   );
 }
-
-export const top100Films = [
-    { title: 'BE' },
-    { title: 'DE' },
-    { title: 'ES' },
-    { title: 'FR' },
-    { title: 'NL' },
-    { title: 'PT' },
-    { title: 'PL' },
-    { title: 'NO' },
-    { title: 'GB' },
-  ];
