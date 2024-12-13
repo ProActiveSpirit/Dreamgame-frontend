@@ -1,24 +1,26 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 // @mui
 import {
   Grid,
   Stack,
-  Container,
+  Divider,
   TextField,
+  RadioGroup,
   Autocomplete,
-  InputAdornment,
+  Radio,
+  Container,
+  FormControlLabel,
+  Typography,
 } from '@mui/material';
+import axios from 'axios';
 // Validation schema
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 
 import { LoadingButton } from '@mui/lab';
-import { DateTimePicker } from '@mui/x-date-pickers';
 // Redux
 import { useDispatch, useSelector } from '../../../redux/store';
-import { getProducts } from '../../../redux/slices/product';
-import { getCustomers } from '../../../redux/slices/user';
 import { createSalesOrder } from '../../../redux/slices/salesorder';
 
 // Components
@@ -34,16 +36,12 @@ import DashboardLayout from '../../../layouts/dashboard';
 
 // Default values for the form
 export const defaultValues = {
-  orderDate: new Date(),
-  Customer: '',
-  Product: '',
-  startDate: new Date(),
-  endDate: null,
-  Quantity: '1',
-  salesCurrency: 'EUR',
-  salesExtVat: '1',
-  salesVat: '0',
-  salesIncVat: '0',
+  firstname: '',
+  lastname: '',
+  enail: '',
+  website: '',
+  ip: '',
+  region: '',
 };
 
 // ----------------------------------------------------------------------
@@ -54,51 +52,64 @@ SalesOrderAddPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout
 
 // Validation schema using Yup
 const FormSchema = Yup.object().shape({
-  Customer: Yup.string().required('Customer is required'),
-  Product: Yup.string().required('Product is required'),
-  startDate: Yup.date().required('Start Date is required').typeError('Invalid date'),
-  orderDate: Yup.date().required('Order Date is required').typeError('Invalid date'),
-  endDate: Yup.date()
-    .required('End Date is required')
-    .typeError('Invalid date')
-    .min(Yup.ref('startDate'), 'End Date must be later than Start Date')
-    .typeError('End Date must be later than Start Date'), // Custom validation
-  Quantity: Yup.number()
-    .required('Quantity is required')
-    .min(1, 'Quantity must be at least 1')
-    .typeError('Quantity must be a number'),
-  salesCurrency: Yup.string()
-    .required('Sales Currency is required')
-    .oneOf(['EUR', 'Dollar'], 'Invalid Currency'),
-  salesExtVat: Yup.number()
-    .required('Sales Ext Vat is required')
-    .min(0, 'Sales Ext Vat must be at least 0')
-    .typeError('Sales Ext Vat must be a number'),
-  salesVat: Yup.number()
-    .required('Sales Vat is required')
-    .min(0, 'Sales Vat must be at least 0')
-    .max(100, 'Sales Vat cannot exceed 100')
-    .typeError('Sales Vat must be a number'),
-  salesIncVat: Yup.number()
-    .required('Sales Inc Vat is required')
-    .min(0, 'Sales Inc Vat must be at least 0')
-    .typeError('Sales Inc Vat must be a number'),
+  company: Yup.string()
+    .required('Company Name is required')
+    .min(2, 'Company Name must be at least 2 characters')
+    .max(50, 'Company Name must not exceed 50 characters'),
+  name: Yup.string()
+    .required('Display Name is required')
+    .min(2, 'Display Name must be at least 2 characters')
+    .max(50, 'Display Name must not exceed 50 characters'),
+  email: Yup.string()
+    .email('Invalid email address')
+    .required('Email is required'),
+  website: Yup.string()
+    .url('Invalid website URL')
+    .required('Website is required'),
 });
 
 export default function SalesOrderAddPage() {
   const { themeStretch } = useSettingsContext();
 
-  const { products } = useSelector((state) => state.product); // Fetch products from Redux
-  const { customers } = useSelector((state) => state.user); // Fetch products from Redux
-
   const dispatch = useDispatch();
+
+  const [regions, setRegions] = useState([]);
+  const [currencies, setCurrencies] = useState([]);
+  const [selectedRegions, setSelectedRegions] = useState([]);
+  const [selectedCurrencies, setSelectedCurrencies] = useState([]);
+
+  useEffect(() => {
+    const fetchRegionsAndCurrencies = async () => {
+      try {
+        // Fetch regions from a REST API (e.g., REST Countries API)
+        const regionsResponse = await axios.get('https://restcountries.com/v3.1/all');
+        const fetchedRegions = regionsResponse.data.map((country) => ({
+          code: country.cca2, // ISO country code (e.g., "ES")
+          name: country.name.common, // Country name (e.g., "Spain")
+        }));
+
+        // Fetch currencies (use a static list or API)
+        const fetchedCurrencies = regionsResponse.data
+          .flatMap((country) => Object.keys(country.currencies || {})) // Get unique currency codes
+          .filter((value, index, self) => self.indexOf(value) === index); // Remove duplicates
+        
+        console.log("fetchedRegions" , fetchedRegions);
+        console.log("fetchedCurrencies" , fetchedCurrencies);
+        setRegions(fetchedRegions);
+        setCurrencies(fetchedCurrencies);
+      } catch (error) {
+        console.error('Error fetching regions or currencies:', error);
+      }
+    };
+
+    fetchRegionsAndCurrencies();
+  }, []);
 
   const methods = useForm({
     resolver: yupResolver(FormSchema),
     defaultValues,
   });
 
-  
   const {
     reset,
     setValue,
@@ -110,17 +121,6 @@ export default function SalesOrderAddPage() {
   // Watch fields for dynamic updates
   const salesExtVat = watch('salesExtVat');
   const salesVat = watch('salesVat');
-  // const Quantity = watch('Quantity');
-
-
-  // Update salesIncVat dynamically
-  useEffect(() => {
-    if (salesExtVat && salesVat) {
-      const vatAmount = (salesExtVat * salesVat) / 100;
-      const salesIncVat = (parseFloat(salesExtVat) + parseFloat(vatAmount));
-      setValue('salesIncVat', salesIncVat.toFixed(2)); // Keep 2 decimal places
-    }
-  }, [salesExtVat, salesVat, setValue]);
 
   const onSubmit = async (data) => {
     console.log('DATA', data); // Debug the form data
@@ -129,180 +129,303 @@ export default function SalesOrderAddPage() {
     reset(defaultValues); // Reset the form explicitly, including Autocomplete fields
   };
 
-  useEffect(() => {
-    dispatch(getCustomers()); // Fetch Customers when the component mounts
-    dispatch(getProducts()); // Fetch products when the component mounts
-  }, [dispatch]);
-
   return (
     <>
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={themeStretch ? false : 'xl'}>
         <CustomBreadcrumbs
-          heading="Sales Order Add"
+          heading="Customer Add"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'Sales Order',
-              href: PATH_DASHBOARD.salesorder.list,
+              name: 'Customer',
+              href: PATH_DASHBOARD.customer.list,
             },
             { name: 'Add' },
           ]}
         />
 
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+          <Typography variant="h7" gutterBottom>
+            General
+          </Typography>
+          <Divider sx={{ mb: 2 }} />
           <Grid container justifyContent="center" alignItems="center">
             <Grid item xs={12} md={8}>
-              <Stack spacing={3}>
-                {/* Order Date */}
-                <DateTimePicker
-                  renderInput={(props) => <TextField {...props} fullWidth />}
-                  label="Order Date"
-                  value={watch('orderDate')}
-                  onChange={(newValue) => setValue('orderDate', newValue)}
-                />
-                {/* Customer Field */}
-                <Autocomplete
-                  fullWidth
-                  options={customers || []} // Ensure options is always an array
-                  getOptionLabel={(option) => (option?.name ? option.name : '')} // Safely access name
-                  value={
-                    customers?.find((customer) => customer.id === watch('Customer')) || null
-                  } // Match selected value properly
-                  isOptionEqualToValue={(option, value) => option?.name === value?.name} // Compare by unique ID
-                  onChange={(event, newValue) => setValue('Customer', newValue?.id || '')} // Update the form state
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Customer"
-                      error={!!errors?.Customer} // Display error if it exists
-                      helperText={errors?.Customer?.message} // Show error message if available
-                    />
-                  )}
-                />
-                {/* Product Field */}
-                <Autocomplete
-                  fullWidth
-                  options={products} // Products fetched from Redux
-                  getOptionLabel={(option) => `${option?.name || ''} (${option?.sku || ''})`} // Ensure label is valid
-                  value={products.find((product) => product.id === watch('Product')) || null} // Match value properly
-                  isOptionEqualToValue={(option, value) => option.name === value?.name} // Compare by name
-                  onChange={(event, newValue) => setValue('Product', newValue?.id || '')} // Update form state
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Product"
-                      error={!!errors.Product}
-                      helperText={errors.Product?.message}
-                    />
-                  )}
-                />
-              <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
-                {/* Start Date */}
-                <DateTimePicker
-                  renderInput={(props) => (
-                    <TextField
-                      {...props}
-                      fullWidth
-                      error={!!errors.startDate}
-                      helperText={errors.startDate?.message}
-                    />
-                  )}
-                  label="Start Date"
-                  value={watch('startDate')}
-                  onChange={(newValue) => setValue('startDate', newValue, { shouldValidate: true })}
-                />
-
-                {/* End Date */}
-                <DateTimePicker
-                  renderInput={(props) => (
-                    <TextField
-                      {...props}
-                      fullWidth
-                      error={!!errors.endDate} // Show error state when validation fails
-                      helperText={errors.endDate?.message} // Display the validation error message
-                    />
-                  )}
-                  label="End Date"
-                  value={watch('endDate')}
-                  onChange={(newValue) => setValue('endDate', newValue, { shouldValidate: true })}
-                />
-              </Stack>
-              <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
-                {/* Quantity */}
+              <Stack spacing={1}>
                 <RHFTextField
-                  name="Quantity"
-                  label="Quantity"
-                  // value={watch('Quantity')}
-                  InputProps={{ type: 'number' }}
-                  error={!!errors.Quantity}
-                  helperText={errors.Quantity?.message}
+                  name="company"
+                  label="Company Name"
+                  InputProps={{ type: 'string' }}
+                  size="small"
+                  error={!!errors.company}
+                  helperText={errors.company?.message}
                 />
-
-                {/* Sales Currency */}
-                  <Autocomplete
-                    fullWidth
-                    disableClearable
-                    value={watch('salesCurrency')}
-                    options={['EUR', 'Dollar']}
-                    onChange={(event, newValue) => setValue('salesCurrency', newValue)}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Sales Currency"
-                        error={!!errors.salesCurrency}
-                        helperText={errors.salesCurrency?.message}
-                      />
-                    )}
-                  />
-                </Stack>
-                {/* Sales Ext Vat, Sales Vat, Sales Inc Vat */}
-                <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
-                  <RHFTextField
-                    name="salesExtVat"
-                    label="Sales Ext Vat"
-                    InputProps={{
-                      type: 'number',
-                      endAdornment: <InputAdornment position="end">EUR</InputAdornment>,
-                    }}
-                    error={!!errors.salesExtVat}
-                    helperText={errors.salesExtVat?.message}
-                  />
-                  <RHFTextField
-                    name="salesVat"
-                    label="Sales Vat"
-                    InputProps={{
-                      type: 'number',
-                      endAdornment: <InputAdornment position="end">%</InputAdornment>,
-                    }}
-                    error={!!errors.salesVat}
-                    helperText={errors.salesVat?.message}
-                  />
-                  <RHFTextField
-                    name="salesIncVat"
-                    label="Sales Inc Vat"
-                    InputProps={{
-                      type: 'number',
-                      endAdornment: <InputAdornment position="end">EUR</InputAdornment>,
-                    }}
-                    error={!!errors.salesIncVat}
-                    helperText={errors.salesIncVat?.message}
-                  />
-                </Stack>
-
-                {/* Submit Button */}
-                <LoadingButton
-                  fullWidth
-                  color="info"
-                  size="large"
-                  type="submit"
-                  variant="contained"
-                  loading={isSubmitting}
-                >
-                  Submit to Add
-                </LoadingButton>
+                <RHFTextField
+                  name="name"
+                  label="Display Name"
+                  InputProps={{ type: 'string' }}
+                  size="small"
+                  error={!!errors.name}
+                  helperText={errors.name?.message}
+                />
+                <RHFTextField
+                  name="website"
+                  label="Website Url"
+                  InputProps={{ type: 'string' }}
+                  size="small"
+                  error={!!errors.website}
+                  helperText={errors.website?.message}
+                />
+                <RHFTextField
+                  name="email"
+                  label="Email"
+                  InputProps={{ type: 'string' }}
+                  size="small"
+                  error={!!errors.email}
+                  helperText={errors.email?.message}
+                />
+                <RHFTextField
+                  name="phone"
+                  label="Phone"
+                  InputProps={{ type: 'string' }}
+                  size="small"
+                  error={!!errors.phone}
+                  helperText={errors.phone?.message}
+                />
+                <RHFTextField
+                  name="linkedIn"
+                  label="LinkedIn"
+                  InputProps={{ type: 'string' }}
+                  size="small"
+                  error={!!errors.linkedin}
+                  helperText={errors.linkedin?.message}
+                />
+                <RHFTextField
+                  name="skype"
+                  label="Skype"
+                  InputProps={{ type: 'string' }}
+                  size="small"
+                  error={!!errors.skype}
+                  helperText={errors.skype?.message}
+                />
+                <RHFTextField
+                  name="facebook"
+                  label="Facebook"
+                  InputProps={{ type: 'string' }}
+                  size="small"
+                  error={!!errors.facebook}
+                  helperText={errors.facebook?.message}
+                />
+                <RHFTextField
+                  name="twitter"
+                  label="Twitter"
+                  InputProps={{ type: 'string' }}
+                  size="small"
+                  error={!!errors.twitter}
+                  helperText={errors.twitter?.message}
+                />
               </Stack>
             </Grid>
           </Grid>
+          <Typography variant="h7" gutterBottom>
+            Invoice Information
+          </Typography>
+          <Divider sx={{ mb: 2 }} />
+          <Grid container justifyContent="center" alignItems="center">
+            <Grid item xs={12} md={8}>
+              <Stack spacing={1}>
+                <RHFTextField
+                  name="companyInvoice"
+                  label="Company Name (Invoice)"
+                  InputProps={{ type: 'string' }}
+                  size="small"
+                  error={!!errors.company}
+                  helperText={errors.company?.message}
+                />
+                <RHFTextField
+                  name="address"
+                  label="Address"
+                  InputProps={{ type: 'string' }}
+                  size="small"
+                  error={!!errors.address}
+                  helperText={errors.address?.message}
+                />
+                <RHFTextField
+                  name="zipCode"
+                  label="ZipCode"
+                  InputProps={{ type: 'string' }}
+                  size="small"
+                  error={!!errors.zipCode}
+                  helperText={errors.zipCode?.message}
+                />
+                <RHFTextField
+                  name="city"
+                  label="City"
+                  InputProps={{ type: 'string' }}
+                  size="small"
+                  error={!!errors.city}
+                  helperText={errors.city?.message}
+                />
+                <RHFTextField
+                  name="state"
+                  label="State"
+                  InputProps={{ type: 'string' }}
+                  size="small"
+                  error={!!errors.state}
+                  helperText={errors.state?.message}
+                />
+                <RHFTextField
+                  name="countryCode"
+                  label="CountryCode"
+                  InputProps={{ type: 'string' }}
+                  size="small"
+                  error={!!errors.linkedin}
+                  helperText={errors.linkedin?.message}
+                />
+                {/* Sales Region Autocomplete */}
+                <Autocomplete
+                  multiple
+                  fullWidth
+                  options={regions}
+                  getOptionLabel={(option) => `${option.code} - ${option.name}`} // E.g., "ES - Spain"
+                  value={selectedRegions}
+                  onChange={(event, newValue) => setSelectedRegions(newValue)}
+                  filterSelectedOptions
+                  renderInput={(params) => (
+                    <TextField {...params} label="Sales Regions" placeholder="Select region(s)" />
+                  )}
+                />
+                <RHFTextField
+                  name="taxInformation"
+                  label="Tax Information"
+                  InputProps={{ type: 'string' }}
+                  size="small"
+                  error={!!errors.taxInformation}
+                  helperText={errors.taxInformation?.message}
+                />
+                {/* Sales Currency Autocomplete */}
+                <Autocomplete
+                  multiple
+                  fullWidth
+                  options={currencies} // Array of currency codes (e.g., "AED", "ARD", etc.)
+                  getOptionLabel={(option) => option} // Show currency code directly
+                  value={selectedCurrencies}
+                  onChange={(event, newValue) => setSelectedCurrencies(newValue)}
+                  filterSelectedOptions
+                  renderInput={(params) => (
+                    <TextField {...params} label="Sales Currencies" placeholder="Select currency(ies)" />
+                  )}
+                />
+                <RHFTextField
+                  name="defaultVatRate"
+                  label="Default Vat Rate"
+                  InputProps={{ type: 'string' }}
+                  size="small"
+                  error={!!errors.defaultVatRate}
+                  helperText={errors.defaultVatRate?.message}
+                />
+              </Stack>
+            </Grid>
+          </Grid>
+          <Typography variant="h7" gutterBottom>
+            Primary Contact Information
+          </Typography>
+          <Divider sx={{ mb: 2 }} />
+          <Grid container justifyContent="center" alignItems="center">
+            <Grid item xs={12} md={8}>
+              <Stack spacing={1}>
+                <RHFTextField
+                  name="primaryName"
+                  label="Name"
+                  InputProps={{ type: 'string' }}
+                  size="small"
+                  error={!!errors.primaryName}
+                  helperText={errors.primaryName?.message}
+                />
+                <RHFTextField
+                  name="primarySurname"
+                  label="Surname"
+                  InputProps={{ type: 'string' }}
+                  size="small"
+                  error={!!errors.primarySurname}
+                  helperText={errors.primarySurname?.message}
+                />
+                <RHFTextField
+                  name="primaryEmail"
+                  label="Email"
+                  InputProps={{ type: 'string' }}
+                  size="small"
+                  error={!!errors.primaryEmail}
+                  helperText={errors.primaryEmail?.message}
+                />
+                <RHFTextField
+                  name="primaryPhone"
+                  label="Phone"
+                  InputProps={{ type: 'string' }}
+                  size="small"
+                  error={!!errors.primaryPhone}
+                  helperText={errors.primaryPhone?.message}
+                />
+                <RHFTextField
+                  name="primarySkype"
+                  label="Skype"
+                  InputProps={{ type: 'string' }}
+                  size="small"
+                  error={!!errors.primarySkype}
+                  helperText={errors.primarySkype?.message}
+                />
+                <RHFTextField
+                  name="primaryLinkedIn"
+                  label="LinkedIn"
+                  InputProps={{ type: 'string' }}
+                  size="small"
+                  error={!!errors.primaryLinkedIn}
+                  helperText={errors.primaryLinkedIn?.message}
+                />
+                <RHFTextField
+                  name="primaryFacebook"
+                  label="Facebook"
+                  InputProps={{ type: 'string' }}
+                  size="small"
+                  error={!!errors.primaryFacebook}
+                  helperText={errors.primaryFacebook?.message}
+                />
+                <RHFTextField
+                  name="primaryTwitter"
+                  label="Twitter"
+                  InputProps={{ type: 'string' }}
+                  size="small"
+                  error={!!errors.primaryTwitter}
+                  helperText={errors.primaryTwitter?.message}
+                />
+              </Stack>
+            </Grid>
+          </Grid>
+          <Divider sx={{ mb: 2 }} />
+          <Grid container justifyContent="center" alignItems="center">
+            <Grid item xs={12} md={8}>
+              <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
+                  <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center' }}>
+                    In Active
+                  </Typography>
+                  <RadioGroup row defaultValue="g">
+                    <FormControlLabel value="g" control={<Radio />} label="Yes" />
+                    <FormControlLabel value="p" control={<Radio size="small" />} label="No" />
+                  </RadioGroup>
+              </Stack>
+            </Grid>
+          </Grid>
+          {/* Submit Button */}
+          <LoadingButton
+            fullWidth
+            color="info"
+            size="large"
+            type="submit"
+            variant="contained"
+            loading={isSubmitting}
+          >
+            Submit to Add
+          </LoadingButton>
         </FormProvider>
       </Container>
     </>

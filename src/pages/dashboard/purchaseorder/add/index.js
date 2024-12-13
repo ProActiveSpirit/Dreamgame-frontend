@@ -22,6 +22,7 @@ import { LoadingButton } from '@mui/lab';
 // Redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 import { getProducts } from '../../../../redux/slices/product';
+import { getSalesOrders } from '../../../../redux/slices/salesorder';
 import { createPurchaseOrder } from '../../../../redux/slices/purchaseorder';
 
 // Components
@@ -113,6 +114,7 @@ export default function PurchaseOrderAddPage() {
   const [totals, setTotals] = useState({ totalQuantity: 0, totalCostIncVat: 0 }); // State for totals
 
   const { products } = useSelector((state) => state.product); // Fetch products from Redux
+  const { allOrders } = useSelector((state) => state.salesorder); // Fetch salesorders from Redux
 
   const dispatch = useDispatch();
 
@@ -146,7 +148,6 @@ export default function PurchaseOrderAddPage() {
   }, [costExtVat, costVat, setValue]);
 
   const onSubmit = async (data) => {
-    console.log('DATA', data); // Debug the form data
     dispatch(createPurchaseOrder(data));
     await new Promise((resolve) => setTimeout(resolve, 3000)); // Simulate API call
     reset(defaultValues); // Reset the form explicitly, including Autocomplete fields
@@ -154,6 +155,7 @@ export default function PurchaseOrderAddPage() {
 
   useEffect(() => {
     dispatch(getProducts()); // Fetch products when the component mounts
+    dispatch(getSalesOrders()); // Fetch salesorders when the component mounts
   }, [dispatch]);
 
   return (
@@ -181,13 +183,13 @@ export default function PurchaseOrderAddPage() {
           </Typography>
           <Divider sx={{ mb: 2 }} />
           <Stack spacing={3}>
-            <TextField variant="outlined" fullWidth label="Friendly Name" size="small" />
+            <TextField name="friendlyName" variant="outlined" fullWidth label="Friendly Name" size="small" />
             <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
               <Autocomplete
-                fullWidth
-                options={products}
+                fullWidth 
+                options={allOrders}
                 getOptionLabel={(option) => `${option?.name || ''} (${option?.sku || ''})`}
-                value={products.find((product) => product.id === watch('Product')) || null}
+                value={allOrders.find((order) => order.id === watch('Product')) || null}
                 isOptionEqualToValue={(option, value) => option.name === value?.name}
                 onChange={(event, newValue) => setValue('Product', newValue?.id || '')}
                 renderInput={(params) => (
@@ -209,19 +211,7 @@ export default function PurchaseOrderAddPage() {
               />
             </Stack>
             <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
-              <Autocomplete
-                fullWidth
-                options={products}
-                getOptionLabel={(option) => `${option?.name || ''} (${option?.sku || ''})`}
-                value={products.find((product) => product.id === watch('Product')) || null}
-                isOptionEqualToValue={(option, value) => option.name === value?.name}
-                onChange={(event, newValue) => setValue('Product', newValue?.id || '')}
-                renderInput={(params) => (
-                  <TextField {...params} label="Provider" error={!!errors.Product} helperText={errors.Product?.message} />
-                )}
-                size="small"
-              />
-              <Autocomplete
+              <Autocomplete 
                 fullWidth
                 options={products}
                 getOptionLabel={(option) => `${option?.name || ''} (${option?.sku || ''})`}
@@ -230,6 +220,18 @@ export default function PurchaseOrderAddPage() {
                 onChange={(event, newValue) => setValue('Product', newValue?.id || '')}
                 renderInput={(params) => (
                   <TextField {...params} label="Vendor" error={!!errors.Product} helperText={errors.Product?.message} />
+                )}
+                size="small"
+              />
+              <Autocomplete
+                fullWidth
+                options={products}
+                getOptionLabel={(option) => `${option?.name || ''} (${option?.sku || ''})`}
+                value={products.find((product) => product.id === watch('salesOrder')) || null}
+                isOptionEqualToValue={(option, value) => option.name === value?.name}
+                onChange={(event, newValue) => setValue('salesOrder', newValue?.id || '')}
+                renderInput={(params) => (
+                  <TextField {...params} label="Region" error={!!errors.salesOrder} helperText={errors.salesOrder?.message} />
                 )}
                 size="small"
               />
