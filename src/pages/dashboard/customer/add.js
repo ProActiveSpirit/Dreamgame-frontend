@@ -13,8 +13,6 @@ import {
   Typography,
 } from '@mui/material';
 
-import axios from '../../../utils/axios';
-
 // Validation schema
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
@@ -33,6 +31,7 @@ import FormProvider, { RHFTextField } from '../../../components/hook-form';
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // Layouts
 import DashboardLayout from '../../../layouts/dashboard';
+import axios from '../../../utils/axios';
 
 // ----------------------------------------------------------------------
 

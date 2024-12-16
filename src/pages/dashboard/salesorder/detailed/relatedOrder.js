@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 // @mui
-import { Fab } from '@mui/material';
 import {
   Card,
   Stack,
@@ -13,6 +12,7 @@ import {
   Tooltip,
   TableBody,
   Container,
+  Fab,
   TableContainer,
 } from '@mui/material';
 // redux
@@ -43,8 +43,8 @@ import { RelatedOrderTableRow } from '../../../../sections/@dashboard/salesorder
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'NUMBER', label: 'SALES ORDER NUMBER', align: 'center'},
-  { id: 'PRODUCT', label: 'PRODUCT', align: 'center'},
+  { id: 'NUMBER', label: 'SALES ORDER NUMBER', align: 'center' },
+  { id: 'PRODUCT', label: 'PRODUCT', align: 'center' },
   { id: 'PROVIDER', label: 'PROVIDER', align: 'center' },
   { id: 'REGION', label: 'REGION', align: 'center' },
   { id: 'INCVAT', label: 'COST INC VAT', align: 'center' },
@@ -103,19 +103,19 @@ export default function RelatedOrderListPage() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-//   useEffect(() => {
-//     dispatch(getProducts());
-//   }, [dispatch]);
+  //   useEffect(() => {
+  //     dispatch(getProducts());
+  //   }, [dispatch]);
 
-//   useEffect(() => {
-//     if (products.length) {
-//       setTableData(products);
-//     }
-//   }, [products]);
+  //   useEffect(() => {
+  //     if (products.length) {
+  //       setTableData(products);
+  //     }
+  //   }, [products]);
 
   useEffect(() => {
     setTableData(orderData);
-  },[dispatch])
+  }, [dispatch]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -177,17 +177,11 @@ export default function RelatedOrderListPage() {
     push(PATH_DASHBOARD.salesorder.view(paramCase(id)));
   };
 
-  const createPO = () => {
+  const createPO = () => {};
 
-  }
+  const startPO = () => {};
 
-  const startPO = () => {
-
-  }
-
-  const stopPO = () => {
-
-  }
+  const stopPO = () => {};
 
   return (
     <>
@@ -202,7 +196,12 @@ export default function RelatedOrderListPage() {
               <Iconify icon="prime:sync" width={20} height={20} />
             </Fab>
           </Tooltip>
-          <Button variant="contained" color="info" startIcon={<Iconify icon="foundation:plus" />} onClick={createPO} >
+          <Button
+            variant="contained"
+            color="info"
+            startIcon={<Iconify icon="foundation:plus" />}
+            onClick={createPO}
+          >
             Create Purchase Order
           </Button>
           <Tooltip title="Start POs" arrow placement="top">
