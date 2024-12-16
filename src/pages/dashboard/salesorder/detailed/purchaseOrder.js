@@ -6,7 +6,16 @@ import PropTypes from 'prop-types';
 // form
 import { DateTimePicker } from '@mui/x-date-pickers';
 // @mui
-import { Button, Autocomplete, TextField, Stack, InputAdornment, Container, Typography, Divider } from '@mui/material';
+import {
+  Button,
+  Autocomplete,
+  TextField,
+  Stack,
+  InputAdornment,
+  Container,
+  Typography,
+  Divider,
+} from '@mui/material';
 import { Masonry } from '@mui/lab';
 import ConfirmDialog from '../../../../components/confirm-dialog';
 import Iconify from '../../../../components/iconify';
@@ -14,7 +23,6 @@ import Iconify from '../../../../components/iconify';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 import { saveRelatedPurchaseOrder } from '../../../../redux/slices/salesorder';
-
 
 // _mock_
 import _mock from '../../../../_mock';
@@ -61,7 +69,9 @@ export default function BillingInformation({ changeTab, variant }) {
         Product: currentOrder?.product?.name,
         ProductId: currentOrder?.product?.id,
         CostIncVat: parseFloat(
-          (currentOrder?.salesExtVat ?? 0 * (exchangeRates[currencies[region.title]] || 1)).toFixed(2)
+          (currentOrder?.salesExtVat ?? 0 * (exchangeRates[currencies[region.title]] || 1)).toFixed(
+            2
+          )
         ), // Use nullish coalescing to default to 0
         CostCurrency: currencies[region.title], // Keep currency separate for calculations
         Quantity: 0, // Start with 0 quantity
@@ -71,21 +81,24 @@ export default function BillingInformation({ changeTab, variant }) {
       setRows(initialRows);
       calculateTotals(initialRows); // Initialize totals
     }
-  }
+  };
 
   const saveChange = () => {
-    console.log("rows : " , rows);
+    console.log('rows : ', rows);
     const data = {
       id: currentOrder.id,
       purchase: rows,
-    }
+    };
     dispatch(saveRelatedPurchaseOrder(data));
-  }
+  };
 
   // Function to recalculate totals (total quantity and total cost inc vat)
   const calculateTotals = (updatedRows) => {
     const totalQuantity = updatedRows.reduce((sum, row) => sum + row.Quantity, 0);
-    const totalCostIncVat = updatedRows.reduce((sum, row) => sum + parseFloat(row.TotalCostIncVat || 0), 0);
+    const totalCostIncVat = updatedRows.reduce(
+      (sum, row) => sum + parseFloat(row.TotalCostIncVat || 0),
+      0
+    );
     setTotals({ totalQuantity, totalCostIncVat });
   };
 
@@ -93,18 +106,20 @@ export default function BillingInformation({ changeTab, variant }) {
   const handleQuantityChange = (id, value) => {
     const newQuantity = parseFloat(value) || 0; // Convert input to number, default to 0 if invalid
     let updatedRows;
-    if ((currentOrder?.totalQuantity ?? 0)- totals.totalQuantity - newQuantity < 0) {
+    if ((currentOrder?.totalQuantity ?? 0) - totals.totalQuantity - newQuantity < 0) {
       updatedRows = rows.map((row) =>
         row.id === id
           ? {
               ...row,
-              Quantity: (currentOrder?.totalQuantity ?? 0)- totals.totalQuantity,
-              TotalCostIncVat: (((currentOrder?.totalQuantity ?? 0) - totals.totalQuantity) * row.CostIncVat).toFixed(2), // Recalculate total
+              Quantity: (currentOrder?.totalQuantity ?? 0) - totals.totalQuantity,
+              TotalCostIncVat: (
+                ((currentOrder?.totalQuantity ?? 0) - totals.totalQuantity) *
+                row.CostIncVat
+              ).toFixed(2), // Recalculate total
             }
           : row
       );
-    }
-    else{
+    } else {
       updatedRows = rows.map((row) =>
         row.id === id
           ? {
@@ -121,17 +136,17 @@ export default function BillingInformation({ changeTab, variant }) {
 
   // Columns definition
   const columns = [
-    { field: "Region", headerName: "Region", width: 150 },
-    { field: "Product", headerName: "Product", width: 350 },
+    { field: 'Region', headerName: 'Region', width: 150 },
+    { field: 'Product', headerName: 'Product', width: 350 },
     {
-      field: "CostIncVat",
-      headerName: "Cost (Inc. VAT)",
+      field: 'CostIncVat',
+      headerName: 'Cost (Inc. VAT)',
       width: 150,
       valueGetter: (params) => `${params.row.CostIncVat} ${params.row.CostCurrency}`,
     },
     {
-      field: "Quantity",
-      headerName: "Quantity (%)",
+      field: 'Quantity',
+      headerName: 'Quantity (%)',
       width: 150,
       renderCell: (params) => (
         <TextField
@@ -144,8 +159,8 @@ export default function BillingInformation({ changeTab, variant }) {
       ),
     },
     {
-      field: "TotalCostIncVat",
-      headerName: "Total Cost (Inc. VAT)",
+      field: 'TotalCostIncVat',
+      headerName: 'Total Cost (Inc. VAT)',
       width: 200,
       valueGetter: (params) => `${params.row.TotalCostIncVat} ${params.row.CostCurrency}`,
     },
@@ -156,38 +171,36 @@ export default function BillingInformation({ changeTab, variant }) {
     setSelectedRegions(top100Films); // Set all options as selected
   };
 
-    // Fetch exchange rates
-    useEffect(() => {
-      const fetchExchangeRates = async () => {
-        try {
-          const response = await fetch(
-            'https://api.exchangerate-api.com/v4/latest/EUR'
-          );
-          const data = await response.json();
-          setExchangeRates(data.rates);
-          setLoading(false);
-        } catch (error) {
-          console.error('Error fetching exchange rates:', error);
-          setLoading(false);
-        }
-      };
-  
-      fetchExchangeRates();
-    }, []);
+  // Fetch exchange rates
+  useEffect(() => {
+    const fetchExchangeRates = async () => {
+      try {
+        const response = await fetch('https://api.exchangerate-api.com/v4/latest/EUR');
+        const data = await response.json();
+        setExchangeRates(data.rates);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching exchange rates:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchExchangeRates();
+  }, []);
 
   const generatePO = () => {
-    setOpenConfirm(true)
-  }
-  
+    setOpenConfirm(true);
+  };
+
   const handleCloseConfirm = () => {
-    setOpenConfirm(false)
-  }
+    setOpenConfirm(false);
+  };
 
   const onAction = () => {
-    setOpenConfirm(false)
-    changeTab("Related Purchase Orders");
-  }
-  
+    setOpenConfirm(false);
+    changeTab('Related Purchase Orders');
+  };
+
   return (
     <>
       <Container maxWidth="md">
@@ -196,7 +209,7 @@ export default function BillingInformation({ changeTab, variant }) {
             variant={variant}
             required
             fullWidth
-            value={currentOrder?.totalQuantity ?? ""}
+            value={currentOrder?.totalQuantity ?? ''}
             label="Quantity"
             // defaultValue={currentOrder?.totalQuantity}
           />
@@ -205,24 +218,28 @@ export default function BillingInformation({ changeTab, variant }) {
             <TextField
               variant="outlined"
               fullWidth
-              value={currentOrder?.salesIncVat ?? ""}
+              value={currentOrder?.salesIncVat ?? ''}
               // defaultValue={currentOrder?.totalQuantity}
               // onChange={handleChange('weight')}
               label="Sales"
               // helperText="Weight"
               InputProps={{
-                endAdornment: <InputAdornment position="start">{currentOrder?.salesCurrency}</InputAdornment>,
+                endAdornment: (
+                  <InputAdornment position="start">{currentOrder?.salesCurrency}</InputAdornment>
+                ),
               }}
             />
             <TextField
               variant="outlined"
               fullWidth
-              value={currentOrder?.expectedCost ?? ""}
+              value={currentOrder?.expectedCost ?? ''}
               // onChange={handleChange('weight')}
               label="Expected Cost"
               // helperText="Weight"
               InputProps={{
-                endAdornment: <InputAdornment position="end">{currentOrder?.salesCurrency}</InputAdornment>,
+                endAdornment: (
+                  <InputAdornment position="end">{currentOrder?.salesCurrency}</InputAdornment>
+                ),
               }}
             />
           </Stack>
@@ -271,13 +288,28 @@ export default function BillingInformation({ changeTab, variant }) {
             </button>
           </Stack>
           <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
-            <Button variant="contained" color="warning" size="large" startIcon={<Iconify icon="eva:save-fill" />} >
+            <Button
+              variant="contained"
+              color="warning"
+              size="large"
+              startIcon={<Iconify icon="eva:save-fill" />}
+            >
               Save & Generate Auto-Calculated
             </Button>
-            <Button variant="contained" color="primary" startIcon={<Iconify icon="eva:save-fill" />} onClick={generateEmpty}>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<Iconify icon="eva:save-fill" />}
+              onClick={generateEmpty}
+            >
               Save & Generate Empty
             </Button>
-            <Button variant="contained" color="error" startIcon={<Iconify icon="eos-icons:arrow-rotate" />} onClick={generatePO} >
+            <Button
+              variant="contained"
+              color="error"
+              startIcon={<Iconify icon="eos-icons:arrow-rotate" />}
+              onClick={generatePO}
+            >
               Generate POs from the template
             </Button>
           </Stack>
@@ -288,41 +320,43 @@ export default function BillingInformation({ changeTab, variant }) {
         Purchase Order Template
       </Typography>
       <Divider sx={{ mb: 2 }} />
-      <Button variant="contained" color="info" size="large" startIcon={<Iconify icon="eva:save-fill" />} onClick={saveChange}>
+      <Button
+        variant="contained"
+        color="info"
+        size="large"
+        startIcon={<Iconify icon="eva:save-fill" />}
+        onClick={saveChange}
+      >
         Save & changes
       </Button>
 
-      <DataGrid
-        columns={columns}
-        rows={rows}
-        disableSelectionOnClick
-        autoHeight
-        hideFooter
-      />
+      <DataGrid columns={columns} rows={rows} disableSelectionOnClick autoHeight hideFooter />
 
       {/* Summary Section */}
-      <Stack spacing={10} sx={{ mt: 3 }} direction={{ xs: "column", md: "row" }}>
+      <Stack spacing={10} sx={{ mt: 3 }} direction={{ xs: 'column', md: 'row' }}>
         <Stack direction="row" justifyContent="flex-end">
           <Typography>Average Cost :</Typography>
-          <Typography sx={{ textAlign: "right", width: 120 }}>
+          <Typography sx={{ textAlign: 'right', width: 120 }}>
             {totals.totalQuantity > 0
               ? (totals.totalCostIncVat / totals.totalQuantity).toFixed(2)
-              : "-"}
+              : '-'}
           </Typography>
         </Stack>
 
         <Stack direction="row" justifyContent="flex-end">
           <Typography>Quantity :</Typography>
-          <Typography sx={{ textAlign: "right", width: 120 }}>
+          <Typography sx={{ textAlign: 'right', width: 120 }}>
             {totals.totalQuantity !== currentOrder?.totalQuantity
-              ? `${(currentOrder?.totalQuantity  ?? 0 )- totals.totalQuantity} / ${currentOrder?.totalQuantity} (-${totals.totalQuantity})`
+              ? `${(currentOrder?.totalQuantity ?? 0) - totals.totalQuantity} / ${
+                  currentOrder?.totalQuantity
+                } (-${totals.totalQuantity})`
               : `${totals.totalQuantity} / ${totals.totalQuantity}`}
           </Typography>
         </Stack>
 
         <Stack direction="row" justifyContent="flex-end">
           <Typography variant="h6">Total Cost Inc Vat :</Typography>
-          <Typography variant="h6" sx={{ textAlign: "right", width: 120 }}>
+          <Typography variant="h6" sx={{ textAlign: 'right', width: 120 }}>
             {totals.totalCostIncVat.toFixed(2)} {/* Display total cost */}
           </Typography>
         </Stack>
