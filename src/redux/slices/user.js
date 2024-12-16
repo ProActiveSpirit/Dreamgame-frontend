@@ -6,11 +6,10 @@ const initialState = {
   error: null,
   users: [],
   user: null,
-  customers:[],
+  customers: [],
 };
 
 const userSlice = createSlice({
-  
   name: 'user',
   initialState,
   reducers: {
@@ -39,11 +38,18 @@ const userSlice = createSlice({
     getCustomerSuccess(state, action) {
       state.isLoading = false;
       state.customers = action.payload.customer;
-    }
+    },
   },
 });
 
-export const { startLoading, hasError, getUsersSuccess, getUserSuccess, updateUser, getCustomerSuccess } = userSlice.actions;
+export const {
+  startLoading,
+  hasError,
+  getUsersSuccess,
+  getUserSuccess,
+  updateUser,
+  getCustomerSuccess,
+} = userSlice.actions;
 
 export default userSlice.reducer;
 
@@ -53,7 +59,7 @@ export function fetchUsers() {
     dispatch(startLoading());
     try {
       const response = await axios.post('/api/users/getAll');
-      console.log("response" ,response.data.users);
+      console.log('response', response.data.users);
       dispatch(getUsersSuccess(response.data.users));
     } catch (error) {
       dispatch(hasError(error));
@@ -73,7 +79,6 @@ export function fetchUser(userId) {
   };
 }
 
-
 // Thunk to update user verification status
 export function updateAdminVerified(userId, adminVerified) {
   return async (dispatch) => {
@@ -92,7 +97,21 @@ export function getCustomers() {
   return async (dispatch) => {
     dispatch(startLoading());
     try {
-      const response = await axios.post("/api/users/getCustomer");
+      const response = await axios.post('/api/users/getCustomer');
+      dispatch(getCustomerSuccess(response.data));
+    } catch (error) {
+      dispatch(hasError(error));
+    }
+  };
+}
+
+// Thunk to add Customers information status
+export function createCustomer(data) {
+  return async (dispatch) => {
+    // dispatch(startLoading());
+    console.log('/api/users/createCustomer - 111');
+    try {
+      const response = await axios.post('/api/users/createCustomer', data);
       dispatch(getCustomerSuccess(response.data));
     } catch (error) {
       dispatch(hasError(error));
