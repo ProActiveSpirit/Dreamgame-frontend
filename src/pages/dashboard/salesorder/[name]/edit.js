@@ -33,7 +33,9 @@ export default function SalesOrderEditPage() {
   const { themeStretch } = useSettingsContext();
   const dispatch = useDispatch();
 
-  const [currentTab, setCurrentTab] = useState('PO Templates');
+  const tabs = ["Order Information", "Billing Information", "PO Templates", "Related Purchase Orders", "Activation Keys", "Packages"]
+
+  const [currentTab, setCurrentTab] = useState("PO Templates");
 
   const {
     query: { name },
@@ -42,6 +44,10 @@ export default function SalesOrderEditPage() {
   const currentOrder = useSelector((state) =>
     state.salesorder.allOrders.find((order) => order.id === name)
   );
+
+  const changeTab = (value) => {
+    setCurrentTab(value);
+  }
 
   useEffect(() => {
     dispatch(getSalesOrders());
@@ -62,7 +68,7 @@ export default function SalesOrderEditPage() {
       value: 'PO Templates',
       label: 'PO Templates',
       component: (
-        <PurchaseOrder />
+        <PurchaseOrder changeTab={changeTab} />
       ),
     },
     {
@@ -93,7 +99,7 @@ export default function SalesOrderEditPage() {
       <Container maxWidth={themeStretch ? 'lg' : false}>
         <CustomBreadcrumbs
           heading="Edit Sales Order"
-          links={[
+          links={[  
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'Sales Order',
