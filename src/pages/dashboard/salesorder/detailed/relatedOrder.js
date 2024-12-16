@@ -6,10 +6,13 @@ import { useRouter } from 'next/router';
 // @mui
 import {
   Card,
+  Stack,
   Table,
   Button,
+  Tooltip,
   TableBody,
   Container,
+  Fab,
   TableContainer,
 } from '@mui/material';
 // redux
@@ -33,14 +36,15 @@ import {
 import Scrollbar from '../../../../components/scrollbar';
 import ConfirmDialog from '../../../../components/confirm-dialog';
 import orderData from './relatedorder.json';
+import Iconify from '../../../../components/iconify';
 // sections
 import { RelatedOrderTableRow } from '../../../../sections/@dashboard/salesorder/detailed/relatedorder';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'NUMBER', label: 'SALES ORDER NUMBER', align: 'center'},
-  { id: 'PRODUCT', label: 'PRODUCT', align: 'center'},
+  { id: 'NUMBER', label: 'SALES ORDER NUMBER', align: 'center' },
+  { id: 'PRODUCT', label: 'PRODUCT', align: 'center' },
   { id: 'PROVIDER', label: 'PROVIDER', align: 'center' },
   { id: 'REGION', label: 'REGION', align: 'center' },
   { id: 'INCVAT', label: 'COST INC VAT', align: 'center' },
@@ -99,19 +103,19 @@ export default function RelatedOrderListPage() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-//   useEffect(() => {
-//     dispatch(getProducts());
-//   }, [dispatch]);
+  //   useEffect(() => {
+  //     dispatch(getProducts());
+  //   }, [dispatch]);
 
-//   useEffect(() => {
-//     if (products.length) {
-//       setTableData(products);
-//     }
-//   }, [products]);
+  //   useEffect(() => {
+  //     if (products.length) {
+  //       setTableData(products);
+  //     }
+  //   }, [products]);
 
   useEffect(() => {
     setTableData(orderData);
-  },[dispatch])
+  }, [dispatch]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -130,6 +134,10 @@ export default function RelatedOrderListPage() {
 
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
+  };
+
+  const handleOpenConfirm = () => {
+    setOpenConfirm(true);
   };
 
   const handleDeleteRow = (id) => {
@@ -169,6 +177,11 @@ export default function RelatedOrderListPage() {
     push(PATH_DASHBOARD.salesorder.view(paramCase(id)));
   };
 
+  const createPO = () => {};
+
+  const startPO = () => {};
+
+  const stopPO = () => {};
 
   return (
     <>
@@ -177,34 +190,52 @@ export default function RelatedOrderListPage() {
       </Head>
 
       <Container maxWidth={themeStretch ? false : 'mg'}>
+        <Stack spacing={1} direction={{ xs: 'column', sm: 'row' }}>
+          <Tooltip title="Get Sync Orders" arrow placement="top">
+            <Fab variant="outlined" size="small">
+              <Iconify icon="prime:sync" width={20} height={20} />
+            </Fab>
+          </Tooltip>
+          <Button
+            variant="contained"
+            color="info"
+            startIcon={<Iconify icon="foundation:plus" />}
+            onClick={createPO}
+          >
+            Create Purchase Order
+          </Button>
+          <Tooltip title="Start POs" arrow placement="top">
+            <Fab size="small" color="success">
+              <Iconify icon="codicon:debug-start" width={20} height={20} />
+            </Fab>
+          </Tooltip>
+          <Tooltip title="Stop POs" arrow placement="top">
+            <Fab size="small" color="success">
+              <Iconify icon="lets-icons:stop-fill" width={20} height={20} />
+            </Fab>
+          </Tooltip>
+          {/* <Button variant="contained" startIcon={<Iconify icon="codicon:debug-start" />} />
+          <Iconify icon="lets-icons:stop-fill" /> */}
+        </Stack>
         <Card>
-          {/* <SalesOrderTableToolbar
-            filterName={filterName}
-            filterStatus={filterStatus}
-            onFilterName={handleFilterName}
-            onFilterStatus={handleFilterStatus}
-            isFiltered={isFiltered}
-            onResetFilter={handleResetFilter}
-          /> */}
-
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {/* <TableSelectedAction
-              dense={dense}
-              numSelected={selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row.NUMBER)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
+              // dense={dense}
+              // numSelected={selected.length}
+              // rowCount={tableData.length}
+              // onSelectAllRows={(checked) =>
+              //   onSelectAllRows(
+              //     checked,
+              //     tableData.map((row) => row.id)
+              //   )
+              // }
+              // action={
+              //   <Tooltip title="Delete">
+              //     <IconButton color="primary" onClick={handleOpenConfirm}>
+              //       <Iconify icon="eva:trash-2-outline" />
+              //     </IconButton>
+              //   </Tooltip>
+              // }
             /> */}
 
             <Scrollbar>

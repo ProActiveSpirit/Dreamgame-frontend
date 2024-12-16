@@ -130,6 +130,15 @@ export default function UserListPage() {
             { name: 'Customer', href: PATH_DASHBOARD.customer.list },
             { name: 'List' },
           ]}
+          action={
+            <Button
+              href={PATH_DASHBOARD.customer.add}
+              variant="contained"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+            >
+              New Customer
+            </Button>
+          }
         />
 
         <Card>
