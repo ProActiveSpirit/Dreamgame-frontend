@@ -24,9 +24,10 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.users = action.payload;
     },
-    getUserSuccess(state, action) {
+    setUserSuccess(state, action) {
+      console.log('action.payload', action.payload);
       state.isLoading = false;
-      state.user = action.payload;
+      state.user = action.payload.email;
     },
     updateUser(state, action) {
       state.isLoading = false;
@@ -39,20 +40,29 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.customers = action.payload.customer;
     },
+    addCustomerSuccess(state, action) {
+      state.isLoading = false;
+      state.customers = action.payload.customer;
+    },
+    updateCustomerSuccess(state, action) {
+      state.isLoading = false;
+      state.customers = action.payload.customer;
+    },
+    deleteCustomerSuccess(state, action) {
+      state.isLoading = false;
+      state.customers = action.payload.customer;
+    },
   },
 });
-
 export const {
   startLoading,
   hasError,
   getUsersSuccess,
-  getUserSuccess,
+  setUserSuccess,
   updateUser,
   getCustomerSuccess,
 } = userSlice.actions;
-
 export default userSlice.reducer;
-
 // Thunks for async actions
 export function fetchUsers() {
   return async (dispatch) => {
@@ -66,7 +76,6 @@ export function fetchUsers() {
     }
   };
 }
-
 export function fetchUser(userId) {
   return async (dispatch) => {
     dispatch(startLoading());
@@ -78,7 +87,6 @@ export function fetchUser(userId) {
     }
   };
 }
-
 // Thunk to update user verification status
 export function updateAdminVerified(userId, adminVerified) {
   return async (dispatch) => {
@@ -91,12 +99,12 @@ export function updateAdminVerified(userId, adminVerified) {
     }
   };
 }
-
 // Thunk to get Customers information status
 export function getCustomers() {
   return async (dispatch) => {
     dispatch(startLoading());
     try {
+      console.log('/api/users/getCustomer');
       const response = await axios.post('/api/users/getCustomer');
       dispatch(getCustomerSuccess(response.data));
     } catch (error) {
@@ -104,7 +112,6 @@ export function getCustomers() {
     }
   };
 }
-
 // Thunk to add Customers information status
 export function createCustomer(data) {
   return async (dispatch) => {
@@ -112,7 +119,20 @@ export function createCustomer(data) {
     console.log('/api/users/createCustomer - 111');
     try {
       const response = await axios.post('/api/users/createCustomer', data);
-      dispatch(getCustomerSuccess(response.data));
+      dispatch(createCustomerSuccess(response.data));
+    } catch (error) {
+      dispatch(hasError(error));
+    }
+  };
+}
+// Thunk to update Customers information status
+export function updateCustomer(data) {
+  return async (dispatch) => {
+    // dispatch(startLoading());
+    console.log('/api/users/updateCustomer - 111');
+    try {
+      const response = await axios.post('/api/users/updateCustomer', data);
+      dispatch(updateCustomerSuccess(response.data));
     } catch (error) {
       dispatch(hasError(error));
     }

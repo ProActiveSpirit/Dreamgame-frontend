@@ -11,7 +11,7 @@ export function middleware(request) {
     return NextResponse.redirect(new URL('/auth/login', request.url));
   }
 
-  // Allow the request to proceed cv    
+  // Allow the request to proceed cv
   return NextResponse.next();
 }
 
@@ -19,7 +19,7 @@ export function middleware(request) {
 export const config = {
   matcher: [
     '/dashboard/:path*', // Protect the dashboard route and all its subroutes
-    '/profile/:path*',   // Protect the profile route and all its subroutes
-    '/settings/:path*',  // Add other protected routes as needed
+    '/profile/:path*', // Protect the profile route and all its subroutes
+    '/settings/:path*', // Add other protected routes as needed
   ],
 };

@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { paramCase } from 'change-case';
+
 // @mui
 import {
   Grid,
@@ -19,53 +21,18 @@ import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 
 import { LoadingButton } from '@mui/lab';
+// next
+import { useRouter } from 'next/router';
 // Redux
-import { useDispatch, useSelector } from '../../../redux/store';
-import { createCustomer } from '../../../redux/slices/user';
+import { useDispatch, useSelector } from '../../../../redux/store';
+import { updateCustomer, getCustomers } from '../../../../redux/slices/user';
 
 // Components
-import { useSettingsContext } from '../../../components/settings';
-import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
-import FormProvider, { RHFTextField } from '../../../components/hook-form';
-// Routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { useSettingsContext } from '../../../../components/settings';
+import FormProvider, { RHFTextField } from '../../../../components/hook-form';
 // Layouts
-import DashboardLayout from '../../../layouts/dashboard';
-import axios from '../../../utils/axios';
-
-// ----------------------------------------------------------------------
-
-// Default values for the form
-export const defaultValues = {
-  address: '',
-  city: '',
-  company: '',
-  companyInvoice: '',
-  countryCode: '',
-  defaultVatRate: '',
-  email: '',
-  facebook: '',
-  inActive: 'true',
-  linkedIn: '',
-  name: '',
-  phone: '',
-  primaryEmail: '',
-  primaryFacebook: '',
-  primaryLinkedIn: '',
-  primaryName: '',
-  primaryPhone: '',
-  primarySkype: '',
-  primarySurname: '',
-  primaryTwitter: '',
-  salesCurrency: '',
-  salesRegion: '',
-  skype: '',
-  state: '',
-  taxInformation: '',
-  twitter: '',
-  website: '',
-  zipCode: '',
-};
+import DashboardLayout from '../../../../layouts/dashboard';
+import axios from '../../../../utils/axios';
 
 // ----------------------------------------------------------------------
 
@@ -102,6 +69,50 @@ export default function SalesOrderAddPage() {
   const [salesCurrency, setSalesCurrency] = useState();
   const [countryCode, setCountryCode] = useState();
 
+  const {
+    query: { name },
+  } = useRouter();
+
+  const currentCustomer = useSelector((state) =>
+    state.user.customers.find((customer) => paramCase(customer.name) === name)
+  );
+
+  // Default values for the form
+  const defaultValues = {
+    address: currentCustomer?.address,
+    city: currentCustomer?.city,
+    company: currentCustomer?.company,
+    companyInvoice: currentCustomer?.companyInvoice,
+    countryCode: currentCustomer?.countryCode,
+    defaultVatRate: currentCustomer?.defaultVatRate,
+    email: currentCustomer?.email,
+    facebook: currentCustomer?.facebook,
+    inActive: currentCustomer?.inActive,
+    linkedIn: currentCustomer?.linkedIn,
+    name: currentCustomer?.name,
+    phone: currentCustomer?.phone,
+    primaryEmail: currentCustomer?.primaryEmail,
+    primaryFacebook: currentCustomer?.primaryFacebook,
+    primaryLinkedIn: currentCustomer?.primaryLinkedIn,
+    primaryName: currentCustomer?.primaryName,
+    primaryPhone: currentCustomer?.primaryPhone,
+    primarySkype: currentCustomer?.primarySkype,
+    primarySurname: currentCustomer?.primarySurname,
+    primaryTwitter: currentCustomer?.primaryTwitter,
+    salesCurrency: currentCustomer?.salesCurrency,
+    salesRegion: currentCustomer?.salesRegion,
+    skype: currentCustomer?.skype,
+    state: currentCustomer?.state,
+    taxInformation: currentCustomer?.taxInformation,
+    twitter: currentCustomer?.twitter,
+    website: currentCustomer?.website,
+    zipCode: currentCustomer?.zipCode,
+  };
+
+  useEffect(() => {
+    dispatch(getCustomers());
+  }, [dispatch]);
+
   useEffect(() => {
     const fetchRegionsAndCurrencies = async () => {
       try {
@@ -110,8 +121,8 @@ export default function SalesOrderAddPage() {
 
         // Extract regions data
         const fetchedRegions = regionsResponse.data.map((country) => ({
-          code: country.cca2, // ISO country code (e.g., "ES")
           name: country.name.common, // Country name (e.g., "Spain")
+          code: country.cca2, // ISO country code (e.g., "ES")
         }));
 
         // Extract unique currency codes
@@ -121,6 +132,7 @@ export default function SalesOrderAddPage() {
 
         setRegions(fetchedRegions); // Set regions state
         setCurrencies(fetchedCurrencies); // Set currencies state
+        reset(defaultValues); // Reset the form explicitly, including Autocomplete fields
       } catch (error) {
         console.error('Error fetching regions or currencies:', error);
       }
@@ -130,7 +142,7 @@ export default function SalesOrderAddPage() {
 
   const methods = useForm({
     resolver: yupResolver(FormSchema),
-    defaultValues,
+    currentCustomer,
   });
 
   const {
@@ -152,7 +164,7 @@ export default function SalesOrderAddPage() {
     };
 
     console.log('Updated Data:', updatedData); // Debug the updated data
-    dispatch(createCustomer(data));
+    dispatch(updateCustomer(data));
     await new Promise((resolve) => setTimeout(resolve, 3000)); // Simulate API call
     reset(defaultValues); // Reset the form explicitly, including Autocomplete fields
   };
@@ -160,18 +172,6 @@ export default function SalesOrderAddPage() {
   return (
     <>
       <Container maxWidth={themeStretch ? false : 'xl'}>
-        <CustomBreadcrumbs
-          heading="Customer Add"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'Customer',
-              href: PATH_DASHBOARD.customer.list,
-            },
-            { name: 'Add' },
-          ]}
-        />
-
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <Typography variant="h7" gutterBottom>
             General
@@ -209,6 +209,7 @@ export default function SalesOrderAddPage() {
                   label="Email"
                   InputProps={{ type: 'string' }}
                   size="small"
+                  disabled
                   error={!!errors.email}
                   helperText={errors.email?.message}
                 />
@@ -460,7 +461,7 @@ export default function SalesOrderAddPage() {
             variant="contained"
             loading={isSubmitting}
           >
-            Submit to Add
+            Submit to Save
           </LoadingButton>
         </FormProvider>
       </Container>

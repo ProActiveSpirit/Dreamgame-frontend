@@ -27,7 +27,7 @@ import { saveRelatedPurchaseOrder } from '../../../../redux/slices/salesorder';
 // _mock_
 import _mock from '../../../../_mock';
 
-export default function BillingInformation({ changeTab, variant }) {
+export default function BillingInformation({ changeTab, variant, setGeneratedPOs }) {
   const [selectedRegions, setSelectedRegions] = useState([top100Films[1]]);
   const [exchangeRates, setExchangeRates] = useState({});
   const [loading, setLoading] = useState(true);
@@ -63,23 +63,58 @@ export default function BillingInformation({ changeTab, variant }) {
   // Calculate initial rows when component mounts or when dependencies change
   const generateEmpty = () => {
     if (!loading && exchangeRates) {
-      const initialRows = selectedRegions.map((region, index) => ({
-        id: _mock.id(index),
-        Region: region.title,
-        Product: currentOrder?.product?.name,
-        ProductId: currentOrder?.product?.id,
-        CostIncVat: parseFloat(
-          (currentOrder?.salesExtVat ?? 0 * (exchangeRates[currencies[region.title]] || 1)).toFixed(
-            2
-          )
-        ), // Use nullish coalescing to default to 0
-        CostCurrency: currencies[region.title], // Keep currency separate for calculations
-        Quantity: 0, // Start with 0 quantity
-        TotalCostIncVat: 0, // Start with 0 total cost
-      }));
+      const initialRows = selectedRegions.map((region, index) => {
+        const quantity = currentOrder?.totalQuantity 
+          ? Math.floor(currentOrder.totalQuantity / selectedRegions.length) 
+          : 0;
+        const costIncVat = parseFloat(
+          (currentOrder?.salesExtVat ?? 0 * (exchangeRates[currencies[region.title]] || 1)).toFixed(2)
+        );
+        return {
+          id: currentOrder.id,
+          Region: region.title,
+          Product: currentOrder?.product?.name,
+          ProductId: currentOrder?.product?.id,
+          CostIncVat: costIncVat,
+          CostCurrency: currencies[region.title],
+          Quantity: quantity,
+          TotalCostIncVat: (quantity * costIncVat).toFixed(2),
+        };
+      });
 
       setRows(initialRows);
-      calculateTotals(initialRows); // Initialize totals
+      calculateTotals(initialRows);
+    }
+  };
+
+  const generateAutoCalculate = () => {
+    if (!loading && exchangeRates) {
+      const eachQuantity = currentOrder?.totalQuantity 
+        ? Math.floor(currentOrder.totalQuantity / selectedRegions.length)
+        : 0;
+
+      const initialRows = selectedRegions.map((region, index) => {
+        const costIncVat = parseFloat(
+          (currentOrder?.salesExtVat ?? 0 * (exchangeRates[currencies[region.title]] || 1)).toFixed(2)
+        );
+        const quantity = index === 0
+          ? (currentOrder?.totalQuantity ?? 0) - eachQuantity * (selectedRegions.length - 1)
+          : eachQuantity;
+        
+        return {
+          id: currentOrder.id,
+          Region: region.title,
+          Product: currentOrder?.product?.name,
+          ProductId: currentOrder?.product?.id,
+          CostIncVat: costIncVat,
+          CostCurrency: currencies[region.title],
+          Quantity: quantity,
+          TotalCostIncVat: (quantity * costIncVat).toFixed(2),
+        };
+      });
+
+      setRows(initialRows);
+      calculateTotals(initialRows);
     }
   };
 
@@ -188,7 +223,7 @@ export default function BillingInformation({ changeTab, variant }) {
     fetchExchangeRates();
   }, []);
 
-  const generatePO = () => {
+  const generatePO = () =>   {
     setOpenConfirm(true);
   };
 
@@ -197,6 +232,22 @@ export default function BillingInformation({ changeTab, variant }) {
   };
 
   const onAction = () => {
+    // Transform rows data to match RelatedOrder format
+    const transformedRows = rows.map((row) => ({
+      NUMBER: row.id, // Generate unique ID
+      PRODUCT: row.Product,
+      PROVIDER: 'Dreamgame', // You can customize this
+      REGION: row.Region,
+      INCVAT: `${row.CostIncVat} ${row.CostCurrency}`,
+      QUANTITY: row.Quantity,
+      STOCKING: 'Pending', // You can customize this
+      TOTALINCVAT: `${row.TotalCostIncVat} ${row.CostCurrency}`,
+      JOB: 'false',
+      STATUS: 'Processing',
+      DATE: currentOrder.startDate + ' \n ' + currentOrder.endDate, // You can customize this
+    }));
+
+    setGeneratedPOs(transformedRows);
     setOpenConfirm(false);
     changeTab('Related Purchase Orders');
   };
@@ -293,6 +344,7 @@ export default function BillingInformation({ changeTab, variant }) {
               color="warning"
               size="large"
               startIcon={<Iconify icon="eva:save-fill" />}
+              onClick={generateAutoCalculate}
             >
               Save & Generate Auto-Calculated
             </Button>

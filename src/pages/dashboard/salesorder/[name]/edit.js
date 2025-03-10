@@ -36,6 +36,7 @@ export default function SalesOrderEditPage() {
   const tabs = ["Order Information", "Billing Information", "PO Templates", "Related Purchase Orders", "Activation Keys", "Packages"]
 
   const [currentTab, setCurrentTab] = useState("PO Templates");
+  const [generatedPOs, setGeneratedPOs] = useState([]);
 
   const {
     query: { name },
@@ -57,7 +58,7 @@ export default function SalesOrderEditPage() {
     {
       value: 'Order Information',
       label: 'Order Information',
-      component: <OrderInformation variant = 'outlined'/>,
+      component: <OrderInformation variant='outlined'/>,
     },
     {
       value: 'Billing Information',
@@ -68,14 +69,17 @@ export default function SalesOrderEditPage() {
       value: 'PO Templates',
       label: 'PO Templates',
       component: (
-        <PurchaseOrder changeTab={changeTab} />
+        <PurchaseOrder 
+          changeTab={changeTab} 
+          setGeneratedPOs={setGeneratedPOs}
+        />
       ),
     },
     {
       value: 'Related Purchase Orders',
       label: 'Related Purchase Orders',
       component: (
-        <RelatedOrder />
+        <RelatedOrder generatedPOs={generatedPOs} />
       ),
     },
     {

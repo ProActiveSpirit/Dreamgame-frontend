@@ -1,7 +1,16 @@
 import { useEffect } from 'react';
 import { paramCase } from 'change-case';
 // @mui
-import { Box, Radio, TextField, Tooltip, RadioGroup, FormControlLabel, Container, Button } from '@mui/material';
+import {
+  Box,
+  Radio,
+  TextField,
+  Tooltip,
+  RadioGroup,
+  FormControlLabel,
+  Container,
+  Button,
+} from '@mui/material';
 import { Masonry } from '@mui/lab'; // Ensure this import is correct based on the version you're using
 // next
 import { useRouter } from 'next/router';
@@ -14,7 +23,12 @@ import { useSelector } from '../../../../../redux/store';
 
 export default function ProductInformation() {
   const COLORS = ['primary', 'warning', 'info', 'secondary'];
-  const Status = ['generated keys', 'pending keys to generate', 'sold keys', 'sold keys pending generations'];
+  const Status = [
+    'generated keys',
+    'pending keys to generate',
+    'sold keys',
+    'sold keys pending generations',
+  ];
 
   const {
     query: { name },
@@ -41,15 +55,9 @@ export default function ProductInformation() {
     return <p>Product not found.</p>; // Handle the case when the product is not found
   }
 
-  console.log('Current Product:', currentProduct);
-
   return (
     <>
-      <Button
-        variant="contained"
-        color="info"
-        startIcon={<Iconify icon="eva:edit-fill" />}
-      >
+      <Button variant="contained" color="info" startIcon={<Iconify icon="eva:edit-fill" />}>
         Edit Product
       </Button>
       <Button

@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { Tab, Card, Tabs, Container, Box } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
-// import { getProducts } from '../../../../redux/slices/product';
+import { getPurchaseOrders } from '../../../../redux/slices/purchaseorder';
 // routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 // layouts
@@ -27,20 +27,21 @@ SalesOrderEditPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayou
 
 export default function SalesOrderEditPage() {
   const { themeStretch } = useSettingsContext();
+  const dispatch = useDispatch();
 
   const [currentTab, setCurrentTab] = useState('Stock Detailed');
-
-  // const dispatch = useDispatch();
-
   const {
     query: { name },
   } = useRouter();
 
-  const currentProduct = SaleOrders.find((order) => paramCase(order.NUMBER) === name);
+  const currentOrder = useSelector((state) =>
+    state.purchaseorder.allOrders.find((order) => order.id === name)
+  );
 
-  // useEffect(() => {
-  //   dispatch(getProducts());
-  // }, [dispatch]);
+  useEffect(() => {
+    dispatch(getPurchaseOrders());
+  }, [dispatch]);
+
   const TABS = [
 
     {
@@ -66,7 +67,7 @@ export default function SalesOrderEditPage() {
               name: 'Purchase Order',
               href: PATH_DASHBOARD.purchaseorder.list,
             },
-            { name: currentProduct?.NUMBER },
+            { name: currentOrder?.id },
           ]}
         />
         <Card
