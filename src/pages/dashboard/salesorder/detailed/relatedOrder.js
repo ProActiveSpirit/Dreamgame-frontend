@@ -39,6 +39,7 @@ import orderData from './relatedorder.json';
 import Iconify from '../../../../components/iconify';
 // sections
 import { RelatedOrderTableRow } from '../../../../sections/@dashboard/salesorder/detailed/relatedorder';
+import PropTypes from 'prop-types';
 
 // ----------------------------------------------------------------------
 
@@ -68,7 +69,7 @@ RelatedOrderListPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLay
 
 // ----------------------------------------------------------------------
 
-export default function RelatedOrderListPage() {
+export default function RelatedOrderListPage({ generatedPOs }) {
   const {
     dense,
     page,
@@ -114,8 +115,13 @@ export default function RelatedOrderListPage() {
   //   }, [products]);
 
   useEffect(() => {
-    setTableData(orderData);
-  }, [dispatch]);
+    if (generatedPOs && generatedPOs.length > 0) {
+      // Merge with existing data or replace completely
+      setTableData((prevData) => [...generatedPOs, ...prevData]);
+    } else {
+      setTableData(orderData); // Your existing fallback data
+    }
+  }, [generatedPOs]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -349,3 +355,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
 
   return inputData;
 }
+
+RelatedOrderListPage.propTypes = {
+  generatedPOs: PropTypes.array,
+};

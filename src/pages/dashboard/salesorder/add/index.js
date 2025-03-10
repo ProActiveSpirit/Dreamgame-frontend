@@ -57,7 +57,6 @@ SalesOrderAddPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout
 
 // Validation schema using Yup
 const FormSchema = Yup.object().shape({
-  Customer: Yup.string().required('Customer is required'),
   Product: Yup.string().required('Product is required'),
   startDate: Yup.date().required('Start Date is required').typeError('Invalid date'),
   orderDate: Yup.date().required('Order Date is required').typeError('Invalid date'),
@@ -161,7 +160,7 @@ export default function SalesOrderAddPage() {
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <Grid container justifyContent="left" alignItems="left">
             <Grid item xs={12} md={11}>
-              <Stack spacing={3}>
+              <Stack spacing={5}>
                 {/* Order Date */}
                 <DateTimePicker
                   renderInput={(props) => <TextField {...props} fullWidth />}
@@ -169,8 +168,7 @@ export default function SalesOrderAddPage() {
                   value={watch('orderDate')}
                   onChange={(newValue) => setValue('orderDate', newValue)}
                 />
-                {/* Customer Field */}
-                <Autocomplete
+                {/* <Autocomplete
                   fullWidth
                   options={customers || []} // Ensure options is always an array
                   getOptionLabel={(option) => (option?.name ? option.name : '')} // Safely access name
@@ -187,7 +185,7 @@ export default function SalesOrderAddPage() {
                       helperText={errors?.Customer?.message} // Show error message if available
                     />
                   )}
-                />
+                /> */}
                 {/* Product Field */}
                 <Autocomplete
                   fullWidth

@@ -20,6 +20,7 @@ import {
   AccountSocialLinks,
   AccountNotifications,
   AccountChangePassword,
+  AccountSettings,
 } from '../../../sections/@dashboard/user/account';
 
 // ----------------------------------------------------------------------
@@ -52,23 +53,30 @@ export default function UserAccountPage() {
         />
       ),
     },
-    {
-      value: 'notifications',
-      label: 'Notifications',
-      icon: <Iconify icon="eva:bell-fill" />,
-      component: <AccountNotifications />,
-    },
-    {
-      value: 'social_links',
-      label: 'Social links',
-      icon: <Iconify icon="eva:share-fill" />,
-      component: <AccountSocialLinks socialLinks={_userAbout.socialLinks} />,
-    },
+   
+    // {
+    //   value: 'notifications',
+    //   label: 'Notifications',
+    //   icon: <Iconify icon="eva:bell-fill" />,
+    //   component: <AccountNotifications />,
+    // },
+    // {
+    //   value: 'social_links',
+    //   label: 'Social links',
+    //   icon: <Iconify icon="eva:share-fill" />,
+    //   component: <AccountSocialLinks socialLinks={_userAbout.socialLinks} />,
+    // },
     {
       value: 'change_password',
       label: 'Change password',
       icon: <Iconify icon="ic:round-vpn-key" />,
       component: <AccountChangePassword />,
+    },
+    {
+      value: 'Security Settings',
+      label: 'Security Settings',
+      icon: <Iconify icon="ep:setting" />,
+      component: <AccountSettings />,
     },
   ];
 

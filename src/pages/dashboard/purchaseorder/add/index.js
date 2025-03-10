@@ -33,7 +33,8 @@ import FormProvider, { RHFTextField } from '../../../../components/hook-form';
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 // Layouts
 import DashboardLayout from '../../../../layouts/dashboard';
-
+// Custom imports
+import RegionPrice from '../../e-commerce/product/detailed/regionPrice';
 
 // Default values for the form
 export const defaultValues = {
@@ -58,9 +59,7 @@ PurchaseOrderAddPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLay
 // Validation schema using Yup
 const FormSchema = Yup.object().shape({
   Region: Yup.array()
-    .of(Yup.object().shape({ title: Yup.string().required() })) // Ensure each option has a title
-    .required('Region is required')
-    .min(1, 'At least one region must be selected'), // Require at least one region
+    .required('Region is required'),
   Quantity: Yup.number()
     .required('Quantity is required')
     .min(1, 'Quantity must be at least 1')
@@ -132,11 +131,37 @@ export default function PurchaseOrderAddPage() {
     formState: { isSubmitting, errors },
   } = methods;
 
-  // Watch fields for dynamic updates
   const costExtVat = watch('costExtVat');
   const costVat = watch('costVat');
-  // const Quantity = watch('Quantity');
+  const Quantity = watch('Quantity');
 
+  useEffect(() => {
+    const subscription = watch((value, { name }) => {
+      // Check if the changed field is one of the cost fields
+      if (['costExtVat', 'costVat', 'costIncVat'].includes(name)) {
+        const product = value.Product;
+        const costExtVat = parseFloat(value.costExtVat) || 0;
+        const costVat = parseFloat(value.costVat) || 0;
+        const costIncVat = parseFloat(value.costIncVat) || 0;
+
+        if (name === 'costExtVat' && costVat) {
+          const calculatedIncVat = costExtVat * (1 + costVat / 100);
+          setValue('costIncVat', calculatedIncVat.toFixed(2));
+        } else if (name === 'costVat') {
+          if (costExtVat) {
+            const calculatedIncVat = costExtVat * (1 + costVat / 100);
+            setValue('costIncVat', calculatedIncVat.toFixed(2));
+          } else if (costIncVat) {
+            const calculatedExtVat = costIncVat / (1 + costVat / 100);
+            setValue('costExtVat', calculatedExtVat.toFixed(2));
+          }
+        }
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [watch, setValue]);
+  
 
   // Update purchaseIncVat dynamically
   useEffect(() => {
@@ -176,7 +201,7 @@ export default function PurchaseOrderAddPage() {
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container justifyContent="left" alignItems="center" spacing={5}>
       {/* Order Information */}
-      <Grid item xs={12} md={8}>
+      <Grid item xs={12} md={12}>
         <Box sx={{ padding: 2, border: '1px solid #e0e0e0', borderRadius: 2, marginBottom: 3 }}>
           <Typography variant="h7" gutterBottom>
             Order Information
@@ -184,19 +209,19 @@ export default function PurchaseOrderAddPage() {
           <Divider sx={{ mb: 2 }} />
           <Stack spacing={3}>
             <TextField name="friendlyName" variant="outlined" fullWidth label="Friendly Name" size="small" />
-            <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
-              <Autocomplete
+            <Stack spacing={2} direction={{ xs: 'column', sm: 'column' }}>
+              {/* <Autocomplete
                 fullWidth 
                 options={allOrders}
                 getOptionLabel={(option) => `${option?.name || ''} (${option?.sku || ''})`}
                 value={allOrders.find((order) => order.id === watch('Product')) || null}
-                isOptionEqualToValue={(option, value) => option.name === value?.name}
+                isOptionEqualToValue={(option, value) => option.name === value?.product?.name}
                 onChange={(event, newValue) => setValue('Product', newValue?.id || '')}
                 renderInput={(params) => (
                   <TextField {...params} label="Related Sales Order" error={!!errors.Product} helperText={errors.Product?.message} />
                 )}
                 size="small"
-              />
+              /> */}
               <Autocomplete
                 fullWidth
                 options={products}
@@ -209,33 +234,36 @@ export default function PurchaseOrderAddPage() {
                 )}
                 size="small"
               />
+              {watch('Product') ? 
+                <RegionPrice price={products.find((product) => product.id === watch('Product')).price} SalesVat={0}/>: <></>}
             </Stack>
             <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
               <Autocomplete 
                 fullWidth
-                options={products}
-                getOptionLabel={(option) => `${option?.name || ''} (${option?.sku || ''})`}
-                value={products.find((product) => product.id === watch('Product')) || null}
-                isOptionEqualToValue={(option, value) => option.name === value?.name}
-                onChange={(event, newValue) => setValue('Product', newValue?.id || '')}
+                options={['Nexway', 'Epay', 'Nintendo']}
+                getOptionLabel={(option) => `${option || ''}`}
+                value={watch('Vendor') || null}
+                isOptionEqualToValue={(option, value) => option === value}
+                onChange={(event, newValue) => setValue('Vendor', newValue)}
                 renderInput={(params) => (
-                  <TextField {...params} label="Vendor" error={!!errors.Product} helperText={errors.Product?.message} />
+                  <TextField {...params} label="Vendor" error={!!errors.Vendor} helperText={errors.Vendor?.message} />
                 )}
                 size="small"
               />
               <Autocomplete
                 fullWidth
-                options={products}
-                getOptionLabel={(option) => `${option?.name || ''} (${option?.sku || ''})`}
-                value={products.find((product) => product.id === watch('salesOrder')) || null}
-                isOptionEqualToValue={(option, value) => option.name === value?.name}
-                onChange={(event, newValue) => setValue('salesOrder', newValue?.id || '')}
+                multiple // Allow multiple region selection
+                options={['NO', 'BE', 'DE', 'ES', 'FR', 'NL', 'PT', 'PL', 'GB']} // Region options
+                value={watch('Region') || []}
+                isOptionEqualToValue={(option, value) => option === value}
+                onChange={(event, newValue) => setValue('Region', newValue)}
                 renderInput={(params) => (
-                  <TextField {...params} label="Region" error={!!errors.salesOrder} helperText={errors.salesOrder?.message} />
+                  <TextField {...params} label="Region" error={!!errors.Region} helperText={errors.Region?.message} />
                 )}
                 size="small"
               />
             </Stack>
+            <TextField name="Quantity" variant="outlined" fullWidth label="Quantity" size="small" />
           </Stack>
         </Box>
       </Grid>
@@ -346,7 +374,7 @@ export default function PurchaseOrderAddPage() {
         </Grid>
       </Grid>
       {/* Summary Information */}
-      <Grid key={5} item xs={6} md={10}>
+      <Grid key={5} item xs={6} md={12}>
         <Box sx={{ padding: 2, border: '1px solid #e0e0e0', borderRadius: 2, marginBottom: 3 }}>
           <Typography variant="h7" gutterBottom>
             Purchase Order Summary Information

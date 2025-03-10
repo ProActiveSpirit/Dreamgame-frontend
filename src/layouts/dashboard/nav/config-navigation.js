@@ -50,14 +50,14 @@ export const useNavConfig = () => {
               { title: 'list', path: PATH_DASHBOARD.user.list },
             ],
           }] : []),
-          {
-            title: 'CUSTOMERS',
-            path: PATH_DASHBOARD.customer.root,
-            icon: ICONS.user,
-            children: [
-              { title: 'List', path: PATH_DASHBOARD.customer.list },
-            ],
-          },
+          // {
+          //   title: 'CUSTOMERS',
+          //   path: PATH_DASHBOARD.customer.root,
+          //   icon: ICONS.user,
+          //   children: [
+          //     { title: 'List', path: PATH_DASHBOARD.customer.list },
+          //   ],
+          // },
           {
             title: 'CATALOG',
             path: PATH_DASHBOARD.eCommerce.root,

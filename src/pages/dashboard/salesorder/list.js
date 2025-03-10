@@ -51,7 +51,7 @@ import { SalesOrderTableRow, SalesOrderTableToolbar } from '../../../sections/@d
 
 const TABLE_HEAD = [
   { id: 'id', label: 'SALES ORDER NUMBER', align: 'center'},
-  { id: 'CUSTOMER', label: 'CUSTOMER', align: 'center' },
+  // { id: 'CUSTOMER', label: 'CUSTOMER', align: 'center' },
   { id: 'PRODUCT', label: 'PRODUCT', align: 'center' , width: 300 },
   { id: 'PRICE', label: 'PRODUCT PRICE', align: 'center' },
   { id: 'QUANTITY', label: 'QUANTITY', align: 'center' },
@@ -121,9 +121,10 @@ export default function SalesOrderListPage() {
         createdOn:orderData.createdOn,
         status:orderData.status,
         N_A:orderData.N_A,
-        customer: orderData.customer?.name || "Unknown Customer",
+        // customer: orderData.customer?.name || "Unknown Customer",
         product: orderData.product?.name || "Unknown Product",
       }));
+      console.log("extractedData"  ,extractedData);
       setTableData(extractedData);
     }
   }, [allOrders]);

@@ -45,9 +45,9 @@ import ThemeLocalization from '../locales';
 // components
 import { StyledChart } from '../components/chart';
 import ProgressBar from '../components/progress-bar';
-import SnackbarProvider from '../components/snackbar';
 import { MotionLazyContainer } from '../components/animate';
 import { ThemeSettings, SettingsProvider } from '../components/settings';
+import { SnackbarProvider, closeSnackbar } from 'notistack';
 
 // Check our docs
 // https://docs.minimals.cc/authentication/js-version
@@ -86,7 +86,24 @@ export default function MyApp(props) {
                 <ThemeProvider>
                   <ThemeSettings>
                     <ThemeLocalization>
-                      <SnackbarProvider>
+                      <SnackbarProvider
+                        maxSnack={3}
+                        autoHideDuration={3000}
+                        anchorOrigin={{
+                          vertical: 'top',
+                          horizontal: 'right',
+                        }}
+                        action={(key) => (
+                          <iconify-icon 
+                            icon="lets-icons:close-ring" 
+                            width="24" 
+                            height="24"
+                            onClick={() => closeSnackbar(key)}
+                            sx={{ color: 'white' }}
+                          >
+                          </iconify-icon>
+                        )}  
+                      >
                         <StyledChart />
                         <ProgressBar />
                         {getLayout(<Component {...pageProps} />)}
