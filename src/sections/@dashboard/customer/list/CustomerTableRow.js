@@ -1,18 +1,9 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux'; // Import useDispatch
-import {
-  Switch,
-  Button,
-  Checkbox,
-  TableRow,
-  MenuItem,
-  TableCell,
-} from '@mui/material';
+import { Link, Button, Checkbox, TableRow, MenuItem, TableCell, IconButton } from '@mui/material';
 import Iconify from '../../../../components/iconify';
 import MenuPopover from '../../../../components/menu-popover';
 import ConfirmDialog from '../../../../components/confirm-dialog';
-import { updateAdminVerified } from '../../../../redux/slices/user'; // Import the thunk
 
 CustomerTableRow.propTypes = {
   row: PropTypes.object,
@@ -23,7 +14,7 @@ CustomerTableRow.propTypes = {
 };
 
 export default function CustomerTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
-  const { id, name, email, ip , website,region } = row;
+  const { id, name, email, ip, website, region } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
@@ -51,7 +42,17 @@ export default function CustomerTableRow({ row, selected, onEditRow, onSelectRow
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>
 
-        <TableCell align="center">{name}</TableCell>
+        <TableCell align="center">
+          <Link
+            noWrap
+            color="inherit"
+            variant="subtitle2"
+            onClick={() => onEditRow()}
+            sx={{ cursor: 'pointer' }}
+          >
+            {name}
+          </Link>
+        </TableCell>
 
         <TableCell align="center" sx={{ textTransform: 'capitalize' }}>
           {email}
@@ -64,6 +65,11 @@ export default function CustomerTableRow({ row, selected, onEditRow, onSelectRow
         </TableCell>
         <TableCell align="center" sx={{ textTransform: 'capitalize' }}>
           {region}
+        </TableCell>
+        <TableCell align="center" width={50}>
+          <IconButton onClick={() => onEditRow()}>
+            <Iconify icon="eva:edit-fill" />
+          </IconButton>
         </TableCell>
       </TableRow>
 

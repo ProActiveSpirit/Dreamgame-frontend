@@ -77,7 +77,7 @@ export default function SalesOrderTableRow({
             </Link>
           </Stack>
         </TableCell>
-        <TableCell align="center">{customer}</TableCell>
+        {/* <TableCell align="center">{customer}</TableCell> */}
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>

@@ -55,6 +55,7 @@ export const PATH_DASHBOARD = {
     root: path(ROOTS_DASHBOARD, '/customer'),
     list: path(ROOTS_DASHBOARD, '/customer/list'),
     add: path(ROOTS_DASHBOARD, '/customer/add'),
+    edit: (name) => path(ROOTS_DASHBOARD, `/customer/${name}/edit`),
   },
   mail: {
     root: path(ROOTS_DASHBOARD, '/mail'),
@@ -107,20 +108,20 @@ export const PATH_DASHBOARD = {
     root: path(ROOTS_DASHBOARD, '/purchaseorder'),
     list: path(ROOTS_DASHBOARD, '/salesorder/list'),
     add: path(ROOTS_DASHBOARD, '/salesorder/add'),
-    view: (name) => path(ROOTS_DASHBOARD, `/salesorder/${name}/edit`)
+    view: (name) => path(ROOTS_DASHBOARD, `/salesorder/${name}/edit`),
   },
   purchaseorder: {
     list: path(ROOTS_DASHBOARD, '/purchaseorder/list'),
     add: path(ROOTS_DASHBOARD, '/purchaseorder/add'),
-    view: (name) => path(ROOTS_DASHBOARD, `/purchaseorder/${name}/edit`)
+    view: (name) => path(ROOTS_DASHBOARD, `/purchaseorder/${name}/edit`),
   },
   report: {
     root: path(ROOTS_DASHBOARD, '/report/general'),
     bestseller: path(ROOTS_DASHBOARD, '/report/bestseller'),
     sales: path(ROOTS_DASHBOARD, '/report/salesreport'),
     purchase: path(ROOTS_DASHBOARD, '/report/purchase'),
-    monthlypurchase: path(ROOTS_DASHBOARD, '/report/monthlypurchase')
-  }
+    monthlypurchase: path(ROOTS_DASHBOARD, '/report/monthlypurchase'),
+  },
 };
 
 export const PATH_DOCS = {

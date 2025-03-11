@@ -1,6 +1,5 @@
 import { paramCase } from 'change-case';
 import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux'; // Import Redux hooks
 import Head from 'next/head';
 // import NextLink from 'next/link';
 import { useRouter } from 'next/router';
@@ -14,6 +13,11 @@ import {
   IconButton,
   TableContainer,
 } from '@mui/material';
+// redux
+import { useSelector, useDispatch } from 'react-redux'; // Import Redux hooks
+import { getCustomers } from '../../../redux/slices/user';
+
+// routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 import DashboardLayout from '../../../layouts/dashboard';
 import Iconify from '../../../components/iconify';
@@ -32,7 +36,6 @@ import {
   TablePaginationCustom,
 } from '../../../components/table';
 import { CustomerTableRow } from '../../../sections/@dashboard/customer/list';
-import { getCustomers } from '../../../redux/slices/user';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'center' },
@@ -113,7 +116,7 @@ export default function UserListPage() {
   };
 
   const handleEditRow = (id) => {
-    push(PATH_DASHBOARD.user.edit(paramCase(id)));
+    push(PATH_DASHBOARD.customer.edit(paramCase(id)));
   };
 
   return (
@@ -255,8 +258,8 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterRo
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter(
-      (user) => user.name.toLowerCase().includes(filterName.toLowerCase())
+    inputData = inputData.filter((user) =>
+      user.name.toLowerCase().includes(filterName.toLowerCase())
     );
   }
 

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+// next
+import { useRouter } from 'next/router';
 // @mui
 import { TextField, Stack, Container, Button ,Autocomplete} from '@mui/material';
 import { Masonry } from '@mui/lab';
@@ -21,6 +23,14 @@ export default function StockDetailed({ variant = 'outlined' }) {
   const dispatch = useDispatch();
 
   const { allOrders, isLoading } = useSelector((state) => state.purchaseorder);
+
+  const {
+    query: { name },
+  } = useRouter();
+
+  const currentOrder = useSelector((state) =>
+    state.purchaseorder.allOrders.find((order) => order.id === name)
+  );
 
   useEffect(() => {
     dispatch(getPurchaseOrders());
@@ -66,7 +76,7 @@ export default function StockDetailed({ variant = 'outlined' }) {
             required
             size="small"
             label="Provider"
-            defaultValue="6"
+            defaultValue={currentOrder?.product?.provider}
           />
         </Stack>
         <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
@@ -113,7 +123,7 @@ export default function StockDetailed({ variant = 'outlined' }) {
           >
             Generate Orders
           </Button>
-          <p>Total generated: 0</p>
+          <p style={{marginTop:"20px"}}>Total generated: 0</p>
         </Stack>
         <Stack spacing={1} direction={{ xs: 'column', sm: 'row' }}>
           <TextField
