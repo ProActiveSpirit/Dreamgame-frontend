@@ -61,9 +61,14 @@ export default function AuthLoginForm() {
     try {
       await login(data.email, data.password);
       setTempUserData(data);
-      setShowGoogleAuthModal(true);
       sessionStorage.setItem('userEmail', data.email);
-      // router.push('/dashboard/app');
+
+      const response = await get2FAStatus();
+      console.log("response" , response);
+      if(response.success)
+        setShowGoogleAuthModal(true);
+      else
+        router.push('/dashboard/app');
     } catch (error) {
       console.error(error);
       reset();

@@ -33,8 +33,6 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
   const [loading, setLoading] = useState(true);
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const regions = ['NO', 'BE', 'DE', 'ES', 'FR', 'NL', 'PT', 'PL', 'GB'];
-
   const {
     query: { name },
   } = useRouter();
@@ -234,17 +232,17 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
   const onAction = () => {
     // Transform rows data to match RelatedOrder format
     const transformedRows = rows.map((row) => ({
-      NUMBER: row.id, // Generate unique ID
+      NUMBER: row.id,
       PRODUCT: row.Product,
-      PROVIDER: 'Dreamgame', // You can customize this
+      PROVIDER: 'Dreamgame',
       REGION: row.Region,
       INCVAT: `${row.CostIncVat} ${row.CostCurrency}`,
       QUANTITY: row.Quantity,
-      STOCKING: 'Pending', // You can customize this
+      STOCKING: 'Pending',
       TOTALINCVAT: `${row.TotalCostIncVat} ${row.CostCurrency}`,
       JOB: 'false',
       STATUS: 'Processing',
-      DATE: currentOrder.startDate + ' \n ' + currentOrder.endDate, // You can customize this
+      DATE: `${currentOrder.startDate}\n${currentOrder.endDate}`,
     }));
 
     setGeneratedPOs(transformedRows);

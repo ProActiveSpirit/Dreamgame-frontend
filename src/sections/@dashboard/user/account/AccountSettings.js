@@ -26,6 +26,7 @@ export default function AccountSettings() {
   const [is2FAEnabled, setIs2FAEnabled] = useState(false);
   const [showVerifyModal, setShowVerifyModal] = useState(false);
   const [disableToken, setDisableToken] = useState('');
+  const [otpauth_url, setOtpauth_url] = useState('');
 
   // Use useCallback for status check
   const checkStatus = useCallback(async () => {
@@ -97,6 +98,7 @@ export default function AccountSettings() {
         const response = await setup2FA();
         setQRCodeData(response.data.qrCode);
         setShowQRModal(true);
+        setOtpauth_url(response.data.otpauth_url);
       } else {
         setShowVerifyModal(true);
       }
@@ -297,8 +299,24 @@ export default function AccountSettings() {
                 priority
               />
             )}
+            
             </Box>
-
+            {otpauth_url && (
+              <Typography
+                variant="body2"
+                sx={{
+                  maxWidth: '450px',
+                  overflow: 'hidden',
+                  display: '-webkit-box',
+                  WebkitBoxOrient: 'vertical',
+                  WebkitLineClamp: 4,
+                  textOverflow: 'ellipsis',
+                  wordBreak: 'break-word',
+                }}
+              >
+                {otpauth_url}
+              </Typography>
+            )}
             <Typography variant="body2">
               2. Enter the verification code from your authenticator app
             </Typography>
