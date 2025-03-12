@@ -28,13 +28,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 // components
 import Iconify from '../../components/iconify';
 import FormProvider, { RHFTextField } from '../../components/hook-form';
-import {
-  verify2FA,
-  useEnable2FA,
-  setup2FA,
-  disable2FA,
-  get2FAStatus,
-} from '../../auth/security-utils';
+import { verify2FA, get2FAStatus } from '../../auth/security-utils';
 // redux
 import { setUserSuccess } from '../../redux/slices/user';
 
