@@ -57,10 +57,9 @@ export const disable2FA = async (token) => {
 };
 
 // Alternative version using hooks in a component
-export const Enable2FA = async (token) => {
+export const enable2FA = async (token) => {
   const userEmail = sessionStorage.getItem('userEmail');
   try {
-    console.log('token', token);
     const response = await axios.post('/api/auth/enable-2fa', {
       email: userEmail,
       token,

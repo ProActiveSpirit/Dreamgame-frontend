@@ -24,7 +24,7 @@ import FormProvider, { RHFSwitch } from '../../../../components/hook-form';
 import { useAuthContext } from '../../../../auth/useAuthContext';
 import {
   verify2FA,
-  Enable2FA,
+  enable2FA,
   setup2FA,
   disable2FA,
   get2FAStatus,
@@ -121,7 +121,7 @@ export default function AccountSettings() {
   const handleVerify2FA = async () => {
     try {
       setLoading(true);
-      await Enable2FA(verificationCode);
+      await enable2FA(verificationCode);
       setIs2FAEnabled(true);
       setShowQRModal(false);
       setVerificationCode('');
