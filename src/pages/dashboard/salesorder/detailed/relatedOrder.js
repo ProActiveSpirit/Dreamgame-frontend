@@ -1,8 +1,10 @@
-import { paramCase } from 'change-case';
-import { useState, useEffect } from 'react';
 // next
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+// third party
+import { paramCase } from 'change-case';
+import PropTypes from 'prop-types';
+import { useState, useEffect } from 'react';
 // @mui
 import {
   Card,
@@ -35,11 +37,11 @@ import {
 } from '../../../../components/table';
 import Scrollbar from '../../../../components/scrollbar';
 import ConfirmDialog from '../../../../components/confirm-dialog';
-import orderData from './relatedorder.json';
 import Iconify from '../../../../components/iconify';
+// data
+import orderData from './relatedorder.json';
 // sections
 import { RelatedOrderTableRow } from '../../../../sections/@dashboard/salesorder/detailed/relatedorder';
-import PropTypes from 'prop-types';
 
 // ----------------------------------------------------------------------
 

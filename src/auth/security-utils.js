@@ -1,13 +1,12 @@
 import axios from '../utils/axios';
 import { store } from '../redux/store';
 
-
 export const get2FAStatus = async () => {
   try {
-    const userEmail = sessionStorage.getItem("userEmail");
-    console.log("userEmail", userEmail);
+    const userEmail = sessionStorage.getItem('userEmail');
+    console.log('userEmail', userEmail);
     const response = await axios.post('/api/auth/get-2fa-status', { email: userEmail });
-    console.log("response.data", response.data);
+    console.log('response.data', response.data);
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Failed to get 2FA status');
@@ -17,17 +16,20 @@ export const get2FAStatus = async () => {
 export const setup2FA = async () => {
   try {
     // Get user data from Redux store
-    const userData = store.getState().user.user;
-    const userEmail = sessionStorage.getItem("userEmail");
-    
-    const response = await axios.post('/api/auth/setup-2FA', {
-      email: userEmail,
-    }, {
-      headers: {
-        'Content-Type': 'application/json',
+    const userEmail = sessionStorage.getItem('userEmail');
+
+    const response = await axios.post(
+      '/api/auth/setup-2FA',
+      {
+        email: userEmail,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
       }
-    });
-    console.log("response.data", response.data.data);
+    );
+    console.log('response.data', response.data.data);
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Failed to enable 2FA');
@@ -35,7 +37,7 @@ export const setup2FA = async () => {
 };
 
 export const verify2FA = async (token) => {
-  const userEmail = sessionStorage.getItem("userEmail");
+  const userEmail = sessionStorage.getItem('userEmail');
   try {
     const response = await axios.post('/api/auth/verify-2fa', { token, email: userEmail });
     return response.data;
@@ -45,7 +47,7 @@ export const verify2FA = async (token) => {
 };
 
 export const disable2FA = async (token) => {
-  const userEmail = sessionStorage.getItem("userEmail");
+  const userEmail = sessionStorage.getItem('userEmail');
   try {
     const response = await axios.post('/api/auth/disable-2fa', { token, email: userEmail });
     return response.data;
@@ -55,10 +57,10 @@ export const disable2FA = async (token) => {
 };
 
 // Alternative version using hooks in a component
-export const useEnable2FA = async (token) => {
-  const userEmail = sessionStorage.getItem("userEmail");
+export const Enable2FA = async (token) => {
+  const userEmail = sessionStorage.getItem('userEmail');
   try {
-    console.log("token", token);
+    console.log('token', token);
     const response = await axios.post('/api/auth/enable-2fa', {
       email: userEmail,
       token,
@@ -67,4 +69,14 @@ export const useEnable2FA = async (token) => {
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Failed to enable 2FA');
   }
-}; 
+};
+
+export const resendEmailVerification = async () => {
+  try {
+    const userEmail = sessionStorage.getItem('userEmail');
+    const response = await axios.post('/api/auth/resend-verification', { email: userEmail });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to resend verification email');
+  }
+};

@@ -8,7 +8,18 @@ import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Link, Stack, Alert, IconButton, InputAdornment, Modal, Box, Typography, TextField, Button } from '@mui/material';
+import {
+  Link,
+  Stack,
+  Alert,
+  IconButton,
+  InputAdornment,
+  Modal,
+  Box,
+  Typography,
+  TextField,
+  Button,
+} from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // routes
 import { PATH_AUTH } from '../../routes/paths';
@@ -17,9 +28,13 @@ import { useAuthContext } from '../../auth/useAuthContext';
 // components
 import Iconify from '../../components/iconify';
 import FormProvider, { RHFTextField } from '../../components/hook-form';
-import { verify2FA, useEnable2FA, setup2FA, disable2FA, 
- get2FAStatus } from '../../auth/security-utils';
-
+import {
+  verify2FA,
+  useEnable2FA,
+  setup2FA,
+  disable2FA,
+  get2FAStatus,
+} from '../../auth/security-utils';
 // redux
 import { setUserSuccess } from '../../redux/slices/user';
 
@@ -37,7 +52,9 @@ export default function AuthLoginForm() {
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    password: Yup.string().required('Password is required').min(8, 'Password must be at least 8 characters'),
+    password: Yup.string()
+      .required('Password is required')
+      .min(8, 'Password must be at least 8 characters'),
   });
 
   const defaultValues = {
@@ -64,11 +81,9 @@ export default function AuthLoginForm() {
       sessionStorage.setItem('userEmail', data.email);
 
       const response = await get2FAStatus();
-      console.log("response" , response);
-      if(response.success)
-        setShowGoogleAuthModal(true);
-      else
-        router.push('/dashboard/app');
+      console.log('response', response);
+      if (response.success) setShowGoogleAuthModal(true);
+      else router.push('/dashboard/app');
     } catch (error) {
       console.error(error);
       reset();
@@ -110,7 +125,12 @@ export default function AuthLoginForm() {
         <Stack spacing={3}>
           {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
-          <RHFTextField name="email" label="Email address" error={!!errors.email} helperText={errors.email?.message} />
+          <RHFTextField
+            name="email"
+            label="Email address"
+            error={!!errors.email}
+            helperText={errors.email?.message}
+          />
 
           <RHFTextField
             name="password"
@@ -204,16 +224,10 @@ export default function AuthLoginForm() {
               }}
             />
 
-            {!!errors.googleAuth && (
-              <Alert severity="error">{errors.googleAuth.message}</Alert>
-            )}
+            {!!errors.googleAuth && <Alert severity="error">{errors.googleAuth.message}</Alert>}
 
             <Stack direction="row" spacing={2} justifyContent="flex-end">
-              <Button
-                variant="outlined"
-                onClick={handleCancelAuth}
-                disabled={isSubmitting}
-              >
+              <Button variant="outlined" onClick={handleCancelAuth} disabled={isSubmitting}>
                 Cancel
               </Button>
               <LoadingButton

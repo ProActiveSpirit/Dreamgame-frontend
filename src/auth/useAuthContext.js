@@ -14,22 +14,36 @@ export const useAuthContext = () => {
 
   return {
     ...context,
-    register: async (email, password, firstName, lastName) => {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password, firstName, lastName }),
-      });
+    // register: async (email, password, firstName, lastName) => {
+    //   const response = await fetch('/api/auth/register', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({ email, password, firstName, lastName }),
+    //   });
+    //   console.log('Regsiter response', response);
+    //   let data;
+    //   const contentType = response.headers.get('content-type');
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message);
-      }
+    //   try {
+    //     // Only try to parse as JSON if the content-type is json
+    //     if (contentType && contentType.includes('application/json')) {
+    //       data = await response.json();
+    //     } else {
+    //       // If not JSON, get the text content
+    //       const text = await response.text();
+    //       throw new Error('Server returned an invalid response');
+    //     }
+    //   } catch (error) {
+    //     throw new Error('Failed to process server response');
+    //   }
 
-      // At this point, your backend should send a verification email with a code
-      return await response.json();
-    },
+    //   if (!response.ok) {
+    //     throw new Error(data?.message || 'Registration failed');
+    //   }
+
+    //   return data;
+    // },
   };
 };

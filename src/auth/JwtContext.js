@@ -65,7 +65,6 @@ AuthProvider.propTypes = {
 
 export function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [user, setUser] = useState(null);
 
   const storageAvailable = localStorageAvailable();
 
@@ -84,7 +83,7 @@ export function AuthProvider({ children }) {
           type: 'INITIAL',
           payload: {
             isAuthenticated: true,
-            user:null,
+            user: null,
           },
         });
       } else {
@@ -118,34 +117,28 @@ export function AuthProvider({ children }) {
       email,
       password,
     });
-    const { accessToken, user } = response.data;
+    const { accessToken, userData } = response.data;
     setSession(accessToken);
 
     dispatch({
       type: 'LOGIN',
       payload: {
-        user,
+        user: userData,
       },
     });
   }, []);
 
   // REGISTER
-  const register = async (email, password, firstName, lastName) => {
-    const response = await fetch('/api/auth/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password, firstName, lastName }),
+  const register = useCallback(async (email, password, firstName, lastName) => {
+    console.log('register , register, registr');
+    const response = await axios.post('/api/auth/register', {
+      email,
+      password,
+      firstName,
+      lastName,
     });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message);
-    }
-
-    return await response.json();
-  };
+    return response;
+  }, []);
 
   // LOGOUT
   const logout = useCallback(() => {

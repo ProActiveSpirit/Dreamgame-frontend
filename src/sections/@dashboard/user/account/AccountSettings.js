@@ -1,23 +1,42 @@
 // form
-import { useForm } from 'react-hook-form';
 import { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 // @mui
-import { Card, Stack, Typography, Switch, Container, TextField, CardHeader, CardContent, Modal, Box, Button, Alert, CircularProgress } from '@mui/material';
+import {
+  Card,
+  Stack,
+  Typography,
+  Switch,
+  Container,
+  TextField,
+  CardHeader,
+  CardContent,
+  Modal,
+  Box,
+  Button,
+  Alert,
+  CircularProgress,
+} from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 import FormProvider, { RHFSwitch } from '../../../../components/hook-form';
-import QRCode from 'qrcode.react';
 import { useAuthContext } from '../../../../auth/useAuthContext';
-import { verify2FA, useEnable2FA, setup2FA, disable2FA, resendEmailVerification, get2FAStatus } from '../../../../auth/security-utils';
-import Image from 'next/image'; // For Next.js
+import {
+  verify2FA,
+  Enable2FA,
+  setup2FA,
+  disable2FA,
+  get2FAStatus,
+  resendEmailVerification,
+} from '../../../../auth/security-utils';
 import { useNotification } from '../../../../hooks/useNotification';
 
 export default function AccountSettings() {
   const { enqueueSnackbar } = useSnackbar();
-  const { user, refresh } = useAuthContext();
+  const { user } = useAuthContext();
   const notification = useNotification();
-  
+
   const [showQRModal, setShowQRModal] = useState(false);
   const [qrCodeData, setQRCodeData] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
@@ -33,8 +52,8 @@ export default function AccountSettings() {
     try {
       const response = await get2FAStatus();
       setIs2FAEnabled(response.success);
-    } catch (error) {
-      console.error('Failed to get 2FA status:', error);
+    } catch (err) {
+      console.error('Failed to get 2FA status:', err);
     }
   }, []);
 
@@ -49,22 +68,11 @@ export default function AccountSettings() {
     };
   }, [checkStatus]);
 
-  const onSubmit = async (data) => {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      enqueueSnackbar('Update success!');
-      console.log('DATA', data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const handleResendVerification = async () => {
     try {
       setLoading(true);
       await resendEmailVerification(user.email);
       setError('');
-      // Show success message
     } catch (err) {
       setError('Failed to resend verification email');
     } finally {
@@ -79,10 +87,10 @@ export default function AccountSettings() {
       setIs2FAEnabled(false);
       setShowVerifyModal(false);
       setDisableToken('');
-      
+
       // Refresh status instead of using refresh()
       await checkStatus();
-      
+
       notification.success('2FA disabled successfully');
     } catch (err) {
       notification.error(err.message || 'Invalid verification code');
@@ -113,14 +121,13 @@ export default function AccountSettings() {
   const handleVerify2FA = async () => {
     try {
       setLoading(true);
-      const response = await useEnable2FA(verificationCode);
+      await Enable2FA(verificationCode);
       setIs2FAEnabled(true);
       setShowQRModal(false);
       setVerificationCode('');
-      
-      // Refresh status instead of using refresh()
+
       await checkStatus();
-      
+
       notification.success('2FA enabled successfully');
     } catch (err) {
       notification.error(err.message || 'Invalid verification code');
@@ -222,9 +229,7 @@ export default function AccountSettings() {
               Warning: This will disable 2FA for your account
             </Typography>
 
-            <Typography variant="body2">
-              Enter your authenticator code to confirm
-            </Typography>
+            <Typography variant="body2">Enter your authenticator code to confirm</Typography>
 
             <TextField
               fullWidth
@@ -235,16 +240,12 @@ export default function AccountSettings() {
               placeholder="Enter 6-digit code"
               inputProps={{
                 maxLength: 6,
-                pattern: '[0-9]*'
+                pattern: '[0-9]*',
               }}
             />
 
             <Stack direction="row" spacing={2} justifyContent="flex-end">
-              <Button
-                variant="outlined"
-                onClick={handleCloseVerifyModal}
-                disabled={loading}
-              >
+              <Button variant="outlined" onClick={handleCloseVerifyModal} disabled={loading}>
                 Cancel
               </Button>
               <LoadingButton
@@ -262,11 +263,7 @@ export default function AccountSettings() {
       </Modal>
 
       {/* QR Code Modal */}
-      <Modal
-        open={showQRModal}
-        onClose={handleCloseQRModal}
-        aria-labelledby="2fa-setup-modal"
-      >
+      <Modal open={showQRModal} onClose={handleCloseQRModal} aria-labelledby="2fa-setup-modal">
         <Box
           sx={{
             position: 'absolute',
@@ -291,15 +288,8 @@ export default function AccountSettings() {
 
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               {qrCodeData && (
-              <Image
-                src={qrCodeData}
-                alt="2FA QR Code"
-                width={200}
-                height={200}
-                priority
-              />
-            )}
-            
+                <Image src={qrCodeData} alt="2FA QR Code" width={200} height={200} priority />
+              )}
             </Box>
             {otpauth_url && (
               <Typography
@@ -331,11 +321,7 @@ export default function AccountSettings() {
             />
 
             <Stack direction="row" spacing={2} justifyContent="flex-end">
-              <Button
-                variant="outlined"
-                onClick={handleCloseQRModal}
-                disabled={loading}
-              >
+              <Button variant="outlined" onClick={handleCloseQRModal} disabled={loading}>
                 Cancel
               </Button>
               <LoadingButton

@@ -52,6 +52,14 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.customers = action.payload.customer;
     },
+    getUserSuccess(state, action) {
+      state.isLoading = false;
+      state.user = action.payload;
+    },
+    createCustomerSuccess(state, action) {
+      state.isLoading = false;
+      state.customers = action.payload.customer;
+    },
   },
 });
 export const {
@@ -61,6 +69,9 @@ export const {
   setUserSuccess,
   updateUser,
   getCustomerSuccess,
+  getUserSuccess,
+  createCustomerSuccess,
+  updateCustomerSuccess,
 } = userSlice.actions;
 export default userSlice.reducer;
 // Thunks for async actions

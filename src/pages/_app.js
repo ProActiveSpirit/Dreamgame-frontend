@@ -31,6 +31,7 @@ import { CacheProvider } from '@emotion/react';
 import Head from 'next/head';
 // redux
 import { Provider as ReduxProvider } from 'react-redux';
+import { SnackbarProvider, closeSnackbar } from 'notistack';
 // @mui
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -47,7 +48,6 @@ import { StyledChart } from '../components/chart';
 import ProgressBar from '../components/progress-bar';
 import { MotionLazyContainer } from '../components/animate';
 import { ThemeSettings, SettingsProvider } from '../components/settings';
-import { SnackbarProvider, closeSnackbar } from 'notistack';
 
 // Check our docs
 // https://docs.minimals.cc/authentication/js-version
@@ -94,15 +94,14 @@ export default function MyApp(props) {
                           horizontal: 'right',
                         }}
                         action={(key) => (
-                          <iconify-icon 
-                            icon="lets-icons:close-ring" 
-                            width="24" 
+                          <iconify-icon
+                            icon="lets-icons:close-ring"
+                            width="24"
                             height="24"
                             onClick={() => closeSnackbar(key)}
                             sx={{ color: 'white' }}
-                          >
-                          </iconify-icon>
-                        )}  
+                          />
+                        )}
                       >
                         <StyledChart />
                         <ProgressBar />

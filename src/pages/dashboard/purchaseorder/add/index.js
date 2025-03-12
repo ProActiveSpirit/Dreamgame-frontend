@@ -1,4 +1,4 @@
-import {useState , useEffect } from 'react';
+import { useState, useEffect } from 'react';
 // @mui
 import {
   Grid,
@@ -57,8 +57,7 @@ PurchaseOrderAddPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLay
 
 // Validation schema using Yup
 const FormSchema = Yup.object().shape({
-  Region: Yup.array()
-    .required('Region is required'),
+  Region: Yup.array().required('Region is required'),
   Quantity: Yup.number()
     .required('Quantity is required')
     .min(1, 'Quantity must be at least 1')
@@ -81,29 +80,29 @@ const FormSchema = Yup.object().shape({
     .typeError('cost Inc Vat must be a number'),
 });
 
-  // Columns definition
-  const columns = [
-    { field: "Product", headerName: "Product", width: 350 },
-    { field: "Quantity", headerName: "Quantity", width: 150 },
-    {
-      field: "CostExtVat",
-      headerName: "Cost (Ext. VAT)",
-      width: 250,
-      valueGetter: (params) => `${params.row.CostExtVat} ${params.row.CostCurrency}`,
-    },
-    {
-      field: "CostVat",
-      headerName: "Cost VAT",
-      width: 200,
-      valueGetter: (params) => `${params.row.CostVat} %`,
-    },
-    {
-      field: "CostIncVat",
-      headerName: "Cost (Inc. VAT)",
-      width: 200,
-      valueGetter: (params) => `${params.row.CostIncVat} ${params.row.CostCurrency}`,
-    },
-  ];
+// Columns definition
+const columns = [
+  { field: 'Product', headerName: 'Product', width: 350 },
+  { field: 'Quantity', headerName: 'Quantity', width: 150 },
+  {
+    field: 'CostExtVat',
+    headerName: 'Cost (Ext. VAT)',
+    width: 250,
+    valueGetter: (params) => `${params.row.CostExtVat} ${params.row.CostCurrency}`,
+  },
+  {
+    field: 'CostVat',
+    headerName: 'Cost VAT',
+    width: 200,
+    valueGetter: (params) => `${params.row.CostVat} %`,
+  },
+  {
+    field: 'CostIncVat',
+    headerName: 'Cost (Inc. VAT)',
+    width: 200,
+    valueGetter: (params) => `${params.row.CostIncVat} ${params.row.CostCurrency}`,
+  },
+];
 
 export default function PurchaseOrderAddPage() {
   const { themeStretch } = useSettingsContext();
@@ -160,7 +159,7 @@ export default function PurchaseOrderAddPage() {
   useEffect(() => {
     if (watchedCostExtVat && watchedCostVat) {
       const vatAmount = (watchedCostExtVat * watchedCostVat) / 100;
-      const costIncVat = (parseFloat(watchedCostExtVat) + parseFloat(vatAmount));
+      const costIncVat = parseFloat(watchedCostExtVat) + parseFloat(vatAmount);
       setValue('costIncVat', costIncVat.toFixed(2));
     }
   }, [watchedCostExtVat, watchedCostVat, setValue]);
@@ -191,210 +190,255 @@ export default function PurchaseOrderAddPage() {
         />
 
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Grid container justifyContent="left" alignItems="center" spacing={5}>
-      {/* Order Information */}
-      <Grid item xs={12} md={12}>
-        <Box sx={{ padding: 2, border: '1px solid #e0e0e0', borderRadius: 2, marginBottom: 3 }}>
-          <Typography variant="h7" gutterBottom>
-            Order Information
-          </Typography>
-          <Divider sx={{ mb: 2 }} />
-          <Stack spacing={3}>
-            <TextField name="friendlyName" variant="outlined" fullWidth label="Friendly Name" size="small" />
-            <Stack spacing={2} direction={{ xs: 'column', sm: 'column' }}>
-              <Autocomplete
-                fullWidth
-                options={products}
-                getOptionLabel={(option) => `${option?.name || ''} (${option?.sku || ''})`}
-                value={products.find((product) => product.id === watch('Product')) || null}
-                isOptionEqualToValue={(option, value) => option.name === value?.name}
-                onChange={(event, newValue) => setValue('Product', newValue?.id || '')}
-                renderInput={(params) => (
-                  <TextField {...params} label="Product" error={!!errors.Product} helperText={errors.Product?.message} />
-                )}
-                size="small"
-              />
-              {watch('Product') ? 
-                <RegionPrice price={products.find((product) => product.id === watch('Product')).price} SalesVat={0}/>: <></>}
-            </Stack>
-            <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
-              <Autocomplete 
-                fullWidth
-                options={['Nexway', 'Epay', 'Nintendo']}
-                getOptionLabel={(option) => `${option || ''}`}
-                value={watch('Vendor') || null}
-                isOptionEqualToValue={(option, value) => option === value}
-                onChange={(event, newValue) => setValue('Vendor', newValue)}
-                renderInput={(params) => (
-                  <TextField {...params} label="Vendor" error={!!errors.Vendor} helperText={errors.Vendor?.message} />
-                )}
-                size="small"
-              />
-              <Autocomplete
-                fullWidth
-                multiple // Allow multiple region selection
-                options={['NO', 'BE', 'DE', 'ES', 'FR', 'NL', 'PT', 'PL', 'GB']} // Region options
-                value={watch('Region') || []}
-                isOptionEqualToValue={(option, value) => option === value}
-                onChange={(event, newValue) => setValue('Region', newValue)}
-                renderInput={(params) => (
-                  <TextField {...params} label="Region" error={!!errors.Region} helperText={errors.Region?.message} />
-                )}
-                size="small"
-              />
-            </Stack>
-            <TextField name="Quantity" variant="outlined" fullWidth label="Quantity" size="small" />
-          </Stack>
-        </Box>
-      </Grid>
+          <Grid container justifyContent="left" alignItems="center" spacing={5}>
+            {/* Order Information */}
+            <Grid item xs={12} md={12}>
+              <Box
+                sx={{ padding: 2, border: '1px solid #e0e0e0', borderRadius: 2, marginBottom: 3 }}
+              >
+                <Typography variant="h7" gutterBottom>
+                  Order Information
+                </Typography>
+                <Divider sx={{ mb: 2 }} />
+                <Stack spacing={3}>
+                  <TextField
+                    name="friendlyName"
+                    variant="outlined"
+                    fullWidth
+                    label="Friendly Name"
+                    size="small"
+                  />
+                  <Stack spacing={2} direction={{ xs: 'column', sm: 'column' }}>
+                    <Autocomplete
+                      fullWidth
+                      options={products}
+                      getOptionLabel={(option) => `${option?.name || ''} (${option?.sku || ''})`}
+                      value={products.find((product) => product.id === watch('Product')) || null}
+                      isOptionEqualToValue={(option, value) => option.name === value?.name}
+                      onChange={(event, newValue) => setValue('Product', newValue?.id || '')}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Product"
+                          error={!!errors.Product}
+                          helperText={errors.Product?.message}
+                        />
+                      )}
+                      size="small"
+                    />
+                    {watch('Product') ? (
+                      <RegionPrice
+                        price={products.find((product) => product.id === watch('Product')).price}
+                        SalesVat={0}
+                      />
+                    ) : (
+                      <></>
+                    )}
+                  </Stack>
+                  <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
+                    <Autocomplete
+                      fullWidth
+                      options={['Nexway', 'Epay', 'Nintendo']}
+                      getOptionLabel={(option) => `${option || ''}`}
+                      value={watch('Vendor') || null}
+                      isOptionEqualToValue={(option, value) => option === value}
+                      onChange={(event, newValue) => setValue('Vendor', newValue)}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Vendor"
+                          error={!!errors.Vendor}
+                          helperText={errors.Vendor?.message}
+                        />
+                      )}
+                      size="small"
+                    />
+                    <Autocomplete
+                      fullWidth
+                      multiple // Allow multiple region selection
+                      options={['NO', 'BE', 'DE', 'ES', 'FR', 'NL', 'PT', 'PL', 'GB']} // Region options
+                      value={watch('Region') || []}
+                      isOptionEqualToValue={(option, value) => option === value}
+                      onChange={(event, newValue) => setValue('Region', newValue)}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Region"
+                          error={!!errors.Region}
+                          helperText={errors.Region?.message}
+                        />
+                      )}
+                      size="small"
+                    />
+                  </Stack>
+                  <TextField
+                    name="Quantity"
+                    variant="outlined"
+                    fullWidth
+                    label="Quantity"
+                    size="small"
+                  />
+                </Stack>
+              </Box>
+            </Grid>
 
-      {/* Cost Information */}
-      <Grid key={4} container spacing={10}>
-        <Grid key={1} item xs={6} md={6}>
-          <Box sx={{ padding: 2, border: '1px solid #e0e0e0', borderRadius: 2, marginBottom: 3 }}>
-            <Typography variant="h7" gutterBottom>
-              Cost Information
-            </Typography>
-            <Divider sx={{ mb: 2 }} />
-          <Stack spacing={2}>
+            {/* Cost Information */}
+            <Grid key={4} container spacing={10}>
+              <Grid key={1} item xs={6} md={6}>
+                <Box
+                  sx={{ padding: 2, border: '1px solid #e0e0e0', borderRadius: 2, marginBottom: 3 }}
+                >
+                  <Typography variant="h7" gutterBottom>
+                    Cost Information
+                  </Typography>
+                  <Divider sx={{ mb: 2 }} />
+                  <Stack spacing={2}>
+                    {/* Cost Currency */}
+                    <Autocomplete
+                      fullWidth
+                      disableClearable
+                      value={watch('costCurrency')}
+                      options={['EUR', 'Dollar']}
+                      onChange={(event, newValue) => setValue('costCurrency', newValue)}
+                      size="small"
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Cost Currency"
+                          error={!!errors.costCurrency}
+                          helperText={errors.costCurrency?.message}
+                        />
+                      )}
+                    />
+                    <RHFTextField
+                      name="costExtVat"
+                      label="Cost Ext Vat"
+                      InputProps={{
+                        type: 'number',
+                        endAdornment: <InputAdornment position="end">EUR</InputAdornment>,
+                      }}
+                      size="small"
+                      error={!!errors.costExtVat}
+                      helperText={errors.costExtVat?.message}
+                    />
+                    <RHFTextField
+                      name="costVat"
+                      label="Cost Vat"
+                      InputProps={{
+                        type: 'number',
+                        endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                      }}
+                      size="small"
+                      error={!!errors.costVat}
+                      helperText={errors.costVat?.message}
+                    />
+                    <RHFTextField
+                      name="costIncVat"
+                      label="Cost Inc Vat"
+                      InputProps={{
+                        type: 'number',
+                        endAdornment: <InputAdornment position="end">EUR</InputAdornment>,
+                      }}
+                      size="small"
+                      error={!!errors.costIncVat}
+                      helperText={errors.costIncVat?.message}
+                    />
+                  </Stack>
+                </Box>
+              </Grid>
+              <Grid key={2} item xs={6} md={6}>
+                <Box
+                  sx={{ padding: 2, border: '1px solid #e0e0e0', borderRadius: 2, marginBottom: 3 }}
+                >
+                  <Typography variant="h7" gutterBottom>
+                    Stock Order API Sales Information
+                  </Typography>
+                  <Divider sx={{ mb: 2 }} />
+                  <Stack spacing={2}>
+                    {/* Cost Currency */}
+                    <Autocomplete
+                      fullWidth
+                      disableClearable
+                      value={watch('costCurrency')}
+                      options={['EUR', 'Dollar']}
+                      onChange={(event, newValue) => setValue('costCurrency', newValue)}
+                      size="small"
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Stock Sales Currency"
+                          error={!!errors.costCurrency}
+                          helperText={errors.costCurrency?.message}
+                        />
+                      )}
+                    />
+                    <RHFTextField
+                      name="stockSalesIncVat"
+                      label="Stock Sales Inc Vat"
+                      InputProps={{
+                        type: 'number',
+                        endAdornment: <InputAdornment position="end">EUR</InputAdornment>,
+                      }}
+                      size="small"
+                      error={!!errors.costExtVat}
+                      helperText={errors.costExtVat?.message}
+                    />
+                  </Stack>
+                </Box>
+              </Grid>
+            </Grid>
+            {/* Summary Information */}
+            <Grid key={5} item xs={6} md={12}>
+              <Box
+                sx={{ padding: 2, border: '1px solid #e0e0e0', borderRadius: 2, marginBottom: 3 }}
+              >
+                <Typography variant="h7" gutterBottom>
+                  Purchase Order Summary Information
+                </Typography>
+                <Divider sx={{ mb: 2 }} />
+                <DataGrid
+                  columns={columns}
+                  rows={rows}
+                  disableSelectionOnClick
+                  autoHeight
+                  hideFooter
+                />
 
-            {/* Cost Currency */}
-            <Autocomplete
-              fullWidth
-              disableClearable
-              value={watch('costCurrency')}
-              options={['EUR', 'Dollar']}
-              onChange={(event, newValue) => setValue('costCurrency', newValue)}
-              size="small"
-              renderInput={(params) => (
-              <TextField
-                  {...params}
-                  label="Cost Currency"
-                  error={!!errors.costCurrency}
-                  helperText={errors.costCurrency?.message}
-              />
-              )}
-            />
-            <RHFTextField
-            name="costExtVat"
-            label="Cost Ext Vat"
-            InputProps={{
-                type: 'number',
-                endAdornment: <InputAdornment position="end">EUR</InputAdornment>,
-            }}
-            size="small"
-            error={!!errors.costExtVat}
-            helperText={errors.costExtVat?.message}
-            />
-            <RHFTextField
-            name="costVat"
-            label="Cost Vat"
-            InputProps={{
-                type: 'number',
-                endAdornment: <InputAdornment position="end">%</InputAdornment>,
-            }}
-            size="small"
-            error={!!errors.costVat}
-            helperText={errors.costVat?.message}
-            />
-            <RHFTextField
-            name="costIncVat"
-            label="Cost Inc Vat"
-            InputProps={{
-                type: 'number',
-                endAdornment: <InputAdornment position="end">EUR</InputAdornment>,
-            }}
-            size="small"
-            error={!!errors.costIncVat}
-            helperText={errors.costIncVat?.message}
-            />
-          </Stack>
-          </Box>
-        </Grid>
-        <Grid key={2} item xs={6} md={6}>
-          <Box sx={{ padding: 2, border: '1px solid #e0e0e0', borderRadius: 2, marginBottom: 3 }}>
-          
-            <Typography variant="h7" gutterBottom>
-              Stock Order API Sales Information
-            </Typography>
-            <Divider  sx={{ mb: 2 }}  />
-            <Stack spacing={2}>
-            {/* Cost Currency */}
-            <Autocomplete
-              fullWidth
-              disableClearable
-              value={watch('costCurrency')}
-              options={['EUR', 'Dollar']}
-              onChange={(event, newValue) => setValue('costCurrency', newValue)}
-              size="small"
-              renderInput={(params) => (
-              <TextField
-                  {...params}
-                  label="Stock Sales Currency"
-                  error={!!errors.costCurrency}
-                  helperText={errors.costCurrency?.message}
-              />
-              )}
-            />
-            <RHFTextField
-            name="stockSalesIncVat"
-            label="Stock Sales Inc Vat"
-            InputProps={{
-                type: 'number',
-                endAdornment: <InputAdornment position="end">EUR</InputAdornment>,
-            }}
-            size="small"
-            error={!!errors.costExtVat}
-            helperText={errors.costExtVat?.message}
-            />
-            </Stack>
-          </Stack>
-          </Box>
-        </Grid>
-      </Grid>
-      {/* Summary Information */}
-      <Grid key={5} item xs={6} md={12}>
-        <Box sx={{ padding: 2, border: '1px solid #e0e0e0', borderRadius: 2, marginBottom: 3 }}>
-          <Typography variant="h7" gutterBottom>
-            Purchase Order Summary Information
-          </Typography>
-          <Divider sx={{ mb: 2 }} />
-          <DataGrid
-            columns={columns}
-            rows={rows}
-            disableSelectionOnClick
-            autoHeight
-            hideFooter
-          />
+                {/* Summary Section */}
+                <Stack spacing={10} sx={{ mt: 3 }} direction={{ xs: 'column', md: 'row' }}>
+                  <Stack direction="row" justifyContent="flex-end">
+                    <Typography>Average Cost :</Typography>
+                  </Stack>
 
-          {/* Summary Section */}
-          <Stack spacing={10} sx={{ mt: 3 }} direction={{ xs: "column", md: "row" }}>
-            <Stack direction="row" justifyContent="flex-end">
-              <Typography>Average Cost :</Typography>
-            </Stack>
+                  <Stack direction="row" justifyContent="flex-end">
+                    <Typography>Quantity :</Typography>
+                  </Stack>
 
-            <Stack direction="row" justifyContent="flex-end">
-              <Typography>Quantity :</Typography>
-            </Stack>
-
-            <Stack direction="row" justifyContent="flex-end">
-              <Typography variant="h6">Total Cost Inc Vat :</Typography>
-              <Typography variant="h6" sx={{ textAlign: "right", width: 120 }}>
-                {totals.totalCostIncVat.toFixed(2)}
-              </Typography>
-            </Stack>
-          </Stack>
-          </Box>
-      </Grid>
-      {/* Submit Information */}
-      <Grid item xs={12}>
-        <Box sx={{ textAlign: 'center', marginTop: 3 }}>
-          <LoadingButton fullWidth color="info" size="large" type="submit" variant="contained" loading={isSubmitting}>
-            Submit to Add
-          </LoadingButton>
-        </Box>
-      </Grid>
-    </Grid>
+                  <Stack direction="row" justifyContent="flex-end">
+                    <Typography variant="h6">Total Cost Inc Vat :</Typography>
+                    <Typography variant="h6" sx={{ textAlign: 'right', width: 120 }}>
+                      {totals.totalCostIncVat.toFixed(2)}
+                    </Typography>
+                  </Stack>
+                </Stack>
+              </Box>
+            </Grid>
+            {/* Submit Information */}
+            <Grid item xs={12}>
+              <Box sx={{ textAlign: 'center', marginTop: 3 }}>
+                <LoadingButton
+                  fullWidth
+                  color="info"
+                  size="large"
+                  type="submit"
+                  variant="contained"
+                  loading={isSubmitting}
+                >
+                  Submit to Add
+                </LoadingButton>
+              </Box>
+            </Grid>
+          </Grid>
         </FormProvider>
       </Container>
     </>

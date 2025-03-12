@@ -1,10 +1,10 @@
-import axios from 'axios';
+import axios from '../utils/axios';
 
-export const verifyEmail = async (email, verificationCode) => {
+export const verifyEmail = async (userEmail, verificationCode) => {
   try {
     const response = await axios.post('/api/auth/verify-email', {
-      email,
-      verificationCode,
+      email: userEmail,
+      code: verificationCode,
     });
 
     return response.data;
@@ -19,10 +19,10 @@ export const verifyEmail = async (email, verificationCode) => {
   }
 };
 
-export const resendVerificationCode = async (email) => {
+export const resendVerificationCode = async (userEmail) => {
   try {
     const response = await axios.post('/api/auth/resend-verification', {
-      email,
+      email: userEmail,
     });
 
     return response.data;
@@ -35,4 +35,4 @@ export const resendVerificationCode = async (email) => {
       throw new Error('Error sending verification code. Please try again.');
     }
   }
-}; 
+};

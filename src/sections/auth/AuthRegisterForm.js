@@ -9,21 +9,24 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Stack, IconButton, InputAdornment, Alert, Typography } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // routes
-import { PATH_AUTH } from '../../routes/paths';
+// import { PATH_AUTH } from '../../routes/paths';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // components
 import Iconify from '../../components/iconify';
+import { useSnackbar } from '../../components/snackbar';
 import FormProvider, { RHFTextField } from '../../components/hook-form';
 // import { C } from '@fullcalendar/core/internal-common';
-import axios from 'axios';
+import axios from '../../utils/axios';
+
 import { verifyEmail, resendVerificationCode } from '../../auth/verify-email';
 
 // ----------------------------------------------------------------------
 
-export default function AuthRegisterForm() {  
+export default function AuthRegisterForm() {
   const router = useRouter();
 
+  const { enqueueSnackbar } = useSnackbar();
   const { register } = useAuthContext();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -36,16 +39,18 @@ export default function AuthRegisterForm() {
     firstName: Yup.string().required('First name required'),
     lastName: Yup.string().required('Last name required'),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    password: Yup.string().required('Password is required').min(8, 'Password must be at least 8 characters'),
+    password: Yup.string()
+      .required('Password is required')
+      .min(8, 'Password must be at least 8 characters'),
     confirmPassword: Yup.string()
       .required('Confirm password is required')
-      .oneOf([Yup.ref('password')], 'Passwords must match')
+      .oneOf([Yup.ref('password')], 'Passwords must match'),
   });
 
   const VerificationSchema = Yup.object().shape({
     verificationCode: Yup.string()
       .required('Verification code is required')
-      .matches(/^[0-9]{6}$/, 'Must be exactly 6 digits')
+      .matches(/^[0-9]{6}$/, 'Must be exactly 6 digits'),
   });
 
   const defaultValues = {
@@ -65,20 +70,20 @@ export default function AuthRegisterForm() {
     reset,
     setError,
     handleSubmit,
-    formState: { errors, isSubmitting, isSubmitSuccessful },
+    formState: { errors },
   } = methods;
 
   const onSubmit = async (data) => {
     try {
-      if (!isVerificationStep) {  
-        // First step: Register user and send verification email
-        const result = await register(data.email, data.password, data.firstName, data.lastName);
+      if (!isVerificationStep) {
+        await register(data.email, data.password, data.firstName, data.lastName);
         setUserDetails(data);
         setIsVerificationStep(true);
         reset({ verificationCode: '' });
       } else {
-        // Second step: Verify email with code
         await verifyEmail(userDetails.email, data.verificationCode);
+        enqueueSnackbar('Email Verified Successfully!');
+
         router.push('/auth/login-unprotected');
       }
     } catch (error) {
@@ -94,9 +99,9 @@ export default function AuthRegisterForm() {
   const handleResendCode = async () => {
     try {
       if (!canResend) return;
-      
+
       await resendVerificationCode(userDetails.email);
-      
+
       // Disable resend button for 60 seconds
       setCanResend(false);
       setResendTimer(60);
@@ -112,7 +117,6 @@ export default function AuthRegisterForm() {
           return prev - 1;
         });
       }, 1000);
-
     } catch (error) {
       setError('afterSubmit', {
         message: error.message || 'Failed to resend verification code',
@@ -125,9 +129,9 @@ export default function AuthRegisterForm() {
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={2.5}>
           {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
-          
+
           <Typography variant="body2" sx={{ mb: 3 }}>
-            Please check your email ({userDetails?.email}). We've sent you a verification code.
+            Please check your email ({userDetails?.email}). We&apos;ve sent you a verification code.
           </Typography>
 
           <RHFTextField
@@ -142,7 +146,6 @@ export default function AuthRegisterForm() {
             size="large"
             type="submit"
             variant="contained"
-            loading={isSubmitting || isSubmitSuccessful}
             sx={{
               bgcolor: 'text.primary',
               color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.800'),
@@ -217,7 +220,6 @@ export default function AuthRegisterForm() {
           size="large"
           type="submit"
           variant="contained"
-          loading={isSubmitting || isSubmitSuccessful}
           sx={{
             bgcolor: 'text.primary',
             color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.800'),
