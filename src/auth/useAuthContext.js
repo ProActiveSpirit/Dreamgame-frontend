@@ -29,7 +29,7 @@ export const useAuthContext = () => {
       }
 
       // At this point, your backend should send a verification email with a code
-      return await response.json();
+      return response.json();
     },
   };
 };

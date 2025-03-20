@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { paramCase } from 'change-case';
 
 // @mui
@@ -67,7 +67,6 @@ export default function SalesOrderAddPage() {
   const [currencies, setCurrencies] = useState([]);
   const [salesRegion, setSalesRegion] = useState();
   const [salesCurrency, setSalesCurrency] = useState();
-  const [countryCode, setCountryCode] = useState();
 
   const {
     query: { name },
@@ -77,8 +76,8 @@ export default function SalesOrderAddPage() {
     state.user.customers.find((customer) => paramCase(customer.name) === name)
   );
 
-  // Default values for the form
-  const defaultValues = {
+  // Wrap defaultValues in useMemo to prevent recreation on every render
+  const defaultValues = useMemo(() => ({
     address: currentCustomer?.address,
     city: currentCustomer?.city,
     company: currentCustomer?.company,
@@ -107,11 +106,24 @@ export default function SalesOrderAddPage() {
     twitter: currentCustomer?.twitter,
     website: currentCustomer?.website,
     zipCode: currentCustomer?.zipCode,
-  };
+  }), [currentCustomer]);
 
   useEffect(() => {
     dispatch(getCustomers());
   }, [dispatch]);
+
+  const methods = useForm({
+    resolver: yupResolver(FormSchema),
+    currentCustomer,
+  });
+
+  const {
+    reset,
+    setValue,
+    handleSubmit,
+    watch,
+    formState: { isSubmitting, errors },
+  } = methods;
 
   useEffect(() => {
     const fetchRegionsAndCurrencies = async () => {
@@ -138,20 +150,7 @@ export default function SalesOrderAddPage() {
       }
     };
     fetchRegionsAndCurrencies();
-  }, []);
-
-  const methods = useForm({
-    resolver: yupResolver(FormSchema),
-    currentCustomer,
-  });
-
-  const {
-    reset,
-    setValue,
-    handleSubmit,
-    watch,
-    formState: { isSubmitting, errors },
-  } = methods;
+  }, [defaultValues, reset]);
 
   const inActive = watch('inActive', false);
 
@@ -160,7 +159,7 @@ export default function SalesOrderAddPage() {
       ...data,
       salesRegion, // Add salesRegion
       salesCurrency, // Add salesCurrency
-      countryCode, // Add countryCode based on salesRegion
+      countryCode: salesRegion?.code, // Derive countryCode from salesRegion
     };
 
     console.log('Updated Data:', updatedData); // Debug the updated data
@@ -170,301 +169,299 @@ export default function SalesOrderAddPage() {
   };
 
   return (
-    <>
-      <Container maxWidth={themeStretch ? false : 'xl'}>
-        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <Typography variant="h7" gutterBottom>
-            General
-          </Typography>
-          <Divider sx={{ mb: 2 }} />
-          <Grid container justifyContent="center" alignItems="center">
-            <Grid item xs={12} md={8}>
-              <Stack spacing={1}>
-                <RHFTextField
-                  name="company"
-                  label="Company Name"
-                  InputProps={{ type: 'string' }}
-                  size="small"
-                  error={!!errors.company}
-                  helperText={errors.company?.message}
-                />
-                <RHFTextField
-                  name="name"
-                  label="Display Name"
-                  InputProps={{ type: 'string' }}
-                  size="small"
-                  error={!!errors.name}
-                  helperText={errors.name?.message}
-                />
-                <RHFTextField
-                  name="website"
-                  label="Website Url"
-                  InputProps={{ type: 'string' }}
-                  size="small"
-                  error={!!errors.website}
-                  helperText={errors.website?.message}
-                />
-                <RHFTextField
-                  name="email"
-                  label="Email"
-                  InputProps={{ type: 'string' }}
-                  size="small"
-                  disabled
-                  error={!!errors.email}
-                  helperText={errors.email?.message}
-                />
-                <RHFTextField
-                  name="phone"
-                  label="Phone"
-                  InputProps={{ type: 'string' }}
-                  size="small"
-                  error={!!errors.phone}
-                  helperText={errors.phone?.message}
-                />
-                <RHFTextField
-                  name="linkedIn"
-                  label="LinkedIn"
-                  InputProps={{ type: 'string' }}
-                  size="small"
-                  error={!!errors.linkedin}
-                  helperText={errors.linkedin?.message}
-                />
-                <RHFTextField
-                  name="skype"
-                  label="Skype"
-                  InputProps={{ type: 'string' }}
-                  size="small"
-                  error={!!errors.skype}
-                  helperText={errors.skype?.message}
-                />
-                <RHFTextField
-                  name="facebook"
-                  label="Facebook"
-                  InputProps={{ type: 'string' }}
-                  size="small"
-                  error={!!errors.facebook}
-                  helperText={errors.facebook?.message}
-                />
-                <RHFTextField
-                  name="twitter"
-                  label="Twitter"
-                  InputProps={{ type: 'string' }}
-                  size="small"
-                  error={!!errors.twitter}
-                  helperText={errors.twitter?.message}
-                />
-              </Stack>
-            </Grid>
+    <Container maxWidth={themeStretch ? false : 'xl'}>
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <Typography variant="h7" gutterBottom>
+          General
+        </Typography>
+        <Divider sx={{ mb: 2 }} />
+        <Grid container justifyContent="center" alignItems="center">
+          <Grid item xs={12} md={8}>
+            <Stack spacing={1}>
+              <RHFTextField
+                name="company"
+                label="Company Name"
+                InputProps={{ type: 'string' }}
+                size="small"
+                error={!!errors.company}
+                helperText={errors.company?.message}
+              />
+              <RHFTextField
+                name="name"
+                label="Display Name"
+                InputProps={{ type: 'string' }}
+                size="small"
+                error={!!errors.name}
+                helperText={errors.name?.message}
+              />
+              <RHFTextField
+                name="website"
+                label="Website Url"
+                InputProps={{ type: 'string' }}
+                size="small"
+                error={!!errors.website}
+                helperText={errors.website?.message}
+              />
+              <RHFTextField
+                name="email"
+                label="Email"
+                InputProps={{ type: 'string' }}
+                size="small"
+                disabled
+                error={!!errors.email}
+                helperText={errors.email?.message}
+              />
+              <RHFTextField
+                name="phone"
+                label="Phone"
+                InputProps={{ type: 'string' }}
+                size="small"
+                error={!!errors.phone}
+                helperText={errors.phone?.message}
+              />
+              <RHFTextField
+                name="linkedIn"
+                label="LinkedIn"
+                InputProps={{ type: 'string' }}
+                size="small"
+                error={!!errors.linkedin}
+                helperText={errors.linkedin?.message}
+              />
+              <RHFTextField
+                name="skype"
+                label="Skype"
+                InputProps={{ type: 'string' }}
+                size="small"
+                error={!!errors.skype}
+                helperText={errors.skype?.message}
+              />
+              <RHFTextField
+                name="facebook"
+                label="Facebook"
+                InputProps={{ type: 'string' }}
+                size="small"
+                error={!!errors.facebook}
+                helperText={errors.facebook?.message}
+              />
+              <RHFTextField
+                name="twitter"
+                label="Twitter"
+                InputProps={{ type: 'string' }}
+                size="small"
+                error={!!errors.twitter}
+                helperText={errors.twitter?.message}
+              />
+            </Stack>
           </Grid>
-          <Typography variant="h7" gutterBottom>
-            Invoice Information
-          </Typography>
-          <Divider sx={{ mb: 2 }} />
-          <Grid container justifyContent="center" alignItems="center">
-            <Grid item xs={12} md={8}>
-              <Stack spacing={1}>
-                <RHFTextField
-                  name="companyInvoice"
-                  label="Company Name (Invoice)"
-                  InputProps={{ type: 'string' }}
-                  size="small"
-                  error={!!errors.company}
-                  helperText={errors.company?.message}
-                />
-                <RHFTextField
-                  name="address"
-                  label="Address"
-                  InputProps={{ type: 'string' }}
-                  size="small"
-                  error={!!errors.address}
-                  helperText={errors.address?.message}
-                />
-                <RHFTextField
-                  name="zipCode"
-                  label="ZipCode"
-                  InputProps={{ type: 'string' }}
-                  size="small"
-                  error={!!errors.zipCode}
-                  helperText={errors.zipCode?.message}
-                />
-                <RHFTextField
-                  name="city"
-                  label="City"
-                  InputProps={{ type: 'string' }}
-                  size="small"
-                  error={!!errors.city}
-                  helperText={errors.city?.message}
-                />
-                <RHFTextField
-                  name="state"
-                  label="State"
-                  InputProps={{ type: 'string' }}
-                  size="small"
-                  error={!!errors.state}
-                  helperText={errors.state?.message}
-                />
-                <RHFTextField
-                  name="countryCode"
-                  label="CountryCode"
-                  InputProps={{ type: 'string' }}
-                  size="small"
-                  disabled
-                  defaultValue="2"
-                  error={!!errors.linkedin}
-                  helperText={errors.linkedin?.message}
-                />
-                {/* Sales Region Autocomplete */}
-                <Autocomplete
-                  fullWidth
-                  options={regions || []} // Ensure fallback to an empty array
-                  getOptionLabel={(option) => `${option.code} - ${option.name}`}
-                  onChange={(event, newValue) => setSalesRegion(newValue)} // Log selected value
-                  filterSelectedOptions
-                  renderInput={(params) => (
-                    <TextField {...params} label="Sales Regions" placeholder="Select region(s)" />
-                  )}
-                />
-                <RHFTextField
-                  name="taxInformation"
-                  label="Tax Information"
-                  InputProps={{ type: 'string' }}
-                  size="small"
-                  defaultValue="0"
-                  error={!!errors.taxInformation}
-                  helperText={errors.taxInformation?.message}
-                />
-                {/* Sales Currency Autocomplete */}
-                <Autocomplete
-                  fullWidth
-                  options={currencies || []} // Ensure options is always an array
-                  getOptionLabel={(option) => option} // Show currency code directly
-                  onChange={(event, newValue) => setSalesCurrency(newValue)} // Handle selection
-                  filterSelectedOptions
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Sales Currencies"
-                      placeholder="Select currency(ies)"
-                    />
-                  )}
-                />
-                <RHFTextField
-                  name="defaultVatRate"
-                  label="Default Vat Rate"
-                  InputProps={{ type: 'string' }}
-                  size="small"
-                  defaultValue="0"
-                  error={!!errors.defaultVatRate}
-                  helperText={errors.defaultVatRate?.message}
-                />
-              </Stack>
-            </Grid>
+        </Grid>
+        <Typography variant="h7" gutterBottom>
+          Invoice Information
+        </Typography>
+        <Divider sx={{ mb: 2 }} />
+        <Grid container justifyContent="center" alignItems="center">
+          <Grid item xs={12} md={8}>
+            <Stack spacing={1}>
+              <RHFTextField
+                name="companyInvoice"
+                label="Company Name (Invoice)"
+                InputProps={{ type: 'string' }}
+                size="small"
+                error={!!errors.company}
+                helperText={errors.company?.message}
+              />
+              <RHFTextField
+                name="address"
+                label="Address"
+                InputProps={{ type: 'string' }}
+                size="small"
+                error={!!errors.address}
+                helperText={errors.address?.message}
+              />
+              <RHFTextField
+                name="zipCode"
+                label="ZipCode"
+                InputProps={{ type: 'string' }}
+                size="small"
+                error={!!errors.zipCode}
+                helperText={errors.zipCode?.message}
+              />
+              <RHFTextField
+                name="city"
+                label="City"
+                InputProps={{ type: 'string' }}
+                size="small"
+                error={!!errors.city}
+                helperText={errors.city?.message}
+              />
+              <RHFTextField
+                name="state"
+                label="State"
+                InputProps={{ type: 'string' }}
+                size="small"
+                error={!!errors.state}
+                helperText={errors.state?.message}
+              />
+              <RHFTextField
+                name="countryCode"
+                label="CountryCode"
+                InputProps={{ type: 'string' }}
+                size="small"
+                disabled
+                defaultValue="2"
+                error={!!errors.linkedin}
+                helperText={errors.linkedin?.message}
+              />
+              {/* Sales Region Autocomplete */}
+              <Autocomplete
+                fullWidth
+                options={regions || []} // Ensure fallback to an empty array
+                getOptionLabel={(option) => `${option.code} - ${option.name}`}
+                onChange={(event, newValue) => setSalesRegion(newValue)} // Log selected value
+                filterSelectedOptions
+                renderInput={(params) => (
+                  <TextField {...params} label="Sales Regions" placeholder="Select region(s)" />
+                )}
+              />
+              <RHFTextField
+                name="taxInformation"
+                label="Tax Information"
+                InputProps={{ type: 'string' }}
+                size="small"
+                defaultValue="0"
+                error={!!errors.taxInformation}
+                helperText={errors.taxInformation?.message}
+              />
+              {/* Sales Currency Autocomplete */}
+              <Autocomplete
+                fullWidth
+                options={currencies || []} // Ensure options is always an array
+                getOptionLabel={(option) => option} // Show currency code directly
+                onChange={(event, newValue) => setSalesCurrency(newValue)} // Handle selection
+                filterSelectedOptions
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Sales Currencies"
+                    placeholder="Select currency(ies)"
+                  />
+                )}
+              />
+              <RHFTextField
+                name="defaultVatRate"
+                label="Default Vat Rate"
+                InputProps={{ type: 'string' }}
+                size="small"
+                defaultValue="0"
+                error={!!errors.defaultVatRate}
+                helperText={errors.defaultVatRate?.message}
+              />
+            </Stack>
           </Grid>
-          <Typography variant="h7" gutterBottom>
-            Primary Contact Information
-          </Typography>
-          <Divider sx={{ mb: 2 }} />
-          <Grid container justifyContent="center" alignItems="center">
-            <Grid item xs={12} md={8}>
-              <Stack spacing={1}>
-                <RHFTextField
-                  name="primaryName"
-                  label="Name"
-                  InputProps={{ type: 'string' }}
-                  size="small"
-                  error={!!errors.primaryName}
-                  helperText={errors.primaryName?.message}
-                />
-                <RHFTextField
-                  name="primarySurname"
-                  label="Surname"
-                  InputProps={{ type: 'string' }}
-                  size="small"
-                  error={!!errors.primarySurname}
-                  helperText={errors.primarySurname?.message}
-                />
-                <RHFTextField
-                  name="primaryEmail"
-                  label="Email"
-                  InputProps={{ type: 'string' }}
-                  size="small"
-                  error={!!errors.primaryEmail}
-                  helperText={errors.primaryEmail?.message}
-                />
-                <RHFTextField
-                  name="primaryPhone"
-                  label="Phone"
-                  InputProps={{ type: 'string' }}
-                  size="small"
-                  error={!!errors.primaryPhone}
-                  helperText={errors.primaryPhone?.message}
-                />
-                <RHFTextField
-                  name="primarySkype"
-                  label="Skype"
-                  InputProps={{ type: 'string' }}
-                  size="small"
-                  error={!!errors.primarySkype}
-                  helperText={errors.primarySkype?.message}
-                />
-                <RHFTextField
-                  name="primaryLinkedIn"
-                  label="LinkedIn"
-                  InputProps={{ type: 'string' }}
-                  size="small"
-                  error={!!errors.primaryLinkedIn}
-                  helperText={errors.primaryLinkedIn?.message}
-                />
-                <RHFTextField
-                  name="primaryFacebook"
-                  label="Facebook"
-                  InputProps={{ type: 'string' }}
-                  size="small"
-                  error={!!errors.primaryFacebook}
-                  helperText={errors.primaryFacebook?.message}
-                />
-                <RHFTextField
-                  name="primaryTwitter"
-                  label="Twitter"
-                  InputProps={{ type: 'string' }}
-                  size="small"
-                  error={!!errors.primaryTwitter}
-                  helperText={errors.primaryTwitter?.message}
-                />
-              </Stack>
-            </Grid>
+        </Grid>
+        <Typography variant="h7" gutterBottom>
+          Primary Contact Information
+        </Typography>
+        <Divider sx={{ mb: 2 }} />
+        <Grid container justifyContent="center" alignItems="center">
+          <Grid item xs={12} md={8}>
+            <Stack spacing={1}>
+              <RHFTextField
+                name="primaryName"
+                label="Name"
+                InputProps={{ type: 'string' }}
+                size="small"
+                error={!!errors.primaryName}
+                helperText={errors.primaryName?.message}
+              />
+              <RHFTextField
+                name="primarySurname"
+                label="Surname"
+                InputProps={{ type: 'string' }}
+                size="small"
+                error={!!errors.primarySurname}
+                helperText={errors.primarySurname?.message}
+              />
+              <RHFTextField
+                name="primaryEmail"
+                label="Email"
+                InputProps={{ type: 'string' }}
+                size="small"
+                error={!!errors.primaryEmail}
+                helperText={errors.primaryEmail?.message}
+              />
+              <RHFTextField
+                name="primaryPhone"
+                label="Phone"
+                InputProps={{ type: 'string' }}
+                size="small"
+                error={!!errors.primaryPhone}
+                helperText={errors.primaryPhone?.message}
+              />
+              <RHFTextField
+                name="primarySkype"
+                label="Skype"
+                InputProps={{ type: 'string' }}
+                size="small"
+                error={!!errors.primarySkype}
+                helperText={errors.primarySkype?.message}
+              />
+              <RHFTextField
+                name="primaryLinkedIn"
+                label="LinkedIn"
+                InputProps={{ type: 'string' }}
+                size="small"
+                error={!!errors.primaryLinkedIn}
+                helperText={errors.primaryLinkedIn?.message}
+              />
+              <RHFTextField
+                name="primaryFacebook"
+                label="Facebook"
+                InputProps={{ type: 'string' }}
+                size="small"
+                error={!!errors.primaryFacebook}
+                helperText={errors.primaryFacebook?.message}
+              />
+              <RHFTextField
+                name="primaryTwitter"
+                label="Twitter"
+                InputProps={{ type: 'string' }}
+                size="small"
+                error={!!errors.primaryTwitter}
+                helperText={errors.primaryTwitter?.message}
+              />
+            </Stack>
           </Grid>
-          <Divider sx={{ mb: 2 }} />
-          <Grid container justifyContent="center" alignItems="center">
-            <Grid item xs={12} md={8}>
-              <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
-                <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center' }}>
-                  In Active
-                </Typography>
-                <RadioGroup
-                  row
-                  value={inActive} // Bind the form value
-                  onChange={(event) => setValue('inActive', event.target.value === 'true')} // Update form value
-                >
-                  <FormControlLabel value="true" control={<Radio />} label="Yes" />
-                  <FormControlLabel value="false" control={<Radio />} label="No" />
-                </RadioGroup>
-              </Stack>
-            </Grid>
+        </Grid>
+        <Divider sx={{ mb: 2 }} />
+        <Grid container justifyContent="center" alignItems="center">
+          <Grid item xs={12} md={8}>
+            <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
+              <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center' }}>
+                In Active
+              </Typography>
+              <RadioGroup
+                row
+                value={inActive} // Bind the form value
+                onChange={(event) => setValue('inActive', event.target.value === 'true')} // Update form value
+              >
+                <FormControlLabel value="true" control={<Radio />} label="Yes" />
+                <FormControlLabel value="false" control={<Radio />} label="No" />
+              </RadioGroup>
+            </Stack>
           </Grid>
-          {/* Submit Button */}
-          <LoadingButton
-            fullWidth
-            color="info"
-            size="large"
-            type="submit"
-            variant="contained"
-            loading={isSubmitting}
-          >
-            Submit to Save
-          </LoadingButton>
-        </FormProvider>
-      </Container>
-    </>
+        </Grid>
+        {/* Submit Button */}
+        <LoadingButton
+          fullWidth
+          color="info"
+          size="large"
+          type="submit"
+          variant="contained"
+          loading={isSubmitting}
+        >
+          Submit to Save
+        </LoadingButton>
+      </FormProvider>
+    </Container>
   );
 }

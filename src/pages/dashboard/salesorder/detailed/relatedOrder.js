@@ -1,5 +1,7 @@
 import { paramCase } from 'change-case';
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+
 // next
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -39,7 +41,6 @@ import orderData from './relatedorder.json';
 import Iconify from '../../../../components/iconify';
 // sections
 import { RelatedOrderTableRow } from '../../../../sections/@dashboard/salesorder/detailed/relatedorder';
-import PropTypes from 'prop-types';
 
 // ----------------------------------------------------------------------
 

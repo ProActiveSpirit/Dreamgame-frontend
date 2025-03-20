@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { createContext, useEffect, useReducer, useCallback, useMemo, useState } from 'react';
+import { createContext, useEffect, useReducer, useCallback, useMemo } from 'react';
 // utils
 import axios from '../utils/axios';
 import localStorageAvailable from '../utils/localStorageAvailable';
@@ -65,7 +65,6 @@ AuthProvider.propTypes = {
 
 export function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [user, setUser] = useState(null);
 
   const storageAvailable = localStorageAvailable();
 
@@ -84,7 +83,7 @@ export function AuthProvider({ children }) {
           type: 'INITIAL',
           payload: {
             isAuthenticated: true,
-            user:null,
+            user: null,
           },
         });
       } else {
@@ -118,19 +117,19 @@ export function AuthProvider({ children }) {
       email,
       password,
     });
-    const { accessToken, user } = response.data;
+    const { accessToken, userData } = response.data;
     setSession(accessToken);
 
     dispatch({
       type: 'LOGIN',
       payload: {
-        user,
+        user: userData,
       },
     });
   }, []);
 
   // REGISTER
-  const register = async (email, password, firstName, lastName) => {
+  const register = useCallback(async (email, password, firstName, lastName) => {
     const response = await fetch('/api/auth/register', {
       method: 'POST',
       headers: {
@@ -144,8 +143,8 @@ export function AuthProvider({ children }) {
       throw new Error(error.message);
     }
 
-    return await response.json();
-  };
+    return response.json();
+  }, []);
 
   // LOGOUT
   const logout = useCallback(() => {

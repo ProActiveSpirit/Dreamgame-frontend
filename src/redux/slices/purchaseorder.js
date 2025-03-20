@@ -1,6 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../utils/axios';
+// components
+// import { store } from '../redux/store';
 
 // ----------------------------------------------------------------------
 
@@ -111,10 +113,11 @@ export function createPurchaseOrder(newOrder) {
     try {
       const response = await axios.post('/api/order/addPurchase', newOrder);
       dispatch(slice.actions.createPurchaseOrderSuccess(response.data.data));
-      return {success: true, data: response.data.data}
+      return {success: true, data: response.data.data};
     } catch (error) {
       console.error("Error creating purchase order: ", error);
       dispatch(slice.actions.hasError(error));
+      return {success: false, error: error.message || 'Failed to create purchase order'};
     }
   };
 }

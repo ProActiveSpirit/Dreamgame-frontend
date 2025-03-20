@@ -13,7 +13,6 @@ import {
   Button,
 } from '@mui/material';
 // components
-import Iconify from '../../../../../components/iconify';
 import Label from '../../../../../components/label';
 import _mock from '../../../../../_mock';
 
@@ -100,7 +99,7 @@ const generateRandomData = (count) => {
       id: _mock.id(index),
       CUSTOMER: {
         name: fullName,
-        email: email,
+        email,
         ip: `${ip} (${country1}/${country2})`,
       },
       SCHEDULED_DATE: formattedDate,

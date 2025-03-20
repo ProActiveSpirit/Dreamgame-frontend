@@ -24,6 +24,10 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.users = action.payload;
     },
+    getUserSuccess(state, action) {
+      state.isLoading = false;
+      state.user = action.payload;
+    },
     setUserSuccess(state, action) {
       console.log('action.payload', action.payload);
       state.isLoading = false;
@@ -44,6 +48,10 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.customers = action.payload.customer;
     },
+    createCustomerSuccess(state, action) {
+      state.isLoading = false;
+      state.customers = action.payload.customer;
+    },
     updateCustomerSuccess(state, action) {
       state.isLoading = false;
       state.customers = action.payload.customer;
@@ -58,9 +66,14 @@ export const {
   startLoading,
   hasError,
   getUsersSuccess,
+  getUserSuccess,
   setUserSuccess,
   updateUser,
   getCustomerSuccess,
+  createCustomerSuccess,
+  updateCustomerSuccess,
+  addCustomerSuccess,
+  deleteCustomerSuccess,
 } = userSlice.actions;
 export default userSlice.reducer;
 // Thunks for async actions

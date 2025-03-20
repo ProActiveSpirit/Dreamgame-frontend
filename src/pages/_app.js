@@ -27,6 +27,8 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 
 import PropTypes from 'prop-types';
 import { CacheProvider } from '@emotion/react';
+import { SnackbarProvider, closeSnackbar } from 'notistack';
+
 // next
 import Head from 'next/head';
 // redux
@@ -34,6 +36,12 @@ import { Provider as ReduxProvider } from 'react-redux';
 // @mui
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+// components
+import { StyledChart } from '../components/chart';
+import ProgressBar from '../components/progress-bar';
+import { MotionLazyContainer } from '../components/animate';
+import { ThemeSettings, SettingsProvider } from '../components/settings';
+// notistack (moved before redux/store import)
 // redux
 import { store } from '../redux/store';
 // utils
@@ -42,12 +50,6 @@ import createEmotionCache from '../utils/createEmotionCache';
 import ThemeProvider from '../theme';
 // locales
 import ThemeLocalization from '../locales';
-// components
-import { StyledChart } from '../components/chart';
-import ProgressBar from '../components/progress-bar';
-import { MotionLazyContainer } from '../components/animate';
-import { ThemeSettings, SettingsProvider } from '../components/settings';
-import { SnackbarProvider, closeSnackbar } from 'notistack';
 
 // Check our docs
 // https://docs.minimals.cc/authentication/js-version
@@ -100,8 +102,7 @@ export default function MyApp(props) {
                             height="24"
                             onClick={() => closeSnackbar(key)}
                             sx={{ color: 'white' }}
-                          >
-                          </iconify-icon>
+                          />
                         )}  
                       >
                         <StyledChart />

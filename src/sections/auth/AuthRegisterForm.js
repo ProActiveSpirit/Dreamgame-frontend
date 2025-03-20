@@ -72,7 +72,7 @@ export default function AuthRegisterForm() {
     console.log("isVerificationStep" , isVerificationStep);
     try {
       if (!isVerificationStep) {  
-        const result = await register(data.email, data.password, data.firstName, data.lastName);
+        await register(data.email, data.password, data.firstName, data.lastName);
         setUserDetails(data);
         setIsVerificationStep(true);
         reset({ verificationCode: '' });
@@ -127,7 +127,7 @@ export default function AuthRegisterForm() {
           {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
           
           <Typography variant="body2" sx={{ mb: 3 }}>
-            Please check your email ({userDetails?.email}). We've sent you a verification code.
+            Please check your email ({userDetails?.email}). We&apos;ve sent you a verification code.
           </Typography>
 
           <RHFTextField
