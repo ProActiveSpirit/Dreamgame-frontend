@@ -99,15 +99,20 @@ export default function RegionPrice({price, SalesVat}) {
   const calculateRows = () =>
     loading || !exchangeRates
       ? []
-      : regions.map((region, index) => ({
-          id: _mock.id(index),
-          Region: region,
-          CostEUR: `${(price * (exchangeRates[currencies[region]] || 1)).toFixed(2)} ${currencies[region]}`,
-          CostExcVat: `${(price * (exchangeRates[currencies[region]] || 1)).toFixed(2)} ${currencies[region]}`,
-          SalesVat: `${SalesVat} %`,
-          SalesIncVat: `${(price * (exchangeRates[currencies[region]] || 1)).toFixed(2)} ${currencies[region]}`,
-          SRPIncVat: `${(price * (exchangeRates[currencies[region]] || 1)).toFixed(2)} ${currencies[region]}`,
-        }));
+      : regions.map((region, index) => {
+          // Use price if it exists and is not 0, otherwise default to 5
+          const effectivePrice = (!price || price === 0) ? 5 : price;
+          
+          return {
+            id: _mock.id(index),
+            Region: region,
+            CostEUR: `${(effectivePrice * (exchangeRates[currencies[region]] || 1)).toFixed(2)} ${currencies[region]}`,
+            CostExcVat: `${(effectivePrice * (exchangeRates[currencies[region]] || 1)).toFixed(2)} ${currencies[region]}`,
+            SalesVat: `${SalesVat} %`,
+            SalesIncVat: `${(effectivePrice * (exchangeRates[currencies[region]] || 1)).toFixed(2)} ${currencies[region]}`,
+            SRPIncVat: `${(effectivePrice * (exchangeRates[currencies[region]] || 1)).toFixed(2)} ${currencies[region]}`,
+          };
+        });
 
   const { themeStretch } = useSettingsContext();
 

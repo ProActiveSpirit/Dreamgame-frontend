@@ -16,7 +16,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 import Iconify from '../../components/iconify';
 import FormProvider, { RHFTextField } from '../../components/hook-form';
 // import { C } from '@fullcalendar/core/internal-common';
-import axios from 'axios';
+import axiosInstance from '../../utils/axios';
 import { verifyEmail, resendVerificationCode } from '../../auth/verify-email';
 
 // ----------------------------------------------------------------------
@@ -69,9 +69,9 @@ export default function AuthRegisterForm() {
   } = methods;
 
   const onSubmit = async (data) => {
+    console.log("isVerificationStep" , isVerificationStep);
     try {
       if (!isVerificationStep) {  
-        // First step: Register user and send verification email
         const result = await register(data.email, data.password, data.firstName, data.lastName);
         setUserDetails(data);
         setIsVerificationStep(true);

@@ -14,6 +14,7 @@ import {
 import { DataGrid } from '@mui/x-data-grid';
 
 // Validation schema
+import { useRouter } from 'next/router';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
@@ -114,6 +115,8 @@ export default function PurchaseOrderAddPage() {
   const { products } = useSelector((state) => state.product);
 
   const dispatch = useDispatch();
+  const router = useRouter();
+
 
   const methods = useForm({
     resolver: yupResolver(FormSchema),
@@ -166,9 +169,16 @@ export default function PurchaseOrderAddPage() {
   }, [watchedCostExtVat, watchedCostVat, setValue]);
 
   const onSubmit = async (data) => {
-    dispatch(createPurchaseOrder(data));
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-    reset(defaultValues);
+    console.log("data: ", data);
+    const result = await dispatch(createPurchaseOrder(data));
+    console.log("result" , result);
+    if (result.success) {
+      router.push(PATH_DASHBOARD.purchaseorder.view(result.data[0].id));
+    }
+    else{
+      await new Promise((resolve) => setTimeout(resolve, 3000)); // Simulate API call
+      reset(defaultValues); // Reset the form explicitly, including Autocomplete fields
+    }
   };
 
   useEffect(() => {
@@ -243,7 +253,18 @@ export default function PurchaseOrderAddPage() {
                 size="small"
               />
             </Stack>
-            <TextField name="Quantity" variant="outlined" fullWidth label="Quantity" size="small" />
+            <RHFTextField 
+              name="Quantity" 
+              label="Quantity" 
+              variant="outlined" 
+              fullWidth 
+              size="small"
+              InputProps={{
+                type: 'number',
+              }}
+              error={!!errors.Quantity}
+              helperText={errors.Quantity?.message}
+            />
           </Stack>
         </Box>
       </Grid>
@@ -276,37 +297,37 @@ export default function PurchaseOrderAddPage() {
               )}
             />
             <RHFTextField
-            name="costExtVat"
-            label="Cost Ext Vat"
-            InputProps={{
+              name="costExtVat"
+              label="Cost Ext Vat"
+              InputProps={{
                 type: 'number',
-                endAdornment: <InputAdornment position="end">EUR</InputAdornment>,
-            }}
-            size="small"
-            error={!!errors.costExtVat}
-            helperText={errors.costExtVat?.message}
+                endAdornment: <InputAdornment position="end" disableTypography>EUR</InputAdornment>,
+              }}
+              size="small"
+              error={!!errors.costExtVat}
+              helperText={errors.costExtVat?.message}
             />
             <RHFTextField
-            name="costVat"
-            label="Cost Vat"
-            InputProps={{
+              name="costVat"
+              label="Cost Vat"
+              InputProps={{
                 type: 'number',
-                endAdornment: <InputAdornment position="end">%</InputAdornment>,
-            }}
-            size="small"
-            error={!!errors.costVat}
-            helperText={errors.costVat?.message}
+                endAdornment: <InputAdornment position="end" disableTypography>%</InputAdornment>,
+              }}
+              size="small"
+              error={!!errors.costVat}
+              helperText={errors.costVat?.message}
             />
             <RHFTextField
-            name="costIncVat"
-            label="Cost Inc Vat"
-            InputProps={{
+              name="costIncVat"
+              label="Cost Inc Vat"
+              InputProps={{
                 type: 'number',
-                endAdornment: <InputAdornment position="end">EUR</InputAdornment>,
-            }}
-            size="small"
-            error={!!errors.costIncVat}
-            helperText={errors.costIncVat?.message}
+                endAdornment: <InputAdornment position="end" disableTypography>EUR</InputAdornment>,
+              }}
+              size="small"
+              error={!!errors.costIncVat}
+              helperText={errors.costIncVat?.message}
             />
           </Stack>
           </Box>
@@ -337,55 +358,22 @@ export default function PurchaseOrderAddPage() {
               )}
             />
             <RHFTextField
-            name="stockSalesIncVat"
-            label="Stock Sales Inc Vat"
-            InputProps={{
+              name="stockSalesIncVat"
+              label="Stock Sales Inc Vat"
+              InputProps={{
                 type: 'number',
-                endAdornment: <InputAdornment position="end">EUR</InputAdornment>,
-            }}
-            size="small"
-            error={!!errors.costExtVat}
-            helperText={errors.costExtVat?.message}
+                endAdornment: <InputAdornment position="end" disableTypography>EUR</InputAdornment>,
+              }}
+              size="small"
+              error={!!errors.costExtVat}
+              helperText={errors.costExtVat?.message}
             />
             </Stack>
-          </Stack>
           </Box>
         </Grid>
       </Grid>
       {/* Summary Information */}
-      <Grid key={5} item xs={6} md={12}>
-        <Box sx={{ padding: 2, border: '1px solid #e0e0e0', borderRadius: 2, marginBottom: 3 }}>
-          <Typography variant="h7" gutterBottom>
-            Purchase Order Summary Information
-          </Typography>
-          <Divider sx={{ mb: 2 }} />
-          <DataGrid
-            columns={columns}
-            rows={rows}
-            disableSelectionOnClick
-            autoHeight
-            hideFooter
-          />
-
-          {/* Summary Section */}
-          <Stack spacing={10} sx={{ mt: 3 }} direction={{ xs: "column", md: "row" }}>
-            <Stack direction="row" justifyContent="flex-end">
-              <Typography>Average Cost :</Typography>
-            </Stack>
-
-            <Stack direction="row" justifyContent="flex-end">
-              <Typography>Quantity :</Typography>
-            </Stack>
-
-            <Stack direction="row" justifyContent="flex-end">
-              <Typography variant="h6">Total Cost Inc Vat :</Typography>
-              <Typography variant="h6" sx={{ textAlign: "right", width: 120 }}>
-                {totals.totalCostIncVat.toFixed(2)}
-              </Typography>
-            </Stack>
-          </Stack>
-          </Box>
-      </Grid>
+      
       {/* Submit Information */}
       <Grid item xs={12}>
         <Box sx={{ textAlign: 'center', marginTop: 3 }}>

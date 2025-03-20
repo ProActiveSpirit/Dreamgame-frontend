@@ -138,7 +138,7 @@ export default function SalesOrderAddPage() {
   };
 
   useEffect(() => {
-    dispatch(getCustomers()); // Fetch Customers when the component mounts
+    // dispatch(getCustomers()); // Fetch Customers when the component mounts
     dispatch(getProducts()); // Fetch products when the component mounts
   }, [dispatch]);
 
