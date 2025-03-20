@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 //
 import { AuthContext } from './JwtContext';
+import axios from '../utils/axios';
 // import { AuthContext } from './Auth0Context';
 // import { AuthContext } from './FirebaseContext';
 // import { AuthContext } from './AwsCognitoContext';
@@ -15,21 +16,19 @@ export const useAuthContext = () => {
   return {
     ...context,
     register: async (email, password, firstName, lastName) => {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password, firstName, lastName }),
-      });
+      console.log("auth register", email, password, firstName, lastName);
+      const response = await axios.post('/api/auth/register', 
+        { email, password, firstName, lastName }
+      );
+      console.log("auth response1", response.data);
 
       if (!response.ok) {
-        const error = await response.json();
+        const error = await response.data.json();
         throw new Error(error.message);
       }
 
       // At this point, your backend should send a verification email with a code
-      return response.json();
+      return response.data.json();
     },
   };
 };

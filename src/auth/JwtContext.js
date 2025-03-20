@@ -137,7 +137,7 @@ export function AuthProvider({ children }) {
       },
       body: JSON.stringify({ email, password, firstName, lastName }),
     });
-
+    console.log("auth response", response);
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.message);
