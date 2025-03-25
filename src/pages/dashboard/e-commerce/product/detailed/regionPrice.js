@@ -17,7 +17,7 @@ RegionPrice.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 // ----------------------------------------------------------------------
 
-export default function RegionPrice({price, SalesVat}) {
+export default function RegionPrice({product}) {
   // const theme = useTheme();
 
   const [exchangeRates, setExchangeRates] = useState({});
@@ -85,12 +85,12 @@ export default function RegionPrice({price, SalesVat}) {
 
   const currencies = {
     NO: 'NOK',
-    BE: 'EUR', // No conversion needed
-    DE: 'EUR', // No conversion needed
-    ES: 'EUR', // No conversion needed
-    FR: 'EUR', // No conversion needed
-    NL: 'EUR', // No conversion needed
-    PT: 'EUR', // No conversion needed
+    BE: 'EUR',
+    DE: 'EUR',
+    ES: 'EUR',
+    FR: 'EUR',
+    NL: 'EUR',
+    PT: 'EUR',
     PL: 'PLN',
     GB: 'GBP',
   };
@@ -99,10 +99,9 @@ export default function RegionPrice({price, SalesVat}) {
   const calculateRows = () =>
     loading || !exchangeRates
       ? []
-      : regions.map((region, index) => {
-          // Use price if it exists and is not 0, otherwise default to 5
+      : product?.region?.map((region, index) => {
           const effectivePrice = (!price || price === 0) ? 5 : price;
-          
+          console.log('region : ', region);
           return {
             id: _mock.id(index),
             Region: region,

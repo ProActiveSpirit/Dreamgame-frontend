@@ -106,6 +106,14 @@ export default function SalesOrderListPage() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
+  // Add loading state
+  const [isClient, setIsClient] = useState(false);
+
+  // Add this useEffect to handle client-side rendering
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   useEffect(() => {
     dispatch(getSalesOrders());
   }, [dispatch]);
@@ -113,18 +121,16 @@ export default function SalesOrderListPage() {
   useEffect(() => {
     if (allOrders.length) {
       const extractedData = allOrders.map((orderData) => ({
-        id:orderData.id,
-        salesIncVat:orderData.salesIncVat,
-        processQuantity:orderData.processQuantity,
-        totalQuantity:orderData.totalQuantity,
-        totalPrice:orderData.totalPrice,
-        createdOn:orderData.createdOn,
-        status:orderData.status,
-        N_A:orderData.N_A,
-        // customer: orderData.customer?.name || "Unknown Customer",
+        id: orderData.id,
+        salesIncVat: orderData.salesIncVat,
+        processQuantity: orderData.processQuantity,
+        totalQuantity: orderData.totalQuantity,
+        totalPrice: orderData.totalPrice,
+        createdOn: orderData.createdOn,
+        status: orderData.status,
+        N_A: orderData.N_A,
         product: orderData.product?.name || "Unknown Product",
       }));
-      console.log("extractedData"  ,extractedData);
       setTableData(extractedData);
     }
   }, [allOrders]);
@@ -255,70 +261,74 @@ export default function SalesOrderListPage() {
           />
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
-              dense={dense}
-              numSelected={selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row.id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
-            />
-
-            <Scrollbar>
-              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 1200 }}>
-                <TableHeadCustom
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
+            {isClient ? ( // Only render table on client-side
+              <>
+                <TableSelectedAction
+                  dense={dense}
                   numSelected={selected.length}
-                  onSort={onSort}
+                  rowCount={tableData.length}
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
                       tableData.map((row) => row.id)
                     )
                   }
+                  action={
+                    <Tooltip title="Delete">
+                      <IconButton color="primary" onClick={handleOpenConfirm}>
+                        <Iconify icon="eva:trash-2-outline" />
+                      </IconButton>
+                    </Tooltip>
+                  }
                 />
 
-                <TableBody>
-                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) =>
-                      row ? (
-                        <SalesOrderTableRow
-                          key={row.id}
-                          row={row}
-                          selected={selected.includes(row.id)}
-                          onSelectRow={() => onSelectRow(row.id)}
-                          onDeleteRow={() => handleDeleteRow(row.id)}
-                          onEditRow={() => handleEditRow(row.id)}
-                          onViewRow={() => handleViewRow(row.id)}
-                        />
-                      ) : (
-                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                      )
-                    )}
+                <Scrollbar>
+                  <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 1200 }}>
+                    <TableHeadCustom
+                      order={order}
+                      orderBy={orderBy}
+                      headLabel={TABLE_HEAD}
+                      rowCount={tableData.length}
+                      numSelected={selected.length}
+                      onSort={onSort}
+                      onSelectAllRows={(checked) =>
+                        onSelectAllRows(
+                          checked,
+                          tableData.map((row) => row.id)
+                        )
+                      }
+                    />
 
-                  <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  />
+                    <TableBody>
+                      {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .map((row, index) =>
+                          row ? (
+                            <SalesOrderTableRow
+                              key={row.id}
+                              row={row}
+                              selected={selected.includes(row.id)}
+                              onSelectRow={() => onSelectRow(row.id)}
+                              onDeleteRow={() => handleDeleteRow(row.id)}
+                              onEditRow={() => handleEditRow(row.id)}
+                              onViewRow={() => handleViewRow(row.id)}
+                            />
+                          ) : (
+                            !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                          )
+                        )}
 
-                  <TableNoData isNotFound={isNotFound} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
+                      <TableEmptyRows
+                        height={denseHeight}
+                        emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
+                      />
+
+                      <TableNoData isNotFound={isNotFound} />
+                    </TableBody>
+                  </Table>
+                </Scrollbar>
+              </>
+            ) : null}
           </TableContainer>
 
           <TablePaginationCustom

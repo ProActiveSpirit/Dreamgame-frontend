@@ -128,13 +128,13 @@ export function getCustomers() {
 // Thunk to add Customers information status
 export function createCustomer(data) {
   return async (dispatch) => {
-    // dispatch(startLoading());
-    console.log('/api/users/createCustomer - 111');
     try {
       const response = await axios.post('/api/users/createCustomer', data);
       dispatch(createCustomerSuccess(response.data));
+      return { payload: response.data };
     } catch (error) {
-      dispatch(hasError(error));
+      dispatch(hasError(error.message));
+      throw error;
     }
   };
 }
@@ -142,10 +142,21 @@ export function createCustomer(data) {
 export function updateCustomer(data) {
   return async (dispatch) => {
     // dispatch(startLoading());
-    console.log('/api/users/updateCustomer - 111');
     try {
       const response = await axios.post('/api/users/updateCustomer', data);
       dispatch(updateCustomerSuccess(response.data));
+    } catch (error) {
+      dispatch(hasError(error));
+    }
+  };
+}
+// Thunk to delete Customer
+export function deleteCustomer(id) {
+  return async (dispatch) => {
+    dispatch(startLoading());
+    try {
+      const response = await axios.post('/api/users/deleteCustomer', { id });
+      dispatch(deleteCustomerSuccess(response.data));
     } catch (error) {
       dispatch(hasError(error));
     }

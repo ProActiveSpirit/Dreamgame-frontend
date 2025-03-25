@@ -15,7 +15,7 @@ import NavList from './NavList';
 
 // ----------------------------------------------------------------------
 
-NavMobile.propTypes = {
+NavMobile.propTypes = { 
   data: PropTypes.array,
   isOffset: PropTypes.bool,
 };

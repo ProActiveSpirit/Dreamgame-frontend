@@ -32,6 +32,9 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
   const [exchangeRates, setExchangeRates] = useState({});
   const [loading, setLoading] = useState(true);
   const [openConfirm, setOpenConfirm] = useState(false);
+  const [updatedOrder, setUpdatedOrder] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   const {
     query: { name },
@@ -90,7 +93,7 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
       const eachQuantity = currentOrder?.totalQuantity 
         ? Math.floor(currentOrder.totalQuantity / selectedRegions.length)
         : 0;
-
+      console.log('selectedRegions : ', selectedRegions);
       const initialRows = selectedRegions.map((region, index) => {
         const costIncVat = parseFloat(
           (currentOrder?.salesExtVat ?? 0 * (exchangeRates[currencies[region.title]] || 1)).toFixed(2)
@@ -100,7 +103,7 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
           : eachQuantity;
         
         return {
-          id: currentOrder.id,
+          id: index,
           Region: region.title,
           Product: currentOrder?.product?.name,
           ProductId: currentOrder?.product?.id,
@@ -110,7 +113,7 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
           TotalCostIncVat: (quantity * costIncVat).toFixed(2),
         };
       });
-
+      console.log('initialRows : ', initialRows);
       setRows(initialRows);
       calculateTotals(initialRows);
     }
@@ -133,7 +136,7 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
       0
     );
     setTotals({ totalQuantity, totalCostIncVat });
-  };
+  };  
 
   // Handler to update Quantity and TotalCostIncVat
   const handleQuantityChange = (id, value) => {
@@ -179,7 +182,7 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
     },
     {
       field: 'Quantity',
-      headerName: 'Quantity (%)',
+      headerName: 'Quantity',
       width: 150,
       renderCell: (params) => (
         <TextField
@@ -242,7 +245,7 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
       TOTALINCVAT: `${row.TotalCostIncVat} ${row.CostCurrency}`,
       JOB: 'false',
       STATUS: 'Processing',
-      DATE: `${currentOrder.startDate}\n${currentOrder.endDate}`,
+      DATE: `${startDate}\n${endDate}`,
     }));
 
     setGeneratedPOs(transformedRows);
@@ -282,9 +285,23 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
               variant="outlined"
               fullWidth
               value={currentOrder?.expectedCost ?? ''}
-              // onChange={handleChange('weight')}
+              onChange={(e) => {
+                const newExpectedCost = parseFloat(e.target.value);
+                if (!isNaN(newExpectedCost) || e.target.value === '') {
+
+                  const updatedOrder = { ...currentOrder };
+                  updatedOrder.expectedCost = e.target.value;
+
+                  if (newExpectedCost && updatedOrder.totalQuantity) {
+
+                    const costPerUnit = newExpectedCost / updatedOrder.totalQuantity;
+                    updatedOrder.salesIncVat = costPerUnit;
+                  }
+                  setUpdatedOrder(updatedOrder);
+                }
+              }}
               label="Expected Cost"
-              // helperText="Weight"
+              type="number"
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">{currentOrder?.salesCurrency}</InputAdornment>
@@ -296,14 +313,30 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
             <DateTimePicker
               renderInput={(props) => <TextField {...props} fullWidth />}
               label="Start Date"
-              value={currentOrder?.startDate}
-              // onChange={setValue}
+              value={startDate}
+              onChange={(newValue) => {
+                setStartDate(newValue);
+                if (updatedOrder) {
+                  setUpdatedOrder({
+                    ...updatedOrder,
+                    startDate: newValue,
+                  });
+                }
+              }}
             />
             <DateTimePicker
               renderInput={(props) => <TextField {...props} fullWidth />}
               label="End Date"
-              value={currentOrder?.endDate}
-              // onChange={setValue}
+              value={endDate}
+              onChange={(newValue) => {
+                setEndDate(newValue);
+                if (updatedOrder) {
+                  setUpdatedOrder({
+                    ...updatedOrder,
+                    endDate: newValue,
+                  });
+                }
+              }}
             />
           </Stack>
 

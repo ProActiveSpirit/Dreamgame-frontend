@@ -12,10 +12,12 @@ import {
   Container,
   IconButton,
   TableContainer,
+  TableRow,
+  TableCell,
 } from '@mui/material';
 // redux
 import { useSelector, useDispatch } from 'react-redux'; // Import Redux hooks
-import { getCustomers } from '../../../redux/slices/user';
+import { getCustomers, deleteCustomer } from '../../../redux/slices/user';
 
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -76,12 +78,64 @@ export default function UserListPage() {
 
   const { customers } = useSelector((state) => state.user); // Fetch products from Redux
 
+  // Add loading state
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
-    dispatch(getCustomers());
+    const fetchData = async () => {
+      await dispatch(getCustomers());
+      setIsLoading(false);
+    };
+    fetchData();
   }, [dispatch]);
 
+  // Don't render table until data is loaded
+  if (isLoading) {
+    return (
+      <Container maxWidth={themeStretch ? false : 'mg'}>
+        <CustomBreadcrumbs
+          heading="Customer List"
+          links={[
+            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Customer', href: PATH_DASHBOARD.customer.list },
+            { name: 'List' },
+          ]}
+          action={
+            <Button
+              href={PATH_DASHBOARD.customer.add}
+              variant="contained"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+            >
+              New Customer
+            </Button>
+          }
+        />
+        <Card>
+          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+            <Scrollbar>
+              <Table size="small" sx={{ minWidth: 800 }}>
+                <TableHeadCustom
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={TABLE_HEAD}
+                  rowCount={0}
+                  numSelected={0}
+                  onSort={onSort}
+                  onSelectAllRows={() => {}}
+                />
+              </Table>
+            </Scrollbar>
+          </TableContainer>
+        </Card>
+      </Container>
+    );
+  }
+
+  // Make sure customers is an array
+  const safeCustomers = Array.isArray(customers) ? customers : [];
+
   const dataFiltered = applyFilter({
-    inputData: customers,
+    inputData: safeCustomers,
     comparator: getComparator(order, orderBy),
     filterName,
     filterRole,
@@ -104,15 +158,22 @@ export default function UserListPage() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = customers.filter((row) => row.id !== id);
+    dispatch(deleteCustomer(id));
     setSelected([]);
-    // Consider dispatching an action to update the user list in the store
+
+    if (page > 0) {
+      if (dataInPage.length < 2) {
+        setPage(page - 1);
+      }
+    }
   };
 
   const handleDeleteRows = (selectedRows) => {
-    const deleteRows = customers.filter((row) => !selectedRows.includes(row.id));
+    selectedRows.forEach((id) => {
+      dispatch(deleteCustomer(id));
+    });
     setSelected([]);
-    // Consider dispatching an action to update the user list in the store
+    handleCloseConfirm();
   };
 
   const handleEditRow = (id) => {
@@ -183,22 +244,30 @@ export default function UserListPage() {
                 />
 
                 <TableBody>
-                  {dataFiltered
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => (
-                      <CustomerTableRow
-                        key={row.id}
-                        row={row}
-                        selected={selected.includes(row.id)}
-                        onSelectRow={() => onSelectRow(row.id)}
-                        onDeleteRow={() => handleDeleteRow(row.id)}
-                        onEditRow={() => handleEditRow(row.name)}
-                      />
-                    ))}
+                  {dataFiltered.length > 0 ? (
+                    dataFiltered
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((row) => (
+                        <CustomerTableRow
+                          key={row.id}
+                          row={row}
+                          selected={selected.includes(row.id)}
+                          onSelectRow={() => onSelectRow(row.id)}
+                          onDeleteRow={() => handleDeleteRow(row.id)}
+                          onEditRow={() => handleEditRow(row.name)}
+                        />
+                      ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={TABLE_HEAD.length + 2} align="center">
+                        No data available
+                      </TableCell>
+                    </TableRow>
+                  )}
 
                   <TableEmptyRows
                     height={52}
-                    emptyRows={emptyRows(page, rowsPerPage, customers.length)}
+                    emptyRows={emptyRows(page, rowsPerPage, safeCustomers.length)}
                   />
 
                   <TableNoData isNotFound={isNotFound} />

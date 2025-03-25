@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 
 // Validation schema
+import { useRouter } from 'next/router';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
@@ -32,6 +33,7 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 // Layouts
 import DashboardLayout from '../../../layouts/dashboard';
 import axios from '../../../utils/axios';
+import { useSnackbar } from 'notistack';
 
 // ----------------------------------------------------------------------
 
@@ -76,26 +78,22 @@ SalesOrderAddPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout
 // Validation schema using Yup
 const FormSchema = Yup.object().shape({
   company: Yup.string().required('Company Name is required'),
-  // name: Yup.string()
-  //   .required('Display Name is required')
-  //   .min(2, 'Display Name must be at least 2 characters')
-  //   .max(50, 'Display Name must not exceed 50 characters'),
-  // email: Yup.string().email('Invalid email address').required('Email is required'),
-  // website: Yup.string().url('Invalid website URL').required('Website is required'),
-  // companyInvoice: Yup.string().required('Company Invoice Name is required'),
-  // address: Yup.string().required('Invoice address is required'),
-  // zipCode: Yup.string().required('ZipCode is required'),
-  // city: Yup.string().required('City is required'),
-  // primaryName: Yup.string().required('Name is required'),
-  // primarySurname: Yup.string().required('Surname is required'),
-  // primaryEmail: Yup.string().required('Email is required'),
+  name: Yup.string()
+    .required('Display Name is required')
+    .min(2, 'Display Name must be at least 2 characters')
+    .max(50, 'Display Name must not exceed 50 characters'),
+  website: Yup.string()
+    .url('Invalid website URL')
+    .required('Website URL is required'),
+  // ... existing validation rules ...
 });
 
 export default function SalesOrderAddPage() {
   const { themeStretch } = useSettingsContext();
+  const { enqueueSnackbar } = useSnackbar();
 
   const dispatch = useDispatch();
-
+  const router = useRouter();
   const [regions, setRegions] = useState([]);
   const [currencies, setCurrencies] = useState([]);
   const [salesRegion, setSalesRegion] = useState();
@@ -144,17 +142,26 @@ export default function SalesOrderAddPage() {
   const inActive = watch('inActive', false);
 
   const onSubmit = async (data) => {
-    const updatedData = {
-      ...data,
-      salesRegion, // Add salesRegion
-      salesCurrency, // Add salesCurrency
-      countryCode, // Add countryCode based on salesRegion
-    };
-
-    console.log('Updated Data:', updatedData); // Debug the updated data
-    dispatch(createCustomer(data));
-    await new Promise((resolve) => setTimeout(resolve, 3000)); // Simulate API call
-    reset(defaultValues); // Reset the form explicitly, including Autocomplete fields
+    try {
+      const updatedData = {
+        ...data,
+        salesRegion: salesRegion?.code || '',
+        salesCurrency, 
+        countryCode,
+      };
+      
+      const response = await dispatch(createCustomer(updatedData));
+      
+      // Check if the response was successful
+      if (response?.payload?.message) {
+        enqueueSnackbar(response.payload.message, { variant: 'success' });
+        reset(defaultValues);
+        router.push(PATH_DASHBOARD.customer.list);
+      }
+    } catch (error) {
+      enqueueSnackbar(error.message || 'Error creating customer', { variant: 'error' });
+      console.error('Error submitting form:', error);
+    }
   };
 
   return (
@@ -182,32 +189,31 @@ export default function SalesOrderAddPage() {
               <Stack spacing={1}>
                 <RHFTextField
                   name="company"
-                  label="Company Name"
-                  InputProps={{ type: 'string' }}
+                  label="Company Name *"
                   size="small"
+                  required
                   error={!!errors.company}
                   helperText={errors.company?.message}
                 />
                 <RHFTextField
                   name="name"
-                  label="Display Name"
-                  InputProps={{ type: 'string' }}
+                  label="Display Name *"
                   size="small"
+                  required
                   error={!!errors.name}
                   helperText={errors.name?.message}
                 />
                 <RHFTextField
                   name="website"
-                  label="Website Url"
-                  InputProps={{ type: 'string' }}
+                  label="Website URL *"
                   size="small"
+                  required
                   error={!!errors.website}
                   helperText={errors.website?.message}
                 />
                 <RHFTextField
                   name="email"
                   label="Email"
-                  InputProps={{ type: 'string' }}
                   size="small"
                   error={!!errors.email}
                   helperText={errors.email?.message}
@@ -215,7 +221,6 @@ export default function SalesOrderAddPage() {
                 <RHFTextField
                   name="phone"
                   label="Phone"
-                  InputProps={{ type: 'string' }}
                   size="small"
                   error={!!errors.phone}
                   helperText={errors.phone?.message}
@@ -223,7 +228,6 @@ export default function SalesOrderAddPage() {
                 <RHFTextField
                   name="linkedIn"
                   label="LinkedIn"
-                  InputProps={{ type: 'string' }}
                   size="small"
                   error={!!errors.linkedin}
                   helperText={errors.linkedin?.message}
@@ -231,7 +235,6 @@ export default function SalesOrderAddPage() {
                 <RHFTextField
                   name="skype"
                   label="Skype"
-                  InputProps={{ type: 'string' }}
                   size="small"
                   error={!!errors.skype}
                   helperText={errors.skype?.message}
@@ -239,7 +242,6 @@ export default function SalesOrderAddPage() {
                 <RHFTextField
                   name="facebook"
                   label="Facebook"
-                  InputProps={{ type: 'string' }}
                   size="small"
                   error={!!errors.facebook}
                   helperText={errors.facebook?.message}
@@ -247,7 +249,6 @@ export default function SalesOrderAddPage() {
                 <RHFTextField
                   name="twitter"
                   label="Twitter"
-                  InputProps={{ type: 'string' }}
                   size="small"
                   error={!!errors.twitter}
                   helperText={errors.twitter?.message}
@@ -265,7 +266,6 @@ export default function SalesOrderAddPage() {
                 <RHFTextField
                   name="companyInvoice"
                   label="Company Name (Invoice)"
-                  InputProps={{ type: 'string' }}
                   size="small"
                   error={!!errors.company}
                   helperText={errors.company?.message}
@@ -273,7 +273,6 @@ export default function SalesOrderAddPage() {
                 <RHFTextField
                   name="address"
                   label="Address"
-                  InputProps={{ type: 'string' }}
                   size="small"
                   error={!!errors.address}
                   helperText={errors.address?.message}
@@ -281,7 +280,6 @@ export default function SalesOrderAddPage() {
                 <RHFTextField
                   name="zipCode"
                   label="ZipCode"
-                  InputProps={{ type: 'string' }}
                   size="small"
                   error={!!errors.zipCode}
                   helperText={errors.zipCode?.message}
@@ -289,7 +287,6 @@ export default function SalesOrderAddPage() {
                 <RHFTextField
                   name="city"
                   label="City"
-                  InputProps={{ type: 'string' }}
                   size="small"
                   error={!!errors.city}
                   helperText={errors.city?.message}

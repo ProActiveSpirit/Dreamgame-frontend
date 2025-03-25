@@ -14,7 +14,7 @@ CustomerTableRow.propTypes = {
 };
 
 export default function CustomerTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
-  const { id, name, email, ip, website, region } = row;
+  const { id, name = '', email = '', ip = '', website = '', region = '' } = row || {};
 
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
@@ -66,9 +66,14 @@ export default function CustomerTableRow({ row, selected, onEditRow, onSelectRow
         <TableCell align="center" sx={{ textTransform: 'capitalize' }}>
           {region}
         </TableCell>
-        <TableCell align="center" width={50}>
+        <TableCell align="center" width={10}>
           <IconButton onClick={() => onEditRow()}>
             <Iconify icon="eva:edit-fill" />
+          </IconButton>
+        </TableCell>
+        <TableCell align="center" width={10}>
+          <IconButton onClick={() => onDeleteRow()}>
+            <Iconify icon="eva:trash-2-outline" />
           </IconButton>
         </TableCell>
       </TableRow>

@@ -190,7 +190,7 @@ export default function SalesOrderAddPage() {
                 <Autocomplete
                   fullWidth
                   options={products} // Products fetched from Redux
-                  getOptionLabel={(option) => `${option?.name || ''} (${option?.sku || ''})`} // Ensure label is valid
+                  getOptionLabel={(option) => `${option?.name || ''} [${option?.publisher || ''}] [${option?.region || ''}] (${option?.sku || ''})`} // Ensure label is valid
                   value={products.find((product) => product.id === watch('Product')) || null} // Match value properly
                   isOptionEqualToValue={(option, value) => option.name === value?.name} // Compare by name
                   onChange={(event, newValue) => setValue('Product', newValue?.id || '')} // Update form state
@@ -204,7 +204,7 @@ export default function SalesOrderAddPage() {
                   )}
                 />
                 {watch('Product') ? 
-                <RegionPrice price={products.find((product) => product.id === watch('Product')).price} SalesVat={0}/>: <></>}
+                <RegionPrice product={products.find((product) => product.id === watch('Product'))}/>: <></>}
 
               <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
                 {/* Start Date */}

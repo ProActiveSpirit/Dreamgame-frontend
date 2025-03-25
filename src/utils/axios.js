@@ -4,7 +4,9 @@ import axios from 'axios';
 
 // ----------------------------------------------------------------------
 
-const axiosInstance = axios.create({ baseURL: process.env.HOST_API_KEY || "" });
+const axiosInstance = axios.create({ 
+  baseURL: process.env.NEXT_PUBLIC_HOST_API_KEY || "http://localhost:3000" 
+});
 
 axiosInstance.interceptors.response.use(
   (response) => response,
