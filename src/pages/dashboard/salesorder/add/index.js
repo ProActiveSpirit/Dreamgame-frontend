@@ -138,7 +138,7 @@ export default function SalesOrderAddPage() {
   };
 
   useEffect(() => {
-    // dispatch(getCustomers()); // Fetch Customers when the component mounts
+    dispatch(getCustomers()); // Fetch Customers when the component mounts
     dispatch(getProducts()); // Fetch products when the component mounts
   }, [dispatch]);
 
@@ -160,7 +160,7 @@ export default function SalesOrderAddPage() {
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <Grid container justifyContent="left" alignItems="left">
             <Grid item xs={12} md={11}>
-              <Stack spacing={5}>
+              <Stack spacing={2}>
                 {/* Order Date */}
                 <DateTimePicker
                   renderInput={(props) => <TextField {...props} fullWidth />}
@@ -168,28 +168,28 @@ export default function SalesOrderAddPage() {
                   value={watch('orderDate')}
                   onChange={(newValue) => setValue('orderDate', newValue)}
                 />
-                {/* <Autocomplete
+                <Autocomplete
                   fullWidth
-                  options={customers || []} // Ensure options is always an array
-                  getOptionLabel={(option) => (option?.name ? option.name : '')} // Safely access name
+                  options={customers || []}
+                  getOptionLabel={(option) => (option?.name ? option.name : '')}
                   value={
                     customers?.find((customer) => customer.id === watch('Customer')) || null
-                  } // Match selected value properly
+                  }
                   isOptionEqualToValue={(option, value) => option?.name === value?.name} // Compare by unique ID
                   onChange={(event, newValue) => setValue('Customer', newValue?.id || '')} // Update the form state
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       label="Customer"
-                      error={!!errors?.Customer} // Display error if it exists
-                      helperText={errors?.Customer?.message} // Show error message if available
+                      error={!!errors?.Customer}
+                      helperText={errors?.Customer?.message}
                     />
                   )}
-                /> */}
+                />
                 {/* Product Field */}
                 <Autocomplete
                   fullWidth
-                  options={products} // Products fetched from Redux
+                  options={products} 
                   getOptionLabel={(option) => `${option?.name || ''} [${option?.publisher || ''}] [${option?.region || ''}] (${option?.sku || ''})`} // Ensure label is valid
                   value={products.find((product) => product.id === watch('Product')) || null} // Match value properly
                   isOptionEqualToValue={(option, value) => option.name === value?.name} // Compare by name
@@ -221,15 +221,14 @@ export default function SalesOrderAddPage() {
                   value={watch('startDate')}
                   onChange={(newValue) => setValue('startDate', newValue, { shouldValidate: true })}
                 />
-
                 {/* End Date */}
                 <DateTimePicker
                   renderInput={(props) => (
                     <TextField
                       {...props}
                       fullWidth
-                      error={!!errors.endDate} // Show error state when validation fails
-                      helperText={errors.endDate?.message} // Display the validation error message
+                      error={!!errors.endDate}
+                      helperText={errors.endDate?.message}
                     />
                   )}
                   label="End Date"

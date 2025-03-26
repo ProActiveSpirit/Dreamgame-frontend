@@ -85,7 +85,7 @@ export default function ProductInformation({ variant }) {
   return (
     <>
       <Container maxWidth='md'>
-        <Masonry columns={{ xs: 1 }} spacing={4}>
+        <Masonry columns={{ xs: 1 }} spacing={2}>
           <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
             <TextField
               variant={variant}
@@ -152,23 +152,7 @@ export default function ProductInformation({ variant }) {
             <RadioGroup row defaultValue="g">
               <FormControlLabel value="g" control={<Radio />} label="All (100)" />
               <FormControlLabel value="p" control={<Radio size="small" />} label="Packed (0)" />
-              <FormControlLabel value="p" control={<Radio size="small" />} label="Unpacked (100)" />
-            </RadioGroup>
-          </Box>
-
-          <Box
-            sx={{
-              p: 1,
-              display: 'flex',
-              flexWrap: 'wrap',
-              alignItems: 'left',
-              justifyContent: 'left',
-            }}
-          >
-            <RadioGroup row defaultValue="g">
-              <FormControlLabel value="g" control={<Radio />} label="All (100)" />
-              <FormControlLabel value="p" control={<Radio size="small" />} label="Completed (0)" />
-              <FormControlLabel value="p" control={<Radio size="small" />} label="Pending (100)" />
+              <FormControlLabel value="q" control={<Radio size="small" />} label="Unpacked (100)" />
             </RadioGroup>
           </Box>
         </Masonry>

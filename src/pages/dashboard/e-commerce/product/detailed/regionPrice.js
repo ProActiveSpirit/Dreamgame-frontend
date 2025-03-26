@@ -81,44 +81,52 @@ export default function RegionPrice({product}) {
     }
   ];
 
-  const regions = ['NO', 'BE', 'DE', 'ES', 'FR', 'NL', 'PT', 'PL', 'GB'];
-
   const currencies = {
-    NO: 'NOK',
-    BE: 'EUR',
-    DE: 'EUR',
-    ES: 'EUR',
-    FR: 'EUR',
-    NL: 'EUR',
-    PT: 'EUR',
-    PL: 'PLN',
-    GB: 'GBP',
+    no: 'NOK',
+    be: 'EUR',
+    de: 'EUR',
+    es: 'EUR',
+    fr: 'EUR',
+    it: 'EUR',
+    nl: 'EUR',
+    pt: 'EUR',
+    pl: 'PLN',
+    gb: 'GBP',
+    en: 'GBP',
   };
 
-  // Calculate DataGrid rows with exchange rates
-  const calculateRows = () =>
-    loading || !exchangeRates
-      ? []
-      : product?.region?.map((region, index) => {
-          const effectivePrice = (!price || price === 0) ? 5 : price;
-          console.log('region : ', region);
-          return {
-            id: _mock.id(index),
-            Region: region,
-            CostEUR: `${(effectivePrice * (exchangeRates[currencies[region]] || 1)).toFixed(2)} ${currencies[region]}`,
-            CostExcVat: `${(effectivePrice * (exchangeRates[currencies[region]] || 1)).toFixed(2)} ${currencies[region]}`,
-            SalesVat: `${SalesVat} %`,
-            SalesIncVat: `${(effectivePrice * (exchangeRates[currencies[region]] || 1)).toFixed(2)} ${currencies[region]}`,
-            SRPIncVat: `${(effectivePrice * (exchangeRates[currencies[region]] || 1)).toFixed(2)} ${currencies[region]}`,
-          };
-        });
+  const calculateRows = () => {
+    if (loading || !exchangeRates) return [];
+
+    // Split the region string into an array
+    const regions = product?.region?.split(',') || [];
+    
+    return regions.map((region, index) => {
+      const effectivePrice = (!product?.price || product?.price === 0) ? 5 : product?.price;
+      return {
+        id: _mock.id(index),
+        Region: region.toUpperCase(),
+        CostEUR: `${(effectivePrice * (exchangeRates[currencies[region]] || 1)).toFixed(2)} ${currencies[region]}`,
+        CostExcVat: `${(effectivePrice * (exchangeRates[currencies[region]] || 1)).toFixed(2)} ${currencies[region]}`,
+        SalesVat: `${product?.SalesVat ? product?.SalesVat : 0} %`,
+        SalesIncVat: `${(effectivePrice * (exchangeRates[currencies[region]] || 1)).toFixed(2)} ${currencies[region]}`,
+        SRPIncVat: `${(effectivePrice * (exchangeRates[currencies[region]] || 1)).toFixed(2)} ${currencies[region]}`,
+      };
+    });
+  };
 
   const { themeStretch } = useSettingsContext();
 
   return (
     <>
       <Container maxWidth={themeStretch ? false : 'xl'}>
-        <DataGrid columns={columns} rows={calculateRows()} disableSelectionOnClick style={{height: 595}} />
+        <DataGrid 
+          columns={columns} 
+          rows={calculateRows()} 
+          disableSelectionOnClick 
+          autoHeight 
+          pagination={false}
+        />
       </Container>  
     </>
   );

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Link, Button, Checkbox, TableRow, MenuItem, TableCell, IconButton } from '@mui/material';
+import { Link, Button, Checkbox, TableRow, MenuItem, TableCell, IconButton, Stack } from '@mui/material';
 import Iconify from '../../../../components/iconify';
 import MenuPopover from '../../../../components/menu-popover';
 import ConfirmDialog from '../../../../components/confirm-dialog';
@@ -66,16 +66,17 @@ export default function CustomerTableRow({ row, selected, onEditRow, onSelectRow
         <TableCell align="center" sx={{ textTransform: 'capitalize' }}>
           {region}
         </TableCell>
-        <TableCell align="center" width={10}>
-          <IconButton onClick={() => onEditRow()}>
-            <Iconify icon="eva:edit-fill" />
-          </IconButton>
+        <TableCell align="center" sx={{ textTransform: 'capitalize' }}>
+          <Stack direction="row" spacing={1} justifyContent="center">
+            <IconButton onClick={() => onEditRow()}>
+              <Iconify icon="eva:edit-fill" />
+            </IconButton>
+            <IconButton onClick={() => onDeleteRow()}>
+              <Iconify icon="eva:trash-2-outline" />
+            </IconButton>
+          </Stack>
         </TableCell>
-        <TableCell align="center" width={10}>
-          <IconButton onClick={() => onDeleteRow()}>
-            <Iconify icon="eva:trash-2-outline" />
-          </IconButton>
-        </TableCell>
+        
       </TableRow>
 
       <MenuPopover

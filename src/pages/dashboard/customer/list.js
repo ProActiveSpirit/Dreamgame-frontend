@@ -18,7 +18,8 @@ import {
 // redux
 import { useSelector, useDispatch } from 'react-redux'; // Import Redux hooks
 import { getCustomers, deleteCustomer } from '../../../redux/slices/user';
-
+// components
+import { useSnackbar } from '../../../components/snackbar';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 import DashboardLayout from '../../../layouts/dashboard';
@@ -40,11 +41,12 @@ import {
 import { CustomerTableRow } from '../../../sections/@dashboard/customer/list';
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', align: 'center' },
+  { id: 'name', label: 'Display Name', align: 'center' },
   { id: 'email', label: 'Email', align: 'center' },
   { id: 'website', label: 'Website', align: 'center' },
   { id: 'ip', label: 'IP Address', align: 'center' },
   { id: 'region', label: 'Region', align: 'center' },
+  { id: 'action', label: 'Action', align: 'center', width: 30 },
 ];
 
 UserListPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
@@ -76,10 +78,12 @@ export default function UserListPage() {
   const [filterRole] = useState('all');
   const [filterStatus] = useState('all');
 
-  const { customers } = useSelector((state) => state.user); // Fetch products from Redux
+  const { customers = [] } = useSelector((state) => state.user); // Add default empty array
 
   // Add loading state
   const [isLoading, setIsLoading] = useState(true);
+
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -157,23 +161,33 @@ export default function UserListPage() {
     setOpenConfirm(false);
   };
 
-  const handleDeleteRow = (id) => {
-    dispatch(deleteCustomer(id));
-    setSelected([]);
+  const handleDeleteRow = async (id) => {
+    try {
+      await dispatch(deleteCustomer(id));
+      await dispatch(getCustomers()); // Refresh the data after deletion
+      enqueueSnackbar('Customer deleted successfully', { variant: 'success' });
+      setSelected([]);
 
-    if (page > 0) {
-      if (dataInPage.length < 2) {
-        setPage(page - 1);
+      if (page > 0) {
+        if (dataInPage.length < 2) {
+          setPage(page - 1);
+        }
       }
+    } catch (error) {
+      enqueueSnackbar('Failed to delete customer', { variant: 'error' });
     }
   };
 
-  const handleDeleteRows = (selectedRows) => {
-    selectedRows.forEach((id) => {
-      dispatch(deleteCustomer(id));
-    });
-    setSelected([]);
-    handleCloseConfirm();
+  const handleDeleteRows = async (selectedRows) => {
+    try {
+      await Promise.all(selectedRows.map((id) => dispatch(deleteCustomer(id))));
+      await dispatch(getCustomers()); // Refresh the data after bulk deletion
+      enqueueSnackbar(`${selectedRows.length} customers deleted successfully`, { variant: 'success' });
+      setSelected([]);
+      handleCloseConfirm();
+    } catch (error) {
+      enqueueSnackbar('Failed to delete customers', { variant: 'error' });
+    }
   };
 
   const handleEditRow = (id) => {
@@ -210,11 +224,11 @@ export default function UserListPage() {
             <TableSelectedAction
               dense={dense}
               numSelected={selected.length}
-              rowCount={customers.length}
+              rowCount={safeCustomers.length}
               onSelectAllRows={(checked) =>
                 onSelectAllRows(
                   checked,
-                  customers.map((row) => row.id)
+                  safeCustomers.map((row) => row.id)
                 )
               }
               action={
@@ -232,13 +246,13 @@ export default function UserListPage() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={customers.length}
+                  rowCount={safeCustomers.length}
                   numSelected={selected.length}
                   onSort={onSort}
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      customers.map((row) => row.id)
+                      safeCustomers.map((row) => row.id)
                     )
                   }
                 />

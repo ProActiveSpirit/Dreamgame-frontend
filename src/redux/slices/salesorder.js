@@ -124,11 +124,11 @@ export function createSalesOrder(newOrder) {
   };
 }
 
-export function updateSalesOrder(id, updatedOrder) {
+export function updateSalesOrder(updatedOrder) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.put(`/api/order/editSales/${id}`, updatedOrder);
+      const response = await axios.post(`/api/order/editSales`, updatedOrder);
       dispatch(slice.actions.updateSalesOrderSuccess(response.data));
       return {success: true, data: response.data.data}
 
@@ -153,18 +153,16 @@ export function deleteSalesOrder(id) {
   };
 }
 
-export function saveRelatedPurchaseOrder(data) {
+export function saveRelatedPurchaseOrder(id, data) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post("/api/order/saveRelatedPurchase", data);
-      // Dispatch or handle the success response if needed
-      // dispatch(slice.actions.saveRelatedPurchase(data));
+      const response = await axios.put(`/api/order/saveRelatedPurchase/${id}`, data);
+      dispatch(slice.actions.saveRelatedPurchase(data));
       return { success: true, data: response.data.data };
     } catch (error) {
       console.error("Error saving related purchase order: ", error);
       dispatch(slice.actions.hasError(error));
-      // Ensure a return value in the catch block
       return { success: false, error };
     }
   };

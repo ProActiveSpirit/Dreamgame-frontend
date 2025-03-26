@@ -35,6 +35,7 @@ import { PATH_DASHBOARD } from '../../../../routes/paths';
 import DashboardLayout from '../../../../layouts/dashboard';
 // Custom imports
 import RegionPrice from '../../e-commerce/product/detailed/regionPrice';
+import { getSalesOrder } from '../../../../redux/slices/salesorder';
 
 // Default values for the form
 export const defaultValues = {
@@ -113,6 +114,7 @@ export default function PurchaseOrderAddPage() {
   const [totals, setTotals] = useState({ totalQuantity: 0, totalCostIncVat: 0 });
 
   const { products } = useSelector((state) => state.product);
+  const allOrders = useSelector((state) => state.salesorder.allOrders);
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -183,6 +185,7 @@ export default function PurchaseOrderAddPage() {
 
   useEffect(() => {
     dispatch(getProducts());
+    dispatch(getSalesOrder());
   }, [dispatch]);
 
   return (
@@ -210,6 +213,26 @@ export default function PurchaseOrderAddPage() {
           </Typography>
           <Divider sx={{ mb: 2 }} />
           <Stack spacing={3}>
+            <Autocomplete
+              fullWidth
+              options={allOrders}
+              getOptionLabel={(option) => `${option?.id || ''} - ${option?.salesOrder || ''}`}
+              value={watch('currentOrder') || null}
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  router.push(`/dashboard/salesorder/detailed/${newValue.id}`);
+                }
+              }}
+              renderInput={(params) => (
+                <TextField 
+                  {...params} 
+                  label="Select Sales Order" 
+                  placeholder="Search by ID or SalesOrder"
+                  size="small"
+                />
+              )}
+              size="small"
+            />
             <TextField name="friendlyName" variant="outlined" fullWidth label="Friendly Name" size="small" />
             <Stack spacing={2} direction={{ xs: 'column', sm: 'column' }}>
               <Autocomplete

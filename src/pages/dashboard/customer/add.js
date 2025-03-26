@@ -20,6 +20,7 @@ import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 
 import { LoadingButton } from '@mui/lab';
+import { useSnackbar } from 'notistack';
 // Redux
 import { useDispatch, useSelector } from '../../../redux/store';
 import { createCustomer } from '../../../redux/slices/user';
@@ -33,7 +34,6 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 // Layouts
 import DashboardLayout from '../../../layouts/dashboard';
 import axios from '../../../utils/axios';
-import { useSnackbar } from 'notistack';
 
 // ----------------------------------------------------------------------
 
@@ -304,10 +304,9 @@ export default function SalesOrderAddPage() {
                   label="CountryCode"
                   InputProps={{ type: 'string' }}
                   size="small"
-                  disabled
-                  defaultValue="2"
-                  error={!!errors.linkedin}
-                  helperText={errors.linkedin?.message}
+                  defaultValue="NL"
+                  error={!!errors.CountryCode}
+                  helperText={errors.CountryCode?.message}
                 />
                 {/* Sales Region Autocomplete */}
                 <Autocomplete

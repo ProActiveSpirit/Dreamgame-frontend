@@ -27,7 +27,7 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 
 import PropTypes from 'prop-types';
 import { CacheProvider } from '@emotion/react';
-import { SnackbarProvider, closeSnackbar } from 'notistack';
+import { SnackbarProvider, useSnackbar } from 'notistack';
 
 // next
 import Head from 'next/head';
@@ -63,6 +63,20 @@ import { AuthProvider } from '../auth/JwtContext';
 
 const clientSideEmotionCache = createEmotionCache();
 
+// Create a separate component for the close button
+function SnackbarCloseButton({ key }) {
+  const { closeSnackbar } = useSnackbar();
+  return (
+    <iconify-icon 
+      icon="lets-icons:close-ring" 
+      width="24" 
+      height="24"
+      onClick={() => closeSnackbar(key)}
+      sx={{ color: 'white' }}
+    />
+  );
+}
+
 MyApp.propTypes = {
   Component: PropTypes.elementType,
   pageProps: PropTypes.object,
@@ -95,15 +109,7 @@ export default function MyApp(props) {
                           vertical: 'top',
                           horizontal: 'right',
                         }}
-                        action={(key) => (
-                          <iconify-icon 
-                            icon="lets-icons:close-ring" 
-                            width="24" 
-                            height="24"
-                            onClick={() => closeSnackbar(key)}
-                            sx={{ color: 'white' }}
-                          />
-                        )}  
+                        action={(key) => <SnackbarCloseButton key={key} />}
                       >
                         <StyledChart />
                         <ProgressBar />

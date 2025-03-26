@@ -33,6 +33,7 @@ import FormProvider, { RHFTextField } from '../../../../components/hook-form';
 // Layouts
 import DashboardLayout from '../../../../layouts/dashboard';
 import axios from '../../../../utils/axios';
+import { useSnackbar } from '../../../../components/snackbar';
 
 // ----------------------------------------------------------------------
 
@@ -62,6 +63,7 @@ export default function SalesOrderAddPage() {
   const { themeStretch } = useSettingsContext();
 
   const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [regions, setRegions] = useState([]);
   const [currencies, setCurrencies] = useState([]);
@@ -78,43 +80,39 @@ export default function SalesOrderAddPage() {
 
   // Wrap defaultValues in useMemo to prevent recreation on every render
   const defaultValues = useMemo(() => ({
-    address: currentCustomer?.address,
-    city: currentCustomer?.city,
-    company: currentCustomer?.company,
-    companyInvoice: currentCustomer?.companyInvoice,
-    countryCode: currentCustomer?.countryCode,
-    defaultVatRate: currentCustomer?.defaultVatRate,
-    email: currentCustomer?.email,
-    facebook: currentCustomer?.facebook,
-    inActive: currentCustomer?.inActive,
-    linkedIn: currentCustomer?.linkedIn,
-    name: currentCustomer?.name,
-    phone: currentCustomer?.phone,
-    primaryEmail: currentCustomer?.primaryEmail,
-    primaryFacebook: currentCustomer?.primaryFacebook,
-    primaryLinkedIn: currentCustomer?.primaryLinkedIn,
-    primaryName: currentCustomer?.primaryName,
-    primaryPhone: currentCustomer?.primaryPhone,
-    primarySkype: currentCustomer?.primarySkype,
-    primarySurname: currentCustomer?.primarySurname,
-    primaryTwitter: currentCustomer?.primaryTwitter,
-    salesCurrency: currentCustomer?.salesCurrency,
-    salesRegion: currentCustomer?.salesRegion,
-    skype: currentCustomer?.skype,
-    state: currentCustomer?.state,
-    taxInformation: currentCustomer?.taxInformation,
-    twitter: currentCustomer?.twitter,
-    website: currentCustomer?.website,
-    zipCode: currentCustomer?.zipCode,
+    address: currentCustomer?.address || '',
+    city: currentCustomer?.city || '',
+    company: currentCustomer?.company || '',
+    companyInvoice: currentCustomer?.companyInvoice || '',
+    countryCode: currentCustomer?.countryCode || '',
+    defaultVatRate: currentCustomer?.defaultVatRate || '',
+    email: currentCustomer?.email || '',
+    facebook: currentCustomer?.facebook || '',
+    inActive: currentCustomer?.inActive || false,
+    linkedIn: currentCustomer?.linkedIn || '',
+    name: currentCustomer?.name || '',
+    phone: currentCustomer?.phone || '',
+    primaryEmail: currentCustomer?.primaryEmail || '',
+    primaryFacebook: currentCustomer?.primaryFacebook || '',
+    primaryLinkedIn: currentCustomer?.primaryLinkedIn || '',
+    primaryName: currentCustomer?.primaryName || '',
+    primaryPhone: currentCustomer?.primaryPhone || '',
+    primarySkype: currentCustomer?.primarySkype || '',
+    primarySurname: currentCustomer?.primarySurname || '',
+    primaryTwitter: currentCustomer?.primaryTwitter || '',
+    salesCurrency: currentCustomer?.salesCurrency || '',
+    salesRegion: currentCustomer?.salesRegion || '',
+    skype: currentCustomer?.skype || '',
+    state: currentCustomer?.state || '',
+    taxInformation: currentCustomer?.taxInformation || '',
+    twitter: currentCustomer?.twitter || '',
+    website: currentCustomer?.website || '',
+    zipCode: currentCustomer?.zipCode || '',
   }), [currentCustomer]);
-
-  useEffect(() => {
-    dispatch(getCustomers());
-  }, [dispatch]);
 
   const methods = useForm({
     resolver: yupResolver(FormSchema),
-    currentCustomer,
+    defaultValues,
   });
 
   const {
@@ -126,46 +124,66 @@ export default function SalesOrderAddPage() {
   } = methods;
 
   useEffect(() => {
-    const fetchRegionsAndCurrencies = async () => {
+    const fetchData = async () => {
       try {
-        // Fetch regions and currencies from the REST Countries API
+        // First fetch customers from Redux
+        await dispatch(getCustomers());
+        
+        // Then fetch regions and currencies
         const regionsResponse = await axios.get('https://restcountries.com/v3.1/all');
 
         // Extract regions data
         const fetchedRegions = regionsResponse.data.map((country) => ({
-          name: country.name.common, // Country name (e.g., "Spain")
-          code: country.cca2, // ISO country code (e.g., "ES")
+          name: country.name.common,
+          code: country.cca2,
         }));
 
         // Extract unique currency codes
         const fetchedCurrencies = regionsResponse.data
-          .flatMap((country) => Object.keys(country.currencies || {})) // Get currency codes
-          .filter((value, index, self) => self.indexOf(value) === index); // Remove duplicates
+          .flatMap((country) => Object.keys(country.currencies || {}))
+          .filter((value, index, self) => self.indexOf(value) === index);
 
-        setRegions(fetchedRegions); // Set regions state
-        setCurrencies(fetchedCurrencies); // Set currencies state
-        reset(defaultValues); // Reset the form explicitly, including Autocomplete fields
+        setRegions(fetchedRegions);
+        setCurrencies(fetchedCurrencies);
+
+        // Set the sales region and currency from current customer
+        if (currentCustomer?.salesRegion) {
+          const region = fetchedRegions.find(r => r.code === currentCustomer.salesRegion.code);
+          if (region) setSalesRegion(region);
+        }
+        if (currentCustomer?.salesCurrency) {
+          setSalesCurrency(currentCustomer.salesCurrency);
+        }
+
+        // Reset form with current customer data
+        reset(defaultValues);
       } catch (error) {
-        console.error('Error fetching regions or currencies:', error);
+        console.error('Error fetching data:', error);
+        enqueueSnackbar('Failed to load customer data', { variant: 'error' });
       }
     };
-    fetchRegionsAndCurrencies();
-  }, [defaultValues, reset]);
+
+    fetchData();
+  }, [dispatch, currentCustomer, defaultValues, reset, enqueueSnackbar]);
 
   const inActive = watch('inActive', false);
 
   const onSubmit = async (data) => {
-    const updatedData = {
-      ...data,
-      salesRegion, // Add salesRegion
-      salesCurrency, // Add salesCurrency
-      countryCode: salesRegion?.code, // Derive countryCode from salesRegion
-    };
+    try {
+      const updatedData = {
+        ...data,
+        salesRegion,
+        salesCurrency,
+        countryCode: salesRegion?.code,
+      };
 
-    console.log('Updated Data:', updatedData); // Debug the updated data
-    dispatch(updateCustomer(data));
-    await new Promise((resolve) => setTimeout(resolve, 3000)); // Simulate API call
-    reset(defaultValues); // Reset the form explicitly, including Autocomplete fields
+      console.log('Updated Data:', updatedData);
+      await dispatch(updateCustomer(updatedData));
+      enqueueSnackbar('Customer updated successfully', { variant: 'success' });
+      reset(defaultValues);
+    } catch (error) {
+      enqueueSnackbar('Failed to update customer', { variant: 'error' });
+    }
   };
 
   return (
@@ -207,7 +225,6 @@ export default function SalesOrderAddPage() {
                 label="Email"
                 InputProps={{ type: 'string' }}
                 size="small"
-                disabled
                 error={!!errors.email}
                 helperText={errors.email?.message}
               />
@@ -306,10 +323,9 @@ export default function SalesOrderAddPage() {
                 label="CountryCode"
                 InputProps={{ type: 'string' }}
                 size="small"
-                disabled
-                defaultValue="2"
-                error={!!errors.linkedin}
-                helperText={errors.linkedin?.message}
+                defaultValue="NL"
+                error={!!errors.CountryCode}
+                helperText={errors.CountryCode?.message}
               />
               {/* Sales Region Autocomplete */}
               <Autocomplete

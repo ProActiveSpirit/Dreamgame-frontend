@@ -19,23 +19,26 @@ import {
 import { Masonry } from '@mui/lab';
 import ConfirmDialog from '../../../../components/confirm-dialog';
 import Iconify from '../../../../components/iconify';
+import { useSnackbar } from '../../../../components/snackbar';
 
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
-import { saveRelatedPurchaseOrder } from '../../../../redux/slices/salesorder';
-
-// _mock_
-import _mock from '../../../../_mock';
+import { saveRelatedPurchaseOrder, updateSalesOrder } from '../../../../redux/slices/salesorder';
 
 export default function BillingInformation({ changeTab, variant, setGeneratedPOs }) {
+  const { enqueueSnackbar } = useSnackbar();
   const [selectedRegions, setSelectedRegions] = useState([top100Films[1]]);
   const [exchangeRates, setExchangeRates] = useState({});
   const [loading, setLoading] = useState(true);
   const [openConfirm, setOpenConfirm] = useState(false);
-  const [updatedOrder, setUpdatedOrder] = useState(null);
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date(new Date().setDate(new Date().getDate() + 1)));
+  const [formData, setFormData] = useState({
+    quantity: '',
+    sales: '',
+    expectedCost: '',
+  });
+  
   const {
     query: { name },
   } = useRouter();
@@ -59,41 +62,38 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
   };
 
   const [rows, setRows] = useState([]);
-  const [totals, setTotals] = useState({ totalQuantity: 0, totalCostIncVat: 0 }); // State for totals
+  const [totals, setTotals] = useState({ totalQuantity: 0, totalCostIncVat: 0 });
 
-  // Calculate initial rows when component mounts or when dependencies change
   const generateEmpty = () => {
     if (!loading && exchangeRates) {
+      console.log('selectedRegions : ', selectedRegions);
+
       const initialRows = selectedRegions.map((region, index) => {
-        const quantity = currentOrder?.totalQuantity 
-          ? Math.floor(currentOrder.totalQuantity / selectedRegions.length) 
-          : 0;
         const costIncVat = parseFloat(
           (currentOrder?.salesExtVat ?? 0 * (exchangeRates[currencies[region.title]] || 1)).toFixed(2)
         );
         return {
-          id: currentOrder.id,
+          id: index,
           Region: region.title,
           Product: currentOrder?.product?.name,
           ProductId: currentOrder?.product?.id,
           CostIncVat: costIncVat,
           CostCurrency: currencies[region.title],
-          Quantity: quantity,
-          TotalCostIncVat: (quantity * costIncVat).toFixed(2),
+          Quantity: 0,
+          TotalCostIncVat: (0 * costIncVat).toFixed(2),
         };
       });
-
+      console.log('initialRows : ', initialRows);
       setRows(initialRows);
-      calculateTotals(initialRows);
     }
   };
 
   const generateAutoCalculate = () => {
     if (!loading && exchangeRates) {
+      console.log('selectedRegions : ', selectedRegions);
       const eachQuantity = currentOrder?.totalQuantity 
         ? Math.floor(currentOrder.totalQuantity / selectedRegions.length)
         : 0;
-      console.log('selectedRegions : ', selectedRegions);
       const initialRows = selectedRegions.map((region, index) => {
         const costIncVat = parseFloat(
           (currentOrder?.salesExtVat ?? 0 * (exchangeRates[currencies[region.title]] || 1)).toFixed(2)
@@ -119,13 +119,70 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
     }
   };
 
-  const saveChange = () => {
-    console.log('rows : ', rows);
-    const data = {
-      id: currentOrder.id,
-      purchase: rows,
-    };
-    dispatch(saveRelatedPurchaseOrder(data));
+  const handleInputChange = (field) => (event) => {
+    const { value } = event.target;
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleSave = async () => {
+    try {
+      // Validate numeric fields
+      const quantity = parseFloat(formData.quantity);
+      const sales = parseFloat(formData.sales);
+      const expectedCost = parseFloat(formData.expectedCost);
+
+      if (Number.isNaN(quantity) || quantity <= 0) {
+        enqueueSnackbar('Quantity must be greater than zero', { variant: 'error' });
+        return;
+      }
+
+      if (Number.isNaN(sales) || sales <= 0) {
+        enqueueSnackbar('Sales must be greater than zero', { variant: 'error' });
+        return;
+      }
+
+      if (Number.isNaN(expectedCost) || expectedCost <= 0) {
+        enqueueSnackbar('Expected Cost must be greater than zero', { variant: 'error' });
+        return;
+      }
+
+      // Validate dates
+      if (!startDate || !endDate) {
+        enqueueSnackbar('Start Date and End Date are required', { variant: 'error' });
+        return;
+      }
+
+      if (endDate <= startDate) {
+        enqueueSnackbar('End Date must be after Start Date', { variant: 'error' });
+        return;
+      }
+
+      // Validate regions
+      if (!selectedRegions || selectedRegions.length === 0) {
+        enqueueSnackbar('At least one region must be selected', { variant: 'error' });
+        return;
+      }
+
+      const saveData = {
+        id: currentOrder.id,
+        totalQuantity: quantity,
+        salesIncVat: sales,
+        expectedCost,
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
+        regions: selectedRegions.map(region => region.title),
+        purchase: rows,
+      };
+
+      await dispatch(updateSalesOrder(saveData));
+      enqueueSnackbar('Purchase order updated successfully', { variant: 'success' });
+    } catch (error) {
+      console.error('Error saving purchase order:', error);
+      enqueueSnackbar('Failed to update purchase order', { variant: 'error' });
+    }
   };
 
   // Function to recalculate totals (total quantity and total cost inc vat)
@@ -138,9 +195,8 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
     setTotals({ totalQuantity, totalCostIncVat });
   };  
 
-  // Handler to update Quantity and TotalCostIncVat
   const handleQuantityChange = (id, value) => {
-    const newQuantity = parseFloat(value) || 0; // Convert input to number, default to 0 if invalid
+    const newQuantity = parseFloat(value) || 0;
     let updatedRows;
     if ((currentOrder?.totalQuantity ?? 0) - totals.totalQuantity - newQuantity < 0) {
       updatedRows = rows.map((row) =>
@@ -151,7 +207,7 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
               TotalCostIncVat: (
                 ((currentOrder?.totalQuantity ?? 0) - totals.totalQuantity) *
                 row.CostIncVat
-              ).toFixed(2), // Recalculate total
+              ).toFixed(2),
             }
           : row
       );
@@ -161,13 +217,13 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
           ? {
               ...row,
               Quantity: newQuantity,
-              TotalCostIncVat: (newQuantity * row.CostIncVat).toFixed(2), // Recalculate total
+              TotalCostIncVat: (newQuantity * row.CostIncVat).toFixed(2),
             }
           : row
       );
     }
-    setRows(updatedRows); // Update rows in state
-    calculateTotals(updatedRows); // Recalculate totals after updating rows
+    setRows(updatedRows);
+    calculateTotals(updatedRows); 
   };
 
   // Columns definition
@@ -224,6 +280,18 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
     fetchExchangeRates();
   }, []);
 
+  useEffect(() => {
+    if (currentOrder) {
+      setFormData({
+        quantity: currentOrder?.totalQuantity ?? '',
+        sales: currentOrder?.salesIncVat ?? '',
+        expectedCost: currentOrder?.expectedCost ?? '',
+      });
+      setStartDate(new Date(currentOrder?.startDate) || new Date());
+      setEndDate(new Date(currentOrder?.endDate) || new Date(new Date().setDate(new Date().getDate() + 1)));
+    }
+  }, [currentOrder]);
+
   const generatePO = () =>   {
     setOpenConfirm(true);
   };
@@ -233,9 +301,8 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
   };
 
   const onAction = () => {
-    // Transform rows data to match RelatedOrder format
     const transformedRows = rows.map((row) => ({
-      NUMBER: row.id,
+      NUMBER: name,
       PRODUCT: row.Product,
       PROVIDER: 'Dreamgame',
       REGION: row.Region,
@@ -245,9 +312,9 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
       TOTALINCVAT: `${row.TotalCostIncVat} ${row.CostCurrency}`,
       JOB: 'false',
       STATUS: 'Processing',
-      DATE: `${startDate}\n${endDate}`,
+      DATE: `${startDate ? startDate.toLocaleDateString() : ''} - ${endDate ? endDate.toLocaleDateString() : ''}`,
     }));
-
+    saveRelatedPurchaseOrder(currentOrder.id, rows);
     setGeneratedPOs(transformedRows);
     setOpenConfirm(false);
     changeTab('Related Purchase Orders');
@@ -257,24 +324,25 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
     <>
       <Container maxWidth="md">
         <Masonry columns={{ xs: 1 }} spacing={2}>
+
           <TextField
             variant={variant}
             required
             fullWidth
-            value={currentOrder?.totalQuantity ?? ''}
+            value={formData.quantity}
+            onChange={handleInputChange('quantity')}
             label="Quantity"
-            // defaultValue={currentOrder?.totalQuantity}
+            type="number"
           />
 
           <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
             <TextField
               variant="outlined"
               fullWidth
-              value={currentOrder?.salesIncVat ?? ''}
-              // defaultValue={currentOrder?.totalQuantity}
-              // onChange={handleChange('weight')}
+              value={formData.sales}
+              onChange={handleInputChange('sales')}
               label="Sales"
-              // helperText="Weight"
+              type="number"
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="start">{currentOrder?.salesCurrency}</InputAdornment>
@@ -284,22 +352,8 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
             <TextField
               variant="outlined"
               fullWidth
-              value={currentOrder?.expectedCost ?? ''}
-              onChange={(e) => {
-                const newExpectedCost = parseFloat(e.target.value);
-                if (!isNaN(newExpectedCost) || e.target.value === '') {
-
-                  const updatedOrder = { ...currentOrder };
-                  updatedOrder.expectedCost = e.target.value;
-
-                  if (newExpectedCost && updatedOrder.totalQuantity) {
-
-                    const costPerUnit = newExpectedCost / updatedOrder.totalQuantity;
-                    updatedOrder.salesIncVat = costPerUnit;
-                  }
-                  setUpdatedOrder(updatedOrder);
-                }
-              }}
+              value={formData.expectedCost}
+              onChange={handleInputChange('expectedCost')}
               label="Expected Cost"
               type="number"
               InputProps={{
@@ -309,6 +363,7 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
               }}
             />
           </Stack>
+
           <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
             <DateTimePicker
               renderInput={(props) => <TextField {...props} fullWidth />}
@@ -316,12 +371,6 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
               value={startDate}
               onChange={(newValue) => {
                 setStartDate(newValue);
-                if (updatedOrder) {
-                  setUpdatedOrder({
-                    ...updatedOrder,
-                    startDate: newValue,
-                  });
-                }
               }}
             />
             <DateTimePicker
@@ -330,12 +379,6 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
               value={endDate}
               onChange={(newValue) => {
                 setEndDate(newValue);
-                if (updatedOrder) {
-                  setUpdatedOrder({
-                    ...updatedOrder,
-                    endDate: newValue,
-                  });
-                }
               }}
             />
           </Stack>
@@ -346,15 +389,15 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
               fullWidth
               options={top100Films}
               getOptionLabel={(option) => option.title}
-              value={selectedRegions} // Bind the selected regions to the value prop
-              onChange={(event, newValue) => setSelectedRegions(newValue)} // Update the state on change
+              value={selectedRegions}
+              onChange={(event, newValue) => setSelectedRegions(newValue)}
               filterSelectedOptions
               renderInput={(params) => (
                 <TextField {...params} label="Template Regions" placeholder="Country Code" />
               )}
             />
             <button
-              type="button" // Set explicit button type
+              type="button"
               onClick={handleAddAllRegions}
               style={{
                 width: '100px',
@@ -363,12 +406,13 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
                 border: 'none',
                 cursor: 'pointer',
                 textDecoration: 'underline',
-                fontSize: '16px', // Increase font size
+                fontSize: '16px',
               }}
             >
               (+) add all
             </button>
           </Stack>
+
           <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
             <Button
               variant="contained"
@@ -408,7 +452,7 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
         color="info"
         size="large"
         startIcon={<Iconify icon="eva:save-fill" />}
-        onClick={saveChange}
+        onClick={handleSave}
       >
         Save & changes
       </Button>

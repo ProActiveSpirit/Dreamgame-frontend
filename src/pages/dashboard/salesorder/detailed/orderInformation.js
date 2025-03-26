@@ -5,18 +5,16 @@ import { useRouter } from 'next/router';
 import { DataGrid } from '@mui/x-data-grid';
 
 // @mui
-import { TextField, Stack, Container, Typography, Divider, Button } from '@mui/material';
+import { TextField, Stack, Container, Typography, Divider } from '@mui/material';
 import { Masonry } from '@mui/lab';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import Label from '../../../../components/label';
-import Iconify from '../../../../components/iconify';
 
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 import { getSalesOrders } from '../../../../redux/slices/salesorder';
-import { getProducts } from '../../../../redux/slices/product';
 
-export default function OrderInformation( {variant = 'outlined' }) {
+export default function OrderInformation({ variant = 'outlined' }) {
   const dispatch = useDispatch();
 
   // Columns definition
@@ -38,7 +36,6 @@ export default function OrderInformation( {variant = 'outlined' }) {
   );
 
   const [rows, setRows] = useState([]);
-  const { salesOrders } = useSelector((state) => state.salesorder);
 
   useEffect(() => {
     dispatch(getSalesOrders());
@@ -59,24 +56,6 @@ export default function OrderInformation( {variant = 'outlined' }) {
     }
   }, [currentOrder]);
 
-  const [totals, setTotals] = useState({ totalQuantity: 0, totalCostIncVat: 0 }); // State for totals
-
-  const calculateTotals = (updatedRows) => {
-    const totalQuantity = updatedRows.reduce((sum, row) => sum + row.Quantity, 0);  
-    const totalCostIncVat = updatedRows.reduce((sum, row) => sum + row.TotalCostIncVat, 0);
-    setTotals({ totalQuantity, totalCostIncVat });
-  };
-
-  const handleQuantityChange = (id, value) => {
-    const updatedRows = rows.map((row) => 
-      row.id === id ? { ...row, Quantity: parseInt(value) } : row
-    );
-    setRows(updatedRows);
-    calculateTotals(updatedRows);
-  };  
-
-
-
   return (
     <>
       <Container maxWidth="md">
@@ -93,13 +72,6 @@ export default function OrderInformation( {variant = 'outlined' }) {
               defaultValue={currentOrder?.product?.provider}
             />
           </Stack>
-          {/* <TextField
-            variant={variant}
-            required
-            size="small"
-            label="Customer"
-            defaultValue={currentOrder?.customer?.name}
-          /> */}
           <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
             <DateTimePicker
               renderInput={(props) => <TextField {...props} fullWidth size="small" />}
@@ -113,8 +85,6 @@ export default function OrderInformation( {variant = 'outlined' }) {
               value={currentOrder?.endDate}
             />
           </Stack>
-
-          
         </Masonry>
       </Container>
       <Typography variant="h6" gutterBottom>
@@ -148,23 +118,23 @@ export default function OrderInformation( {variant = 'outlined' }) {
         </Stack>
 
         <Stack direction="row" justifyContent="flex-end">
-          <Typography variant="h6" >Total Inc Vat :</Typography>
+          <Typography variant="h6">Total Inc Vat :</Typography>
           <Typography variant="h6" sx={{ textAlign: 'right', width: 120 }}>
             {currentOrder?.totalPrice}
           </Typography>
         </Stack>
 
         <Stack direction="row" justifyContent="flex-end">
-          <Typography >Total Cost :</Typography>
+          <Typography>Total Cost :</Typography>
           <Typography sx={{ textAlign: 'right', width: 120 }}>
-            {"Not set yet"}
+            Not set yet
           </Typography>
         </Stack>
 
         <Stack direction="row" justifyContent="flex-end">
-          <Typography >Profit :</Typography>
+          <Typography>Profit :</Typography>
           <Typography sx={{ textAlign: 'right', width: 120 }}>
-            {"Not set yet"}
+            Not set yet
           </Typography>
         </Stack>
       </Stack>

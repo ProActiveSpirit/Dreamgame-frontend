@@ -138,10 +138,8 @@ export function createCustomer(data) {
     }
   };
 }
-// Thunk to update Customers information status
 export function updateCustomer(data) {
   return async (dispatch) => {
-    // dispatch(startLoading());
     try {
       const response = await axios.post('/api/users/updateCustomer', data);
       dispatch(updateCustomerSuccess(response.data));
@@ -150,7 +148,6 @@ export function updateCustomer(data) {
     }
   };
 }
-// Thunk to delete Customer
 export function deleteCustomer(id) {
   return async (dispatch) => {
     dispatch(startLoading());
