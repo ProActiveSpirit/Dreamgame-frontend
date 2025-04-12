@@ -216,7 +216,7 @@ export default function SalesOrderListPage() {
   return (
     <>
       <Head>
-        <title> ORDERS: SalesOrder List</title>
+        <title> Sales Order List</title>
       </Head>
 
       <Container maxWidth={themeStretch ? false : 'mg'}>

@@ -64,14 +64,14 @@ import { AuthProvider } from '../auth/JwtContext';
 const clientSideEmotionCache = createEmotionCache();
 
 // Create a separate component for the close button
-function SnackbarCloseButton({ key }) {
+function SnackbarCloseButton({ snackbarKey }) {
   const { closeSnackbar } = useSnackbar();
   return (
     <iconify-icon 
       icon="lets-icons:close-ring" 
       width="24" 
       height="24"
-      onClick={() => closeSnackbar(key)}
+      onClick={() => closeSnackbar(snackbarKey)}
       sx={{ color: 'white' }}
     />
   );
@@ -109,7 +109,7 @@ export default function MyApp(props) {
                           vertical: 'top',
                           horizontal: 'right',
                         }}
-                        action={(key) => <SnackbarCloseButton key={key} />}
+                        action={(snackbarKey) => <SnackbarCloseButton snackbarKey={snackbarKey} />}
                       >
                         <StyledChart />
                         <ProgressBar />

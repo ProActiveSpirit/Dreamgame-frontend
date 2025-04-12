@@ -300,24 +300,36 @@ export default function BillingInformation({ changeTab, variant, setGeneratedPOs
     setOpenConfirm(false);
   };
 
-  const onAction = () => {
-    const transformedRows = rows.map((row) => ({
-      NUMBER: name,
-      PRODUCT: row.Product,
-      PROVIDER: 'Dreamgame',
-      REGION: row.Region,
-      INCVAT: `${row.CostIncVat} ${row.CostCurrency}`,
-      QUANTITY: row.Quantity,
-      STOCKING: 'Pending',
-      TOTALINCVAT: `${row.TotalCostIncVat} ${row.CostCurrency}`,
-      JOB: 'false',
-      STATUS: 'Processing',
-      DATE: `${startDate ? startDate.toLocaleDateString() : ''} - ${endDate ? endDate.toLocaleDateString() : ''}`,
-    }));
-    saveRelatedPurchaseOrder(currentOrder.id, rows);
-    setGeneratedPOs(transformedRows);
-    setOpenConfirm(false);
-    changeTab('Related Purchase Orders');
+  const onAction = async () => {
+    try {
+      const transformedRows = rows.map((row) => ({
+        NUMBER: name,
+        PRODUCT: row.Product,
+        PROVIDER: 'Dreamgame',
+        REGION: row.Region,
+        INCVAT: `${row.CostIncVat} ${row.CostCurrency}`,
+        QUANTITY: row.Quantity,
+        STOCKING: 'Pending',
+        TOTALINCVAT: `${row.TotalCostIncVat} ${row.CostCurrency}`,
+        JOB: 'false',
+        STATUS: 'Processing',
+        DATE: `${startDate ? startDate.toLocaleDateString() : ''} - ${endDate ? endDate.toLocaleDateString() : ''}`,
+      }));
+      
+      const result = await dispatch(saveRelatedPurchaseOrder(currentOrder.id, rows));
+      
+      if (result.success) {
+        enqueueSnackbar('Purchase orders generated successfully', { variant: 'success' });
+        setGeneratedPOs(transformedRows);
+        setOpenConfirm(false);
+        changeTab('Related Purchase Orders');
+      } else {
+        enqueueSnackbar('Failed to generate purchase orders', { variant: 'error' });
+      }
+    } catch (error) {
+      console.error("Error in onAction:", error);
+      enqueueSnackbar('Failed to generate purchase orders', { variant: 'error' });
+    }
   };
 
   return (

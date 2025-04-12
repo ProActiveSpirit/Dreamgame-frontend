@@ -35,7 +35,7 @@ import { PATH_DASHBOARD } from '../../../../routes/paths';
 import DashboardLayout from '../../../../layouts/dashboard';
 // Custom imports
 import RegionPrice from '../../e-commerce/product/detailed/regionPrice';
-import { getSalesOrder } from '../../../../redux/slices/salesorder';
+import { getSalesOrders } from '../../../../redux/slices/salesorder';
 
 // Default values for the form
 export const defaultValues = {
@@ -185,7 +185,7 @@ export default function PurchaseOrderAddPage() {
 
   useEffect(() => {
     dispatch(getProducts());
-    dispatch(getSalesOrder());
+    dispatch(getSalesOrders());
   }, [dispatch]);
 
   return (

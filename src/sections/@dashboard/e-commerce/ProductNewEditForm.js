@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 // next
 import { useRouter } from 'next/router';
 // form
@@ -16,7 +16,12 @@ import {
   RadioGroup,
   FormControlLabel,
   Container,
+  Autocomplete,
+  Typography,
+  Button,
+  IconButton,
 } from '@mui/material';
+import Iconify from '../../../components/iconify';
 
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -68,6 +73,60 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
 
   const Status = ['Generated keys', 'Pending keys to generate', 'Sold keys', 'Sold keys pending generate'];
   const VatPrice = ['Cost-EUR', 'Cost Vat', 'Sales Exc Vat', 'Sales Exc Vat'];
+
+  const CONTINENTS = [
+    'All',
+    'Africa',
+    'Asia',
+    'Europe',
+    'Australia',
+    'North America',
+    'South America',
+  ];
+
+  const EUROPEAN_COUNTRIES = [
+  'Belgium ( BE  )',
+  'Denmark ( DK  )',
+  'Estonia ( EE  )',
+  'Finland ( FI  )',
+  'France ( FR  )',
+  'Germany ( DE  )',
+  'Greece ( GR  )',
+  'Ireland ( IE  )',
+  'Italy ( IT  )',
+  'Luxembourg ( LU  )',
+  'Netherlands ( NL  )',
+  'North Macedonia ( MK  )',
+  'Norway ( NO  )',
+  'Poland ( PL  )',
+  'Portugal ( PT  )',
+  'Romania ( RO  )',
+  'Spain ( ES  )',
+  'Sweden ( SE  )',
+  'Switzerland ( CH  )',
+  'Ukraine ( UA  )',
+  'United Kingdom ( GB  )',
+  ];
+
+  const REGION_OPTIONS = [
+    {
+      group: 'Continents',
+      options: CONTINENTS.map(continent => ({ 
+        label: continent, 
+        value: continent,
+        group: 'Continents' 
+      }))
+    },
+    {
+      group: 'European Countries',
+      options: EUROPEAN_COUNTRIES.map(country => ({ 
+        label: country, 
+        value: country,
+        group: 'European Countries'
+      }))
+    }
+  ];
+  
 
   const NewProductSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -121,15 +180,52 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, currentProduct]);
 
+  const [skuRegions, setSkuRegions] = useState([
+    { id: 1, sku: '', region: null }
+  ]);
+
+  const handleAddSkuRegion = () => {
+    setSkuRegions([
+      ...skuRegions,
+      { id: skuRegions.length + 1, sku: '', region: null }
+    ]);
+  };
+
+  const handleRemoveSkuRegion = (id) => {
+    setSkuRegions(skuRegions.filter(item => item.id !== id));
+  };
+
+  const handleSkuRegionChange = (id, field, value) => {
+    setSkuRegions(skuRegions.map(item => 
+      item.id === id ? { ...item, [field]: value } : item
+    ));
+  };
+
   const onSubmit = async (data) => {
     try {
-      console.log('DATA', data); // Debug the form data
+      const isValidSkuRegions = skuRegions.every(item => 
+        item.sku && item.region
+      );
+
+      if (!isValidSkuRegions) {
+        enqueueSnackbar('Please fill in all SKU and Region fields', { variant: 'error' });
+        return;
+      }
+
+      const submitData = {
+        ...data,
+        skuRegions: skuRegions.map(item => ({
+          sku: item.sku,
+          region: item.region.value,
+          regionName: item.region.label
+        }))
+      };
 
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
       enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
       push(PATH_DASHBOARD.eCommerce.list);
-      console.log('DATA', data);
+      console.log('DATA', submitData);
     } catch (error) {
       console.error(error);
     }
@@ -161,7 +257,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Container maxWidth="md">
+      <Container >
         <Masonry columns={{ xs: 1 }} spacing={4}>
           <TextField
             variant="outlined"
@@ -201,14 +297,86 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
             size="small"
             defaultValue=""
           />
-          <TextField
-            variant="outlined"
-            required
-            fullWidth
-            label="Sku"
-            size="small"
-            defaultValue="8806188752425"
-          />
+          <Box sx={{ width: '100%' }}>
+            <Stack 
+              direction="row" 
+              justifyContent="space-between" 
+              alignItems="center" 
+              sx={{ mb: 2 }}
+            >
+              <Typography variant="subtitle1">SKU and Region Mapping</Typography>
+              <Button
+                size="small"
+                startIcon={<Iconify icon="eva:plus-fill" width={20} height={20} />}
+                onClick={handleAddSkuRegion}
+              >
+                Add SKU-Region
+              </Button>
+            </Stack>
+
+            {skuRegions.map((item) => (
+              <Stack 
+                key={item.id} 
+                direction="row" 
+                spacing={2} 
+                sx={{ mb: 2 }}
+                alignItems="center"
+              >
+                <TextField
+                  variant="outlined"
+                  required
+                  size="small"
+                  label="SKU"
+                  value={item.sku}
+                  onChange={(e) => handleSkuRegionChange(item.id, 'sku', e.target.value)}
+                  sx={{ width: '40%' }}
+                />
+
+                <Autocomplete
+                  value={item.region}
+                  onChange={(event, newValue) => 
+                    handleSkuRegionChange(item.id, 'region', newValue)
+                  }
+                  options={[...REGION_OPTIONS[0].options, ...REGION_OPTIONS[1].options]}
+                  groupBy={(option) => option.group}
+                  getOptionLabel={(option) => option?.label || ''}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Region"
+                      required
+                      size="small"
+                      variant="outlined"
+                    />
+                  )}
+                  sx={{ width: '50%' }}
+                  renderGroup={(params) => (
+                    <Box key={params.key}>
+                      <Typography
+                        variant="subtitle2"
+                        sx={{ 
+                          p: 1, 
+                          fontWeight: 'bold', 
+                          color: 'text.secondary',
+                          backgroundColor: 'background.neutral'
+                        }}
+                      >
+                        {params.group}
+                      </Typography>
+                      {params.children}
+                    </Box>
+                  )}
+                />
+
+                <IconButton 
+                  onClick={() => handleRemoveSkuRegion(item.id)}
+                  disabled={skuRegions.length === 1}
+                >
+                  <Iconify icon="eva:trash-2-outline" width={20} height={20} />
+                </IconButton>
+              </Stack>
+            ))}
+          </Box>
           <TextField
             variant="outlined"
             required

@@ -61,6 +61,12 @@ const slice = createSlice({
       const deletedOrderId = action.payload;
       state.allOrders = state.allOrders.filter((order) => order.id !== deletedOrderId);
     },
+
+    // SAVE RELATED PURCHASE ORDER
+    saveRelatedPurchase(state, action) {
+      state.isLoading = false;
+      // Implementation of saveRelatedPurchase action
+    },
   },
 });
 
@@ -76,6 +82,7 @@ export const {
   createSalesOrderSuccess,
   updateSalesOrderSuccess,
   deleteSalesOrderSuccess,
+  saveRelatedPurchase,
 } = slice.actions;
 
 export function getSalesOrders() {
@@ -83,24 +90,10 @@ export function getSalesOrders() {
     dispatch(slice.actions.startLoading());
     try {
       const allOrders = await axios.get('/api/order/getSalesAll');
+      console.log("allOrders" , allOrders.data.salesOrders);
       dispatch(slice.actions.getSalesOrdersSuccess(allOrders.data.salesOrders));
     } catch (error) {
       console.error("Error fetching sales orders: ", error);
-      dispatch(slice.actions.hasError(error));
-    }
-  };
-}
-
-export function getSalesOrder(name) {
-  return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.get('/api/order/getSale', {
-        params: { name },
-      });
-      dispatch(slice.actions.getSalesOrderSuccess(response.data));
-    } catch (error) {
-      console.error("Error fetching sales order: ", error);
       dispatch(slice.actions.hasError(error));
     }
   };
@@ -155,13 +148,18 @@ export function deleteSalesOrder(id) {
 
 export function saveRelatedPurchaseOrder(id, data) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
     try {
+      dispatch(slice.actions.startLoading());
       const response = await axios.put(`/api/order/saveRelatedPurchase/${id}`, data);
       dispatch(slice.actions.saveRelatedPurchase(data));
       return { success: true, data: response.data.data };
     } catch (error) {
-      console.error("Error saving related purchase order: ", error);
+      console.error("Error in saveRelatedPurchaseOrder:", error);
+      console.error("Error details:", {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
       dispatch(slice.actions.hasError(error));
       return { success: false, error };
     }

@@ -52,11 +52,12 @@ export const useNavConfig = () => {
           }] : []),
           {
             title: 'CUSTOMERS',
-            path: PATH_DASHBOARD.customer.root,
+            // path: PATH_DASHBOARD.customer.root,
             icon: ICONS.user,
-            children: [
-              { title: 'List', path: PATH_DASHBOARD.customer.list },
-            ],
+            path: PATH_DASHBOARD.customer.list,
+            // children: [
+            //   { title: 'List', path: PATH_DASHBOARD.customer.list },
+            // ],
           },
           {
             title: 'CATALOG',

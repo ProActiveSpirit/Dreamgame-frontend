@@ -192,7 +192,7 @@ export default function PurchaseOrderListPage() {
   return (
     <>
       <Head>
-        <title> ORDERS: Purchase Order List</title>
+        <title> Purchase Order List</title>
       </Head>
 
       <Container maxWidth={themeStretch ? false : 'xl'}>
